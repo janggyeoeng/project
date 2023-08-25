@@ -4,7 +4,7 @@ import 'package:hnde_pda/src/loginpage/UIlogin1.dart';
 import 'package:hnde_pda/src/loginpage/UIlogin2.dart';
 import 'package:hnde_pda/config.dart';
 import 'package:hnde_pda/src/loginpage/mainlogin.dart';
-
+//전동규
 class Home extends StatefulWidget {
   const Home({super.key});
 
