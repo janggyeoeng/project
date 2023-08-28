@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -45,7 +46,7 @@ class OutputRegister extends StatelessWidget {
             decoration: BoxDecoration(
               border: Border.all(color: Colors.black.withOpacity(0.01)),
             ),
-            child: Text(
+            child: AutoSizeText(
               text,
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -198,7 +199,7 @@ class OutputRegister extends StatelessWidget {
               ),
               Container(
                 padding: const EdgeInsets.all(7),
-                height: 370,
+                height: 440,
                 //width: 150,
                 child: Column(
                   children: [
@@ -258,23 +259,6 @@ class OutputRegister extends StatelessWidget {
                     ),
                   ],
                 ),
-              ),
-            ],
-          ),
-        ),
-        bottomNavigationBar: const BottomAppBar(
-          color: Colors.grey,
-          height: 60,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.border_color, color: Colors.white),
-              SizedBox(
-                width: 3,
-              ),
-              Text(
-                ' 출고등록',
-                style: TextStyle(fontSize: 30, color: Colors.white),
               ),
             ],
           ),
