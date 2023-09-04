@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hnde_pda/src/scm_admin/scm_check_controller.dart';
+import 'package:get/get.dart';
 
 class ScmCheck extends StatefulWidget {
   ScmCheck({Key? key}) : super(key: key);
@@ -23,37 +25,30 @@ class _ScmCheckState extends State<ScmCheck> {
 
 // });
 
-  var focusNodes = FocusNode();
-  var focusNodes2 = FocusNode();
+  ScmCheckController _controller = ScmCheckController();
+
+  
   String testStd = '';
 
   bool outTap = false;
 
-  TextInputType inputType = TextInputType.none;
+  
 
   @override
   void initState() {
+    //setInputType(false);
+    _controller.pageLoad();
+    _controller.textFocusListner(context);
+    _controller.barcodeFocusListner(context);
+    // focusNodes2.addListener(() {
+    //   print(focusNodes2.hasFocus);
+    //   focusNodes2.hasFocus == false ? FocusScope.of(context).requestFocus(focusNodes) : '';
+    // });
     super.initState();
-    setInputType(false);
-    focusNodes2.addListener(() {
-      print(focusNodes2.hasFocus);
-      focusNodes2.hasFocus == false ? FocusScope.of(context).requestFocus(focusNodes) : '';
-    });
   }
 
-  TextInputType getInputType(){
-    print(this.inputType);
-    return this.inputType;
-  }
 
-  Future<void> setInputType(bool bo)async{
-
-    this.inputType = bo == true ? TextInputType.text : TextInputType.none;
-  }
-
-  Future<void>setFocus()async{
-    FocusScope.of(context).requestFocus(focusNodes);
-  }
+  
 
   Future<void> pageUpdate()async{
     setState(() {
@@ -103,21 +98,23 @@ class _ScmCheckState extends State<ScmCheck> {
                         child: Container(
                           //width: 50,
                           child: TextField(
-                            focusNode: focusNodes,
+                            focusNode: _controller.getBarcodeNode(),
                             controller: txtCon,
                            autofocus: true,
                            cursorColor: Colors.transparent,
                            cursorWidth: 0,
-                           keyboardType: getInputType(),
+                           keyboardType: TextInputType.none,//getInputType(),
                            decoration: InputDecoration(
                             //border: InputBorder.none
                            ),
-                           onSubmitted: (value) {
+                           onSubmitted: (value) async{
+                             //await _controller.printf(value);
                               print(value);
+                              txtCon.text = '';
                            },
                            onChanged: (value){
-                            print(value);
-                            txtCon.text = '';
+                            //print('aaa');
+                            //txtCon.text = '';
                            },
                           //  onTapOutside: (value){
                           //    print('ddd');
@@ -136,16 +133,15 @@ class _ScmCheckState extends State<ScmCheck> {
                           borderRadius:
                               const BorderRadius.all(Radius.circular(8)),
                         ),
-                        child: const Text(
-                          '바코드',
-                          style: TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center,
+                        child: Center(
+                          child: const Text(
+                            '바코드',
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ),
-                      
-
-
                       ]
                     ),
                   ),
@@ -160,7 +156,7 @@ class _ScmCheckState extends State<ScmCheck> {
                               children:[
                                 TextFormField(
                                   controller: txtCon2,
-                                  focusNode: focusNodes2,
+                                  focusNode: _controller.getTextNode(),
                                   cursorColor: Colors.transparent,
                                   cursorWidth: 0,
                                   decoration: InputDecoration(
@@ -168,7 +164,7 @@ class _ScmCheckState extends State<ScmCheck> {
                                   ),
                                   onFieldSubmitted: (value){
                                     this.outTap = false;
-                                    setFocus();
+                                    _controller.setFocus(context);
                                   },
                                 ),
                                 TextFormField(
@@ -196,14 +192,19 @@ class _ScmCheckState extends State<ScmCheck> {
                               child: Container(
                                 width: 20,
                                 height: 20,
-                                color: Colors.red,
+                                //color: Colors.green,
+                                child: Icon(
+                                  Icons.keyboard,
+                                  color: Colors.blue,
+                                ),
                               ),
                               onTap: ()async{
                                 print('클릭');
                                   //FocusScope.of(context).unfocus();
                                   //await setInputType(true);
+                                  await _controller.setKeyboardClick(true);
                                   this.outTap = true;
-                                  FocusScope.of(context).requestFocus(focusNodes2);
+                                  FocusScope.of(context).requestFocus(_controller.getBarcodeNode());
                                   //print(this.inputType);
                                   //await pageUpdate();
 
@@ -233,6 +234,285 @@ class _ScmCheckState extends State<ScmCheck> {
                 ],
              // ),
             ),
+            SizedBox(
+              height: 10,
+            ),
+
+            Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Container(
+                        padding: const EdgeInsets.all(7),
+                        margin: const EdgeInsets.all(5.0),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.withOpacity(0.3),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(8)),
+                        ),
+                        child: Center(
+                          child: const Text(
+                            '출고번호',
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                ),
+                Expanded(
+                  flex: 7,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 5,
+                        child: Text(
+                      '출고번호',
+                       style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Container()
+                      )
+                    ]
+                  )
+                ),
+                
+
+              ],
+            ),
+
+            SizedBox(
+              height: 10,
+            ),
+
+            Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Container(
+                        padding: const EdgeInsets.all(7),
+                        margin: const EdgeInsets.all(5.0),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.withOpacity(0.3),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(8)),
+                        ),
+                        child: Center(
+                          child: const Text(
+                            '거래처',
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                ),
+                Expanded(
+                  flex: 7,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 5,
+                        child: Text(
+                      '화신',
+                       style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Container()
+                      )
+                    ]
+                  )
+                ),
+
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(7.0),
+              child: Container(
+                height: 1,
+                color:  Colors.grey.shade800,
+              ),
+            ),
+            
+
+            Expanded(
+              flex: 2,
+              child: Container(
+                    padding: const EdgeInsets.all(7),
+                    decoration: BoxDecoration(
+                      //color: Colors.white,
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(15),
+                      ),
+                      
+                    ),
+                    child: ListView.builder(
+                        itemCount: 5,
+                        itemBuilder: (context, index) {
+                          //final selectedItem = _controller.outputlist[index];
+                          return GestureDetector(
+                            onTap: () {
+                              // Get.to(() => OutputStatusDetail(
+                              //     detailNumber: selectedItem["ISU_NB"],));
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.all(3),
+                              height: 100, // 아이템 높이 지정
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(15),
+                                ),
+                                border: Border.all(
+                                  color: Colors.black.withOpacity(0.5),
+                                ),
+                              ),
+                              child: Container(
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                      flex: 1,
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            flex: 1,
+                                            child: Container(
+                                              alignment: Alignment.center,
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey.withOpacity(0.3),
+                                                borderRadius: const BorderRadius.only(topLeft: Radius.circular(15))
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  '품번',
+                                                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 2,
+                                            child: Container(
+                                              //color: Colors.grey.withOpacity(0.3),
+                                              child: Center(
+                                                child: Text(
+                                                  'ITEM_CD',
+                                                  style: const TextStyle(fontSize: 14),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 1,
+                                            child: Container(
+                                              color: Colors.grey.withOpacity(0.3),
+                                              child: Center(
+                                                child: Text(
+                                                  '품명',
+                                                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 2,
+                                            child: Container(
+                                              //color: Colors.grey.withOpacity(0.3),
+                                              child: Center(
+                                                child: Text(
+                                                  'ITEM_NM',
+                                                  style: const TextStyle(fontSize: 14),
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    
+                                    Expanded(
+                                      flex: 1,
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            flex: 1,
+                                            child: Container(
+                                              alignment: Alignment.center,
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey.withOpacity(0.3),
+                                                borderRadius: const BorderRadius.only(topLeft: Radius.circular(15))
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  '단위',
+                                                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 2,
+                                            child: Container(
+                                              //color: Colors.grey.withOpacity(0.3),
+                                              child: Center(
+                                                child: Text(
+                                                  'UNIT_DC',
+                                                  style: const TextStyle(fontSize: 14),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 1,
+                                            child: Container(
+                                              color: Colors.grey.withOpacity(0.3),
+                                              child: Center(
+                                                child: Text(
+                                                  '입고수량',
+                                                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 2,
+                                            child: Container(
+                                              //color: Colors.grey.withOpacity(0.3),
+                                              child: Center(
+                                                child: Text(
+                                                  'ISU_QT',
+                                                  style: const TextStyle(fontSize: 14),
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      
+                    ),
+                  ),
+            ),
+
+            
             
           ],
         ),
