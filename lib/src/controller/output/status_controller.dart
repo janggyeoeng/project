@@ -9,7 +9,7 @@ class OutPutController extends GetxController {
 
   Future<void> OutputStatusData(DateTime startDate, DateTime endDate, String searchKeyword) async {
     String outputdata = await SqlConn.readData(
-        "SP_TSDELIVER_MOBILE_R1 '1000', '$searchKeyword', '$startDate', '$endDate'");
+        "SP_MOBILE_DELIVER_R3 '1001', '$startDate', '$endDate', '$searchKeyword'");
     List<Map<String, dynamic>> decodedData =
         List<Map<String, dynamic>>.from(jsonDecode(outputdata));
     outputlist.assignAll(decodedData);

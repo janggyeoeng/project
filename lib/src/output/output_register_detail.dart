@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hnde_pda/src/controller/output/register_detail_controller.dart';
@@ -78,7 +79,7 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        //resizeToAvoidBottomInset: false,
         appBar: AppBar(
           elevation: 0.7,
           title: Text(
@@ -365,7 +366,12 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
                                                   .outcontroller[index],
                                               keyboardType:
                                                   TextInputType.number,
+                                              inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[0-9]'))],
                                               textAlign: TextAlign.center,
+                                              onSubmitted: (value)async{
+                                                await _controller.checkValue(context, index, value);
+                                                await _controller.setSelectItem(index, value, 'ISU_QT');
+                                              },
                                             ),
                                           ),
                                         ),
@@ -398,8 +404,12 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
                                       ),
                                       child: Center(
                                           child: TextField(
-                                        keyboardType: TextInputType.number,
+                                        keyboardType: TextInputType.text,
                                         textAlign: TextAlign.center,
+                                        onSubmitted: (value)async{
+                                          await _controller.selectItem(index, true);
+                                          await _controller.setSelectItem(index, value, 'LOT_NB');
+                                        },
                                       )),
                                     ),
                                   )
@@ -416,22 +426,32 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
             ),
           ],
         ),
-        bottomNavigationBar: const BottomAppBar(
+        bottomNavigationBar:  BottomAppBar(
           color: Colors.grey,
           height: 60,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.border_color, color: Colors.white),
-              SizedBox(
-                width: 3,
-              ),
-              Text(
-                ' 출고등록',
-                style: TextStyle(fontSize: 30, color: Colors.white),
-              ),
-            ],
+          child: GestureDetector(
+            child: Container(
+              color: Colors.grey,
+              child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.border_color, color: Colors.white),
+                SizedBox(
+                  width: 3,
+                ),
+                Text(
+                  ' 출고등록',
+                  style: TextStyle(fontSize: 30, color: Colors.white),
+                ),
+              ],
+                      ),
+            ),
+          onTap: ()async{
+            
+            await _controller.saveClick(context);
+          },
           ),
+          
         ),
       ),
     );

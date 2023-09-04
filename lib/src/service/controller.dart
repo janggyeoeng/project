@@ -3,7 +3,7 @@
 // import 'package:get/get.dart';
 // import 'package:hnde_pda/src/auth_page.dart';
 // import 'package:sql_conn/sql_conn.dart';
-
+//dede
 // //Login controller
 // class LoginManager {
 //   Future<void> login(TextEditingController idController,
