@@ -6,8 +6,8 @@ import 'package:hnde_pda/src/scm_admin/scmcheck.dart';
 import 'package:hnde_pda/src/home.dart';
 import 'package:hnde_pda/src/scm_admin/input_register.dart';
 import 'package:hnde_pda/src/scm_admin/input_delete.dart';
-import 'package:hnde_pda/src/output/output_register.dart';
-import 'package:hnde_pda/src/output/output_status.dart';
+import 'package:hnde_pda/src/output/output_view/output_register.dart';
+import 'package:hnde_pda/src/output/output_view/output_status.dart';
 
 class AuthPage extends StatelessWidget {
   const AuthPage({super.key});
@@ -95,10 +95,10 @@ class AuthPage extends StatelessWidget {
                 crossAxisSpacing: 3,
                 mainAxisSpacing: 3,
                 shrinkWrap: true, // 스크롤 불가하도록 함
-                physics: NeverScrollableScrollPhysics(), //스크롤 불가하도록 ㅎ마
+                physics: const NeverScrollableScrollPhysics(), //스크롤 불가하도록 ㅎ마
                 children: [
                   gridRouter("SCM수입검사", Icons.pageview, () {
-                    Get.to(() => ScmCheck()); 
+                    Get.to(() => ScmCheck());
                   }),
                   gridRouter("SCM입고등록", Icons.move_to_inbox, () {
                     Get.to(() => InputRegister());

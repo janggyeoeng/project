@@ -14,7 +14,7 @@ class DateSelectionMixin {
   }
 }
 
-class MyViewModel extends GetxController {
+class Datechk extends GetxController {
   final _selectedDateRange = DateTimeRange(
     start: DateTime.now(),
     end: DateTime.now().add(const Duration(days: 2)),
@@ -32,10 +32,10 @@ class MyViewModel extends GetxController {
   }
 }
 
-
 //단일 날짜 지정 code
 class DateSelect {
-  static Future<DateTime?> selectDate(BuildContext context, DateTime date) async {
+  static Future<DateTime?> selectDate(
+      BuildContext context, DateTime date) async {
     return await showDatePicker(
       context: context,
       initialDate: date,
@@ -58,4 +58,3 @@ class DateModel extends GetxController {
     }
   }
 }
-
