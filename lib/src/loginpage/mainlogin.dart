@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hnde_pda/config.dart';
-import 'package:hnde_pda/src/controller/login_controller.dart';
+import 'package:hnde_pda/src/loginpage/login_controller.dart';
 
 class MainLogin extends StatefulWidget {
   const MainLogin({super.key});
@@ -19,7 +19,7 @@ class _MainLoginState extends State<MainLogin> {
     _pwController.clear();
   }
 
-   @override
+  @override
   void dispose() {
     _idController.dispose();
     _pwController.dispose();
@@ -28,15 +28,15 @@ class _MainLoginState extends State<MainLogin> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
         height: 584,
         width: MediaQuery.of(context).size.width,
         child: Stack(children: [
-           Positioned(
+          Positioned(
             left: MediaQuery.of(context).size.height - 600,
             top: 70,
             bottom: 0,
-            child: Text(
+            child: const Text(
               '아이디',
               style: TextStyle(
                   fontFamily: 'Poppins-Medium',
@@ -48,7 +48,7 @@ class _MainLoginState extends State<MainLogin> {
               left: MediaQuery.of(context).size.height - 600,
               top: 99,
               bottom: 0,
-              child: Container(
+              child: SizedBox(
                 width: 280,
                 child: TextField(
                   controller: _idController,
@@ -63,7 +63,7 @@ class _MainLoginState extends State<MainLogin> {
             left: MediaQuery.of(context).size.height - 600,
             top: 189,
             bottom: 0,
-            child: Text(
+            child: const Text(
               '비밀번호',
               style: TextStyle(
                   fontFamily: 'Poppins-Medium',
@@ -75,26 +75,26 @@ class _MainLoginState extends State<MainLogin> {
               left: MediaQuery.of(context).size.height - 600,
               top: 219,
               bottom: 0,
-              child: Container(
+              child: SizedBox(
                 width: 280,
                 child: TextField(
-                    controller: _pwController,
-                    decoration: const InputDecoration(
-                      border: UnderlineInputBorder(),
-                      hintText: '비밀번호를 입력하세요',
-                      hintStyle: TextStyle(color: hintText),
-                    ),
-                    obscureText: true,
-                    onSubmitted: (_) {
-                       _loginManager.login(_idController, _pwController, context);
-                       _resetTextFields();
-                    },
-                    ),
+                  controller: _pwController,
+                  decoration: const InputDecoration(
+                    border: UnderlineInputBorder(),
+                    hintText: '비밀번호를 입력하세요',
+                    hintStyle: TextStyle(color: hintText),
+                  ),
+                  obscureText: true,
+                  onSubmitted: (_) {
+                    _loginManager.login(_idController, _pwController, context);
+                    _resetTextFields();
+                  },
+                ),
               )),
           Positioned(
               top: MediaQuery.of(context).size.height - 380,
               right: MediaQuery.of(context).size.width - 360,
-              bottom: MediaQuery.of(context).size.height -580,
+              bottom: MediaQuery.of(context).size.height - 580,
               child: GestureDetector(
                 onTap: () {
                   _loginManager.login(_idController, _pwController, context);
@@ -102,8 +102,8 @@ class _MainLoginState extends State<MainLogin> {
                   // _login();
                 },
                 child: Container(
-                  width: MediaQuery.of(context).size.width -250,
-                  height: MediaQuery.of(context).size.height -10,
+                  width: MediaQuery.of(context).size.width - 250,
+                  height: MediaQuery.of(context).size.height - 10,
                   decoration: const BoxDecoration(
                     color: signInButton,
                     borderRadius: BorderRadius.only(

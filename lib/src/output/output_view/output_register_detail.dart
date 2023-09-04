@@ -1,13 +1,12 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hnde_pda/src/controller/output/register_detail_controller.dart';
+import 'package:hnde_pda/src/output/output_controller/output_register_detail_controller.dart';
 
 class OutputRegisterDetail extends StatefulWidget {
   final String detailNumber;
-  OutputRegisterDetail({required this.detailNumber});
+  const OutputRegisterDetail({super.key, required this.detailNumber});
 
   @override
   State<OutputRegisterDetail> createState() => _OutputRegisterDetailState();
@@ -20,56 +19,6 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
   void initState() {
     _controller.pageLoad(widget.detailNumber);
     super.initState();
-  }
-
-  Widget _detailcontainar(String text, TextStyle style, int index) {
-    return Container(
-      height: 50,
-      width: MediaQuery.of(context).size.width - 317,
-      // width: 99.7,
-      decoration: BoxDecoration(
-        color: _controller.selectColor(index),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(1),
-          ),
-        ],
-      ),
-      child: Center(
-        child: AutoSizeText(
-          text,
-          style: style,
-          textAlign: TextAlign.center,
-        ),
-      ),
-    );
-  }
-
-  Widget _containarwhite(
-    String text,
-    TextStyle style,
-  ) {
-    return GestureDetector(
-      child: Container(
-        height: 50,
-        width: MediaQuery.of(context).size.width - 317,
-        // width: 99.7,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(1),
-            ),
-          ],
-        ),
-        child: Center(
-            child: AutoSizeText(
-          text,
-          style: style,
-          textAlign: TextAlign.center,
-        )),
-      ),
-    );
   }
 
   @override
@@ -89,7 +38,7 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
         ),
         body: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 7,
             ),
             Row(
@@ -105,7 +54,7 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
                             const BorderRadius.all(Radius.circular(8)),
                       ),
                       child: const Text(
-                        '출고번호',
+                        '주문번호',
                         style: TextStyle(
                             fontSize: 17, fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
@@ -114,13 +63,13 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
                 Expanded(
                     flex: 5,
                     child: Text(
-                      '${widget.detailNumber}',
-                      style: TextStyle(fontSize: 17),
+                      widget.detailNumber,
+                      style: const TextStyle(fontSize: 17),
                       textAlign: TextAlign.center,
                     )),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 5,
             ),
             Row(
@@ -161,13 +110,12 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
                       onChanged: (value) {
                         if (value != null) {
                           setState(() {
-                          _controller.setSelectedOutputend(
-                              value); 
-                          print(value);
-                           });
+                            _controller.setSelectedOutputend(value);
+                            print(value);
+                          });
                         }
                       },
-                      icon: Align(
+                      icon: const Align(
                         alignment: Alignment.centerRight,
                         child: Icon(Icons.arrow_drop_down),
                       ),
@@ -178,7 +126,7 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 5,
             ),
             Row(
@@ -219,13 +167,12 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
                       onChanged: (value) {
                         if (value != null) {
                           setState(() {
-                          _controller.setSelectedDeadline(
-                              value); 
-                          print(value);
-                           });
+                            _controller.setSelectedDeadline(value);
+                            print(value);
+                          });
                         }
                       },
-                      icon: Align(
+                      icon: const Align(
                         alignment: Alignment.centerRight,
                         child: Icon(Icons.arrow_drop_down),
                       ),
@@ -236,7 +183,7 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Container(
@@ -248,7 +195,7 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
             //   height: 15,
             // ),
             Expanded(
-              child: Container(
+              child: SizedBox(
                 width: 390,
                 child: Obx(() {
                   final detailData = _controller.detailData.value;
@@ -263,7 +210,7 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
                         },
                         child: Container(
                           width: double.infinity,
-                          margin: EdgeInsets.fromLTRB(5, 10, 5, 5),
+                          margin: const EdgeInsets.fromLTRB(5, 10, 5, 5),
                           decoration: BoxDecoration(
                               border: Border.all(
                             width: 1,
@@ -277,14 +224,14 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
                                     flex: 1,
                                     child: Row(
                                       children: [
-                                        _detailcontainar(
+                                        _controller.detailcontainar(
                                           '품번',
                                           GoogleFonts.lato(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 15),
                                           index,
                                         ),
-                                        _containarwhite(
+                                        _controller.containarwhite(
                                           '${selectedItem["ITEM_CD"]}',
                                           GoogleFonts.lato(fontSize: 15),
                                         ),
@@ -295,7 +242,7 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
                                     flex: 1,
                                     child: Row(
                                       children: [
-                                        _detailcontainar(
+                                        _controller.detailcontainar(
                                             '품명',
                                             GoogleFonts.lato(
                                                 fontWeight: FontWeight.bold,
@@ -305,7 +252,7 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
                                             // const Color.fromRGBO(
                                             //     240, 248, 255, 1),
                                             ),
-                                        _containarwhite(
+                                        _controller.containarwhite(
                                           '${selectedItem["ITEM_NM"]}',
                                           GoogleFonts.lato(fontSize: 15),
                                         ),
@@ -320,7 +267,7 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
                                     flex: 1,
                                     child: Row(
                                       children: [
-                                        _detailcontainar(
+                                        _controller.detailcontainar(
                                             '주문수량',
                                             GoogleFonts.lato(
                                                 fontWeight: FontWeight.bold,
@@ -329,7 +276,7 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
                                             // const Color.fromRGBO(
                                             //     240, 248, 255, 1),
                                             ),
-                                        _containarwhite(
+                                        _controller.containarwhite(
                                           '${selectedItem["SO_QT"]}',
                                           GoogleFonts.lato(fontSize: 15),
                                         ),
@@ -340,7 +287,7 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
                                     flex: 1,
                                     child: Row(
                                       children: [
-                                        _detailcontainar(
+                                        _controller.detailcontainar(
                                             '출고수량',
                                             GoogleFonts.lato(
                                                 fontWeight: FontWeight.bold,
@@ -351,6 +298,8 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
                                             ),
                                         Expanded(
                                           child: Container(
+                                            padding: const EdgeInsets.only(
+                                                left: 5, right: 5, bottom: 8),
                                             height: 50,
                                             decoration: BoxDecoration(
                                               color: Colors.white,
@@ -366,11 +315,16 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
                                                   .outcontroller[index],
                                               keyboardType:
                                                   TextInputType.number,
-                                              inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[0-9]'))],
+                                              inputFormatters: [
+                                                FilteringTextInputFormatter
+                                                    .allow(RegExp('[0-9]'))
+                                              ],
                                               textAlign: TextAlign.center,
-                                              onSubmitted: (value)async{
-                                                await _controller.checkValue(context, index, value);
-                                                await _controller.setSelectItem(index, value, 'ISU_QT');
+                                              onSubmitted: (value) async {
+                                                await _controller.checkValue(
+                                                    context, index, value);
+                                                await _controller.setSelectItem(
+                                                    index, value, 'ISU_QT');
                                               },
                                             ),
                                           ),
@@ -382,8 +336,8 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
                               ),
                               Row(
                                 children: [
-                                  _detailcontainar(
-                                      'LOT No.',
+                                  _controller.detailcontainar(
+                                      'Lot No.',
                                       GoogleFonts.lato(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 15),
@@ -393,6 +347,8 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
                                   Expanded(
                                     flex: 3,
                                     child: Container(
+                                      padding: const EdgeInsets.only(
+                                          left: 5, right: 5, bottom: 8),
                                       height: 50,
                                       decoration: BoxDecoration(
                                         color: Colors.white,
@@ -406,9 +362,11 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
                                           child: TextField(
                                         keyboardType: TextInputType.text,
                                         textAlign: TextAlign.center,
-                                        onSubmitted: (value)async{
-                                          await _controller.selectItem(index, true);
-                                          await _controller.setSelectItem(index, value, 'LOT_NB');
+                                        onSubmitted: (value) async {
+                                          await _controller.selectItem(
+                                              index, true);
+                                          await _controller.setSelectItem(
+                                              index, value, 'LOT_NB');
                                         },
                                       )),
                                     ),
@@ -426,32 +384,30 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
             ),
           ],
         ),
-        bottomNavigationBar:  BottomAppBar(
+        bottomNavigationBar: BottomAppBar(
           color: Colors.grey,
           height: 60,
           child: GestureDetector(
             child: Container(
               color: Colors.grey,
-              child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.border_color, color: Colors.white),
-                SizedBox(
-                  width: 3,
-                ),
-                Text(
-                  ' 출고등록',
-                  style: TextStyle(fontSize: 30, color: Colors.white),
-                ),
-              ],
-                      ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.border_color, color: Colors.white),
+                  SizedBox(
+                    width: 3,
+                  ),
+                  Text(
+                    ' 출고등록',
+                    style: TextStyle(fontSize: 30, color: Colors.white),
+                  ),
+                ],
+              ),
             ),
-          onTap: ()async{
-            
-            await _controller.saveClick(context);
-          },
+            onTap: () async {
+              await _controller.saveClick(context);
+            },
           ),
-          
         ),
       ),
     );

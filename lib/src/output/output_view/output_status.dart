@@ -1,26 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hnde_pda/src/controller/output/status_controller.dart';
-import 'package:hnde_pda/src/output/output_status_detail.dart';
-import 'package:hnde_pda/src/service/date_time.dart';
+import 'package:hnde_pda/src/output/output_controller/output_status_controller.dart';
+
+import 'package:hnde_pda/src/output/output_view/output_status_detail.dart';
 
 class OutputStatus extends StatelessWidget {
-  OutputStatus({Key? key});
+  OutputStatus({
+    super.key,
+  });
 
-  final MyViewModel _viewModel = Get.put(MyViewModel());
   final OutPutController _controller = Get.put(OutPutController());
-  final TextEditingController searchController = TextEditingController();
-  
-
-  Future<void> _outputdata() async {
-    String searchKeyword = searchController.text;
-    await _controller.OutputStatusData(
-      _viewModel.selectedDateRange.start,
-      _viewModel.selectedDateRange.end,
-      searchKeyword,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +60,7 @@ class OutputStatus extends StatelessWidget {
                     child: Column(
                       children: [
                         Obx(() => Text(
-                              "${_viewModel.selectedDateRange.start.toLocal().toString().split(' ')[0]} ~ ${_viewModel.selectedDateRange.end.toLocal().toString().split(' ')[0]}",
+                              "${_controller.dateck.selectedDateRange.start.toLocal().toString().split(' ')[0]} ~ ${_controller.dateck.selectedDateRange.end.toLocal().toString().split(' ')[0]}",
                               style: const TextStyle(fontSize: 17),
                               textAlign: TextAlign.center,
                             )),
@@ -78,13 +68,15 @@ class OutputStatus extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                      flex: 2,
+                      flex: 1,
                       child: IconButton(
                           onPressed: () async {
-                            await _viewModel.selectDateRange(
-                                context);
+                            await _controller.dateck.selectDateRange(context);
                           },
-                          icon: const Icon(Icons.calendar_month, size: 28,))
+                          icon: const Icon(
+                            Icons.calendar_month,
+                            size: 28,
+                          ))
                       // ElevatedButton(
                       //   onPressed: () async {
                       //     await _viewModel
@@ -125,31 +117,38 @@ class OutputStatus extends StatelessWidget {
                   ),
                   Expanded(
                     flex: 5,
-                    child: TextField(
-                      controller: searchController,
-                      decoration: InputDecoration(hintText: ' 출고번호를 입력하세요.'),
-                      onSubmitted: (value) {
-                        _outputdata();
-                      },
+                    child: Container(
+                      padding: const EdgeInsets.only(left: 5, right: 3),
+                      child: TextField(
+                        controller: _controller.searchController,
+                        decoration:
+                            const InputDecoration(hintText: ' 출고번호를 입력하세요.'),
+                        onSubmitted: (value) {
+                          _controller.outputdata();
+                        },
+                      ),
                     ),
                   ),
                   Expanded(
-                    flex: 2,
-                    child: IconButton(
+                      flex: 1,
+                      child: IconButton(
                           onPressed: () async {
-                            _outputdata();
+                            _controller.outputdata();
                           },
-                          icon: const Icon(Icons.search, size: 28,))
-                    // ElevatedButton(
-                    //   onPressed: () {
-                    //     _outputdata();
-                    //   },
-                    //   child: Text(
-                    //     '검색',
-                    //     style: GoogleFonts.lato(fontSize: 18),
-                    //   ),
-                    // ),
-                  ),
+                          icon: const Icon(
+                            Icons.search,
+                            size: 28,
+                          ))
+                      // ElevatedButton(
+                      //   onPressed: () {
+                      //     _outputdata();
+                      //   },
+                      //   child: Text(
+                      //     '검색',
+                      //     style: GoogleFonts.lato(fontSize: 18),
+                      //   ),
+                      // ),
+                      ),
                 ],
               ),
               const SizedBox(
@@ -178,9 +177,12 @@ class OutputStatus extends StatelessWidget {
                       itemBuilder: (context, index) {
                         final selectedItem = _controller.outputlist[index];
                         return GestureDetector(
-                          onTap: () {
+                          onTap: () async {
+                            await _controller.setInfo(index);
                             Get.to(() => OutputStatusDetail(
-                                detailNumber: selectedItem["ISU_NB"],));
+                                  trNm: _controller.trNm,
+                                  detailNumber: selectedItem["ISU_NB"],
+                                ));
                           },
                           child: Container(
                             margin: const EdgeInsets.all(3),
