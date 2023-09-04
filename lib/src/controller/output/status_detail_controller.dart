@@ -8,8 +8,9 @@ class OpDetailController extends GetxController {
 
   Future<void> OutputStDetailData(String detailNumber) async {
     String detailDataString = await SqlConn.readData(
-      "SP_TSDELIVER_MOBILE_R2 '1000', '$detailNumber'");
+      "SP_MOBILE_DELIVER_R4 '1001', '$detailNumber'");
     List<dynamic> decodedData = jsonDecode(detailDataString);
     detailData.value = List<Map<String, dynamic>>.from(decodedData);
+    print(this.detailData);
   }
 }

@@ -106,77 +106,15 @@ class _OutputStatusDetailState extends State<OutputStatusDetail> {
                                 const Color.fromRGBO(240, 248, 255, 1),
                               ),
                               _detailcontainar(
-                                '품명',
-                                GoogleFonts.lato(
-                                    fontWeight: FontWeight.bold, fontSize: 15),
-                                const Color.fromRGBO(240, 248, 255, 1),
-                              ),
-                              _detailcontainar(
-                                '가격',
-                                GoogleFonts.lato(
-                                    fontWeight: FontWeight.bold, fontSize: 15),
-                                const Color.fromRGBO(240, 248, 255, 1),
-                              ),
-                              _detailcontainar(
-                                '출고창고',
-                                GoogleFonts.lato(
-                                    fontWeight: FontWeight.bold, fontSize: 15),
-                                const Color.fromRGBO(240, 248, 255, 1),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Column(
-                            children: [
-                              _detailcontainar(
-                                '${selectedItem["ITEM_CD"]}'
-                                    .replaceAll('STR_', ''),
-                                GoogleFonts.lato(fontSize: 15),
-                                Colors.white,
-                              ),
-                              _detailcontainar('${selectedItem["ITEM_NM"]}',
-                                  GoogleFonts.lato(fontSize: 15), Colors.white),
-                              _detailcontainar(
-                                  '${selectedItem["LOT_NB"]}'
-                                      .replaceAll('STR_', ''),
-                                  GoogleFonts.lato(fontSize: 15),
-                                  Colors.white),
-                              _detailcontainar(
-                                  '${selectedItem["ISU_QT"]}'
-                                      .replaceAll('STR_', ''),
-                                  GoogleFonts.lato(fontSize: 15),
-                                  Colors.white),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Column(
-                            children: [
-                              _detailcontainar(
                                 '규격',
                                 GoogleFonts.lato(
-                                    fontWeight: FontWeight.bold, fontSize: 17),
+                                    fontWeight: FontWeight.bold, fontSize: 15),
                                 const Color.fromRGBO(240, 248, 255, 1),
                               ),
                               _detailcontainar(
-                                '단가',
+                                'LOT NO',
                                 GoogleFonts.lato(
-                                    fontWeight: FontWeight.bold, fontSize: 17),
-                                const Color.fromRGBO(240, 248, 255, 1),
-                              ),
-                              _detailcontainar(
-                                '공급가',
-                                GoogleFonts.lato(
-                                    fontWeight: FontWeight.bold, fontSize: 17),
-                                const Color.fromRGBO(240, 248, 255, 1),
-                              ),
-                              _detailcontainar(
-                                '세액',
-                                GoogleFonts.lato(
-                                    fontWeight: FontWeight.bold, fontSize: 17),
+                                    fontWeight: FontWeight.bold, fontSize: 15),
                                 const Color.fromRGBO(240, 248, 255, 1),
                               ),
                             ],
@@ -192,18 +130,61 @@ class _OutputStatusDetailState extends State<OutputStatusDetail> {
                                 GoogleFonts.lato(fontSize: 15),
                                 Colors.white,
                               ),
-                              _detailcontainar('${selectedItem["ITEM_NM"]}',
+                              _detailcontainar('${selectedItem["ITEM_SPEC"]}',
                                   GoogleFonts.lato(fontSize: 15), Colors.white),
                               _detailcontainar(
                                   '${selectedItem["LOT_NB"]}'
                                       .replaceAll('STR_', ''),
                                   GoogleFonts.lato(fontSize: 15),
                                   Colors.white),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Column(
+                            children: [
                               _detailcontainar(
-                                  '${selectedItem["ISU_QT"]}'
-                                      .replaceAll('STR_', ''),
+                                '품명',
+                                GoogleFonts.lato(
+                                    fontWeight: FontWeight.bold, fontSize: 17),
+                                const Color.fromRGBO(240, 248, 255, 1),
+                              ),
+                              _detailcontainar(
+                                '출고수량',
+                                GoogleFonts.lato(
+                                    fontWeight: FontWeight.bold, fontSize: 17),
+                                const Color.fromRGBO(240, 248, 255, 1),
+                              ),
+                              _detailcontainar(
+                                '',
+                                GoogleFonts.lato(
+                                    fontWeight: FontWeight.bold, fontSize: 17),
+                                const Color.fromRGBO(240, 248, 255, 1),
+                              ),
+                              
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Column(
+                            children: [
+                              _detailcontainar(
+                                '${selectedItem["ITEM_NM"]}'
+                                    .replaceAll('STR_', ''),
+                                GoogleFonts.lato(fontSize: 15),
+                                Colors.white,
+                              ),
+                              _detailcontainar('${selectedItem["ISU_QT"]}',
+                                  GoogleFonts.lato(fontSize: 15), Colors.white),
+                              _detailcontainar(
+                                  // '${selectedItem["LOT_NB"]}'
+                                  //     .replaceAll('STR_', ''),
+                                  '',
                                   GoogleFonts.lato(fontSize: 15),
                                   Colors.white),
+                            
                             ],
                           ),
                         ),
