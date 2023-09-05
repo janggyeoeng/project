@@ -92,9 +92,8 @@ class _MainLoginState extends State<MainLogin> {
                 ),
               )),
           Positioned(
-              top: MediaQuery.of(context).size.height - 380,
-              right: MediaQuery.of(context).size.width - 360,
-              bottom: MediaQuery.of(context).size.height - 580,
+              top: MediaQuery.of(context).size.height - 350,
+              right: MediaQuery.of(context).size.width - 320,
               child: GestureDetector(
                 onTap: () {
                   _loginManager.login(_idController, _pwController, context);
@@ -103,7 +102,7 @@ class _MainLoginState extends State<MainLogin> {
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width - 250,
-                  height: MediaQuery.of(context).size.height - 10,
+                  height: 40,
                   decoration: const BoxDecoration(
                     color: signInButton,
                     borderRadius: BorderRadius.only(

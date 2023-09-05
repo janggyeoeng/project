@@ -56,12 +56,12 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
                       child: const Text(
                         '주문번호',
                         style: TextStyle(
-                            fontSize: 17, fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       )),
                 ),
                 Expanded(
-                    flex: 5,
+                    flex: 7,
                     child: Text(
                       widget.detailNumber,
                       style: const TextStyle(fontSize: 17),
@@ -87,12 +87,12 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
                       child: const Text(
                         '출고구분',
                         style: TextStyle(
-                            fontSize: 17, fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       )),
                 ),
                 Expanded(
-                  flex: 5,
+                  flex: 7,
                   child: Obx(() {
                     return DropdownButton(
                       value: _controller
@@ -149,7 +149,7 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
                       )),
                 ),
                 Expanded(
-                  flex: 5,
+                  flex: 7,
                   child: Obx(() {
                     return DropdownButton(
                       value: _controller.selectedDeadline,
