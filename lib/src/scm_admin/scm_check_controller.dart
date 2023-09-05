@@ -15,8 +15,8 @@ class ScmCheckController {
     await model.setKeyboardClick(bo);
   }
 
-  dynamic textFocusListner(BuildContext context){
-    return model.textFocusListner(context);
+  dynamic textFocusListner(BuildContext context, void Function()? state){
+    return model.textFocusListner(context,state);
   }
 
   dynamic barcodeFocusListner(BuildContext context){
@@ -33,6 +33,14 @@ class ScmCheckController {
 
   Future<void>setFocus(BuildContext context)async{
     model.setFocus(context);
+  }
+
+  Color setKeyboardColor(){
+    return model.setKeyboardColor();
+  }
+
+  Future<void> scanBarcode(String barcode)async{
+    model.scanBarcode(barcode);
   }
 
 }
