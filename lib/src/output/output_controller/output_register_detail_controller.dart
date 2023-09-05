@@ -21,7 +21,7 @@ class OpRegisterDetailController extends GetxController {
   Widget detailcontainar(String text, TextStyle style, int index) {
     return Container(
       height: 50,
-      width: 99.7,
+      width: 85,
       decoration: BoxDecoration(
         color: selectColor(index),
         boxShadow: [
@@ -47,7 +47,7 @@ class OpRegisterDetailController extends GetxController {
     return GestureDetector(
       child: Container(
         height: 50,
-        width: 89,
+        width: 85,
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [

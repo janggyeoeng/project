@@ -45,9 +45,9 @@ class OutputStatus extends StatelessWidget {
                             const BorderRadius.all(Radius.circular(8)),
                       ),
                       child: const Text(
-                        '출고 일자',
+                        '출고일자',
                         style: TextStyle(
-                            fontSize: 17, fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -56,7 +56,7 @@ class OutputStatus extends StatelessWidget {
                     width: 5,
                   ),
                   Expanded(
-                    flex: 5,
+                    flex: 6,
                     child: Column(
                       children: [
                         Obx(() => Text(
@@ -105,9 +105,9 @@ class OutputStatus extends StatelessWidget {
                             const BorderRadius.all(Radius.circular(8)),
                       ),
                       child: const Text(
-                        '출고 번호',
+                        '출고번호',
                         style: TextStyle(
-                            fontSize: 17, fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -116,7 +116,7 @@ class OutputStatus extends StatelessWidget {
                     width: 5,
                   ),
                   Expanded(
-                    flex: 5,
+                    flex: 6,
                     child: Container(
                       padding: const EdgeInsets.only(left: 5, right: 3),
                       child: TextField(
@@ -152,25 +152,17 @@ class OutputStatus extends StatelessWidget {
                 ],
               ),
               const SizedBox(
-                height: 15,
+                height: 10,
+              ),
+              const Divider(
+                thickness: 1,
+                color: Colors.black,
+              ),
+              const SizedBox(
+                height: 10,
               ),
               Expanded(
-                //하단 Container
                 child: Container(
-                  padding: const EdgeInsets.all(7),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(15),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        blurRadius: 5,
-                        spreadRadius: 3,
-                      )
-                    ],
-                  ),
                   child: Obx(
                     () => ListView.builder(
                       itemCount: _controller.outputlist.length,

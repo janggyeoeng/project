@@ -31,6 +31,7 @@ class OutputRegister extends StatelessWidget {
             '출고 등록',
             style: GoogleFonts.lato(fontWeight: FontWeight.bold),
           ),
+          centerTitle: true,
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -53,7 +54,7 @@ class OutputRegister extends StatelessWidget {
                       child: const Text(
                         '주문일자',
                         style: TextStyle(
-                            fontSize: 17, fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -102,7 +103,7 @@ class OutputRegister extends StatelessWidget {
                         child: const Text(
                           '주문번호',
                           style: TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.bold),
+                              fontSize: 16, fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         )),
                   ),
