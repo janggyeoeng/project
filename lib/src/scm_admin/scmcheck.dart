@@ -33,12 +33,23 @@ class _ScmCheckState extends State<ScmCheck> {
   bool outTap = false;
 
   
+  TextEditingController txtCon = TextEditingController();
+  TextEditingController txtCon2 = TextEditingController();
+
+  
+
+  void pageUpdate(){
+    setState(() {
+      
+    });
+  }
 
   @override
   void initState() {
     //setInputType(false);
+    //print('asasas ${txtCon.value}');
     _controller.pageLoad();
-    _controller.textFocusListner(context);
+    _controller.textFocusListner(context,pageUpdate);
     _controller.barcodeFocusListner(context);
     // focusNodes2.addListener(() {
     //   print(focusNodes2.hasFocus);
@@ -48,16 +59,7 @@ class _ScmCheckState extends State<ScmCheck> {
   }
 
 
-  
 
-  Future<void> pageUpdate()async{
-    setState(() {
-      
-    });
-  }
-
-  TextEditingController txtCon = TextEditingController();
-  TextEditingController txtCon2 = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -81,14 +83,16 @@ class _ScmCheckState extends State<ScmCheck> {
             SizedBox(
               height: 10,
             ),
-            //RawKeyboardListener(
-              // focusNode: focusNodes,
-              // onKey: (e){
-              //           if(e.isKeyPressed(LogicalKeyboardKey.enter)){
-              //             print('enter : ${e}');
-              //           }
-              // },
-               Row( //child:
+            // RawKeyboardListener(
+            //   focusNode: _controller.getBarcodeNode(),
+            //   onKey: (e){
+            //       if(e.isKeyPressed(LogicalKeyboardKey.enter)){
+            //         print(txtCon.text);
+            //         txt
+            //         txtCon.clear();
+            //       }
+            //   },
+              Row( //child:
                 children: [
                   Expanded(
                     flex: 2,
@@ -103,25 +107,19 @@ class _ScmCheckState extends State<ScmCheck> {
                            autofocus: true,
                            cursorColor: Colors.transparent,
                            cursorWidth: 0,
-                           keyboardType: TextInputType.none,//getInputType(),
+                           keyboardType: TextInputType.none,
                            decoration: InputDecoration(
                             //border: InputBorder.none
                            ),
-                           onSubmitted: (value) async{
-                             //await _controller.printf(value);
-                              print(value);
-                              txtCon.text = '';
+                           onSubmitted: (value) {
+                              print('saas $value');
                            },
-                           onChanged: (value){
-                            //print('aaa');
-                            //txtCon.text = '';
+                           onChanged: (value)async{
+                            //print(txtCon.text);
+                            await _controller.scanBarcode(value);
+                            txtCon.text = '';
+                            txtCon.clear();
                            },
-                          //  onTapOutside: (value){
-                          //    print('ddd');
-                          //    FocusScope.of(context).unfocus();
-                          //    FocusScope.of(context).requestFocus(focusNodes);
-                          //  },
-                           
                           ),
                         ),
                       ),
@@ -165,6 +163,9 @@ class _ScmCheckState extends State<ScmCheck> {
                                   onFieldSubmitted: (value){
                                     this.outTap = false;
                                     _controller.setFocus(context);
+                                    setState(() {
+                                      
+                                    });
                                   },
                                 ),
                                 TextFormField(
@@ -195,21 +196,19 @@ class _ScmCheckState extends State<ScmCheck> {
                                 //color: Colors.green,
                                 child: Icon(
                                   Icons.keyboard,
-                                  color: Colors.blue,
+                                  color: _controller.setKeyboardColor()//Colors.blue,
                                 ),
                               ),
                               onTap: ()async{
                                 print('클릭');
-                                  //FocusScope.of(context).unfocus();
-                                  //await setInputType(true);
+                                  
                                   await _controller.setKeyboardClick(true);
                                   this.outTap = true;
-                                  FocusScope.of(context).requestFocus(_controller.getBarcodeNode());
-                                  //print(this.inputType);
-                                  //await pageUpdate();
-
-                                  //await setFocus();
-                                  //FocusScope.of(context).requestFocus(focusNodes);
+                                  FocusScope.of(context).requestFocus(_controller.getTextNode());
+                                  
+                                  setState(() {
+                                    
+                                  });
                                 
                               },
                             )
@@ -232,8 +231,8 @@ class _ScmCheckState extends State<ScmCheck> {
                     // ),
                   ),
                 ],
-             // ),
-            ),
+              ),
+           // ),
             SizedBox(
               height: 10,
             ),
@@ -452,7 +451,7 @@ class _ScmCheckState extends State<ScmCheck> {
                                               alignment: Alignment.center,
                                               decoration: BoxDecoration(
                                                 color: Colors.grey.withOpacity(0.3),
-                                                borderRadius: const BorderRadius.only(topLeft: Radius.circular(15))
+                                                borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(15))
                                               ),
                                               child: Center(
                                                 child: Text(
