@@ -321,6 +321,9 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
                                               ],
                                               textAlign: TextAlign.center,
                                               onSubmitted: (value) async {
+                                                await _controller
+                                                    .colorBool(index);
+                                                setState(() {});
                                                 await _controller.checkValue(
                                                     context, index, value);
                                                 await _controller.setSelectItem(
@@ -363,6 +366,8 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
                                         keyboardType: TextInputType.text,
                                         textAlign: TextAlign.center,
                                         onSubmitted: (value) async {
+                                          await _controller.colorBool(index);
+                                          setState(() {});
                                           await _controller.selectItem(
                                               index, true);
                                           await _controller.setSelectItem(
