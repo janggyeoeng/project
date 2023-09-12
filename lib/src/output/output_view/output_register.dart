@@ -81,6 +81,7 @@ class OutputRegister extends StatelessWidget {
                           onPressed: () async {
                             await _controller.datechk.selectDateRange(
                                 context); // Call selectDateRange
+                            _controller.outputregisterdata();
                           },
                           icon: const Icon(
                             Icons.calendar_month,

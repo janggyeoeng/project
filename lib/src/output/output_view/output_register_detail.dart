@@ -321,6 +321,9 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
                                               ],
                                               textAlign: TextAlign.center,
                                               onSubmitted: (value) async {
+                                                print(_controller.detailData
+                                                    .value[index]['CHK']);
+                                                print(value);
                                                 await _controller
                                                     .colorBool(index);
                                                 setState(() {});
