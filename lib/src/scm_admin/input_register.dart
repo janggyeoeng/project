@@ -2,30 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hnde_pda/src/scm_admin/scm_check_controller.dart';
+import 'package:hnde_pda/src/scm_admin/input_register_controller.dart';
+
 import 'package:get/get.dart';
 
 class InputRegister extends StatefulWidget {
-  InputRegister({Key? key}) : super(key: key);
+  const InputRegister({Key? key}) : super(key: key);
 
   @override
   State<InputRegister> createState() => _InputRegisterState();
 }
 
 class _InputRegisterState extends State<InputRegister> {
-  
 //   var focusNode = FocusNode(onKey: (node, event) {
 //     if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
 //         // Do something
 //         // Next 2 line needed If you don't want to update the text field with new line.
-//         // node.unfocus(); 
+//         // node.unfocus();
 //         // return true;
 //     }
 //     return false;
 
 // });
 
-  ScmCheckController _controller = ScmCheckController();
+  final ScmRegisterController _controller = ScmRegisterController();
 
   var focusNodes = FocusNode();
   var focusNodes2 = FocusNode();
@@ -40,30 +40,29 @@ class _InputRegisterState extends State<InputRegister> {
     setInputType(false);
     focusNodes2.addListener(() {
       print(focusNodes2.hasFocus);
-      focusNodes2.hasFocus == false ? FocusScope.of(context).requestFocus(focusNodes) : '';
+      focusNodes2.hasFocus == false
+          ? FocusScope.of(context).requestFocus(focusNodes)
+          : '';
     });
     super.initState();
   }
 
-  TextInputType getInputType(){
-    print(this.inputType);
-    return this.inputType;
+  TextInputType getInputType() {
+    print(inputType);
+    return inputType;
   }
 
-  Future<void> setInputType(bool bo)async{
-
-    this.inputType = bo == true ? TextInputType.text : TextInputType.none;
-    print(this.inputType);
+  Future<void> setInputType(bool bo) async {
+    inputType = bo == true ? TextInputType.text : TextInputType.none;
+    print(inputType);
   }
 
-  Future<void>setFocus()async{
+  Future<void> setFocus() async {
     FocusScope.of(context).requestFocus(focusNodes);
   }
 
-  Future<void> pageUpdate()async{
-    setState(() {
-      
-    });
+  Future<void> pageUpdate() async {
+    setState(() {});
   }
 
   TextEditingController txtCon = TextEditingController();
@@ -71,12 +70,10 @@ class _InputRegisterState extends State<InputRegister> {
 
   @override
   Widget build(BuildContext context) {
-
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
       },
-      
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -88,141 +85,131 @@ class _InputRegisterState extends State<InputRegister> {
         ),
         body: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             //RawKeyboardListener(
-              // focusNode: focusNodes,
-              // onKey: (e){
-              //           if(e.isKeyPressed(LogicalKeyboardKey.enter)){
-              //             print('enter : ${e}');
-              //           }
-              // },
-               Row( //child:
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: Stack(
-                      children: [
-                        Center(
-                        child: Container(
-                          //width: 50,
-                          child: TextField(
-                            focusNode: focusNodes,
-                            controller: txtCon,
-                           autofocus: true,
-                           cursorColor: Colors.transparent,
-                           cursorWidth: 0,
-                           keyboardType: TextInputType.none,//getInputType(),
-                           decoration: InputDecoration(
-                            border: InputBorder.none
-                           ),
-                           onSubmitted: (value) async{
-                             //await _controller.printf(value);
-                              print(value);
-                              txtCon.text = '';
-                           },
-                           onChanged: (value){
+            // focusNode: focusNodes,
+            // onKey: (e){
+            //           if(e.isKeyPressed(LogicalKeyboardKey.enter)){
+            //             print('enter : ${e}');
+            //           }
+            // },
+            Row(
+              //child:
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Stack(children: [
+                    Center(
+                      child: Container(
+                        //width: 50,
+                        child: TextField(
+                          focusNode: focusNodes,
+                          controller: txtCon,
+                          autofocus: true,
+                          cursorColor: Colors.transparent,
+                          cursorWidth: 0,
+                          keyboardType: TextInputType.none, //getInputType(),
+                          // decoration:
+                          //     // const InputDecoration(border: InputBorder.none),
+                          onSubmitted: (value) async {
+                            //await _controller.printf(value);
+                            print(value);
+                            txtCon.text = '';
+                          },
+                          onChanged: (value) async {
+                            await _controller.barcodeScan(value);
                             //print('aaa');
-                            //txtCon.text = '';
-                           },
+                            setState(() {});
+                            txtCon.text = '';
+                          },
                           //  onTapOutside: (value){
                           //    print('ddd');
                           //    FocusScope.of(context).unfocus();
                           //    FocusScope.of(context).requestFocus(focusNodes);
                           //  },
-                           
-                          ),
                         ),
                       ),
-                        Container(
-                        padding: const EdgeInsets.all(7),
-                        margin: const EdgeInsets.all(5.0),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.withOpacity(0.3),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(8)),
-                        ),
-                        child: Center(
-                          child: const Text(
-                            '바코드',
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                      ]
                     ),
-                  ),
-                  Expanded(
+                    Container(
+                      padding: const EdgeInsets.all(7),
+                      margin: const EdgeInsets.all(5.0),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.3),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(8)),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          '바코드',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ]),
+                ),
+                Expanded(
                     flex: 7,
                     child: Container(
                       child: Row(
                         children: [
                           Expanded(
                             flex: 5,
-                            child: Stack(
-                              children:[
-                                TextFormField(
-                                  controller: txtCon2,
-                                  focusNode: focusNodes2,
-                                  cursorColor: Colors.transparent,
-                                  cursorWidth: 0,
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none
-                                  ),
-                                  onFieldSubmitted: (value){
-                                    this.outTap = false;
-                                    setFocus();
-                                  },
-                                ),
-                                TextFormField(
-                                  //controller: txtCon2,
-                                  readOnly: true,
-                                  cursorColor: Colors.transparent,
-                                  cursorWidth: 0,
-                                  decoration: InputDecoration(
+                            child: Stack(children: [
+                              TextFormField(
+                                controller: txtCon2,
+                                focusNode: focusNodes2,
+                                cursorColor: Colors.transparent,
+                                cursorWidth: 0,
+                                decoration: const InputDecoration(
+                                    border: InputBorder.none),
+                                onFieldSubmitted: (value) {
+                                  outTap = false;
+                                  setFocus();
+                                },
+                              ),
+                              TextFormField(
+                                //controller: txtCon2,
+                                readOnly: true,
+                                cursorColor: Colors.transparent,
+                                cursorWidth: 0,
+                                decoration: const InputDecoration(
                                     //border: InputBorder.none
                                     focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color:Colors.grey
-                                      )
-                                    )  
-                                  ),
-                                  
-                                  
-                                ),
-                              ] 
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: GestureDetector(
-                              child: Container(
-                                width: 20,
-                                height: 20,
-                                //color: Colors.green,
-                                child: Icon(
-                                  Icons.keyboard,
-                                  color: Colors.blue,
-                                ),
+                                        borderSide:
+                                            BorderSide(color: Colors.grey))),
                               ),
-                              onTap: ()async{
-                                print('클릭');
-                                  //FocusScope.of(context).unfocus();
-                                  //await setInputType(true);
-                                  this.outTap = true;
-                                  FocusScope.of(context).requestFocus(focusNodes2);
-                                  //print(this.inputType);
-                                  //await pageUpdate();
+                            ]),
+                          ),
+                          // Expanded(
+                          //     flex: 1,
+                          //     child: GestureDetector(
+                          //       child: const SizedBox(
+                          //         width: 20,
+                          //         height: 20,
+                          //         //color: Colors.green,
+                          //         child: Icon(
+                          //           Icons.keyboard,
+                          //           color: Colors.blue,
+                          //         ),
+                          //       ),
+                          //       onTap: () async {
+                          //         print('클릭');
+                          //         //FocusScope.of(context).unfocus();
+                          //         //await setInputType(true);
+                          //         outTap = true;
+                          //         FocusScope.of(context)
+                          //             .requestFocus(focusNodes2);
+                          //         //print(this.inputType);
+                          //         //await pageUpdate();
 
-                                  //await setFocus();
-                                  //FocusScope.of(context).requestFocus(focusNodes);
-                                
-                              },
-                            )
-                          )
+                          //         //await setFocus();
+                          //         //FocusScope.of(context).requestFocus(focusNodes);
+                          //       },
+                          //     ))
                         ],
                       ),
                     )
@@ -234,16 +221,58 @@ class _InputRegisterState extends State<InputRegister> {
                     //   },
                     //   onTapOutside: (Value){
                     //    // print('포커스아웃');
-                        
+
                     //     FocusScope.of(context).requestFocus(focusNodes);
                     //     FocusScope.of(context).unfocus();
                     //   },
                     // ),
+                    ),
+              ],
+              // ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+
+            Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Container(
+                    padding: const EdgeInsets.all(7),
+                    margin: const EdgeInsets.all(5.0),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.withOpacity(0.3),
+                      borderRadius: const BorderRadius.all(Radius.circular(8)),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        '출고번호',
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                   ),
-                ],
-             // ),
+                ),
+                Expanded(
+                    flex: 7,
+                    child: Row(children: [
+                      Expanded(
+                        flex: 5,
+                        child: Text(
+                          _controller.getPsuNb(),
+                          style: const TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      Expanded(flex: 1, child: Container())
+                    ])),
+              ],
             ),
-            SizedBox(
+
+            const SizedBox(
               height: 10,
             ),
 
@@ -252,277 +281,238 @@ class _InputRegisterState extends State<InputRegister> {
                 Expanded(
                   flex: 2,
                   child: Container(
-                        padding: const EdgeInsets.all(7),
-                        margin: const EdgeInsets.all(5.0),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.withOpacity(0.3),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(8)),
-                        ),
-                        child: Center(
-                          child: const Text(
-                            '출고번호',
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
+                    padding: const EdgeInsets.all(7),
+                    margin: const EdgeInsets.all(5.0),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.withOpacity(0.3),
+                      borderRadius: const BorderRadius.all(Radius.circular(8)),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        '거래처',
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
                       ),
+                    ),
+                  ),
                 ),
                 Expanded(
-                  flex: 7,
-                  child: Row(
-                    children: [
+                    flex: 7,
+                    child: Row(children: [
                       Expanded(
                         flex: 5,
                         child: Text(
-                      '출고번호',
-                       style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.center,
+                          _controller.getTrNm(),
+                          style: const TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
                         ),
                       ),
-                      Expanded(
-                        flex: 1,
-                        child: Container()
-                      )
-                    ]
-                  )
-                ),
-                
-
+                      Expanded(flex: 1, child: Container())
+                    ])),
               ],
             ),
-
-            SizedBox(
-              height: 10,
-            ),
-
-            Row(
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: Container(
-                        padding: const EdgeInsets.all(7),
-                        margin: const EdgeInsets.all(5.0),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.withOpacity(0.3),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(8)),
-                        ),
-                        child: Center(
-                          child: const Text(
-                            '거래처',
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                ),
-                Expanded(
-                  flex: 7,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 5,
-                        child: Text(
-                      '화신',
-                       style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.center,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Container()
-                      )
-                    ]
-                  )
-                ),
-
-              ],
-            ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Padding(
               padding: const EdgeInsets.all(7.0),
               child: Container(
                 height: 1,
-                color:  Colors.grey.shade800,
+                color: Colors.grey.shade800,
               ),
             ),
-            
 
             Expanded(
               flex: 2,
               child: Container(
-                    padding: const EdgeInsets.all(7),
-                    decoration: BoxDecoration(
-                      //color: Colors.white,
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(15),
-                      ),
-                      
-                    ),
-                    child: ListView.builder(
-                        itemCount: 5,
-                        itemBuilder: (context, index) {
-                          //final selectedItem = _controller.outputlist[index];
-                          return GestureDetector(
-                            onTap: () {
-                              // Get.to(() => OutputStatusDetail(
-                              //     detailNumber: selectedItem["ISU_NB"],));
-                            },
-                            child: Container(
-                              margin: const EdgeInsets.all(3),
-                              height: 100, // 아이템 높이 지정
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(15),
-                                ),
-                                border: Border.all(
-                                  color: Colors.black.withOpacity(0.5),
-                                ),
-                              ),
-                              child: Container(
-                                child: Column(
-                                  children: [
-                                    Expanded(
-                                      flex: 1,
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            flex: 1,
-                                            child: Container(
-                                              alignment: Alignment.center,
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey.withOpacity(0.3),
-                                                borderRadius: const BorderRadius.only(topLeft: Radius.circular(15))
-                                              ),
-                                              child: Center(
-                                                child: Text(
-                                                  '품번',
-                                                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            flex: 2,
-                                            child: Container(
-                                              //color: Colors.grey.withOpacity(0.3),
-                                              child: Center(
-                                                child: Text(
-                                                  'ITEM_CD',
-                                                  style: const TextStyle(fontSize: 14),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            flex: 1,
-                                            child: Container(
-                                              color: Colors.grey.withOpacity(0.3),
-                                              child: Center(
-                                                child: Text(
-                                                  '품명',
-                                                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            flex: 2,
-                                            child: Container(
-                                              //color: Colors.grey.withOpacity(0.3),
-                                              child: Center(
-                                                child: Text(
-                                                  'ITEM_NM',
-                                                  style: const TextStyle(fontSize: 14),
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    
-                                    Expanded(
-                                      flex: 1,
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            flex: 1,
-                                            child: Container(
-                                              alignment: Alignment.center,
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey.withOpacity(0.3),
-                                                borderRadius: const BorderRadius.only(topLeft: Radius.circular(15))
-                                              ),
-                                              child: Center(
-                                                child: Text(
-                                                  '단위',
-                                                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            flex: 2,
-                                            child: Container(
-                                              //color: Colors.grey.withOpacity(0.3),
-                                              child: Center(
-                                                child: Text(
-                                                  'UNIT_DC',
-                                                  style: const TextStyle(fontSize: 14),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            flex: 1,
-                                            child: Container(
-                                              color: Colors.grey.withOpacity(0.3),
-                                              child: Center(
-                                                child: Text(
-                                                  '입고수량',
-                                                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            flex: 2,
-                                            child: Container(
-                                              //color: Colors.grey.withOpacity(0.3),
-                                              child: Center(
-                                                child: Text(
-                                                  'ISU_QT',
-                                                  style: const TextStyle(fontSize: 14),
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      
-                    ),
+                padding: const EdgeInsets.all(7),
+                decoration: const BoxDecoration(
+                  //color: Colors.white,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(15),
                   ),
+                ),
+                child: Obx(
+                  () => ListView.builder(
+                    itemCount: _controller.model.rsData.length,
+                    itemBuilder: (context, index) {
+                      //final selectedItem = _controller.outputlist[index];
+                      return GestureDetector(
+                        onTap: () {
+                          // Get.to(() => OutputStatusDetail(
+                          //     detailNumber: selectedItem["ISU_NB"],));
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.all(3),
+                          height: 100, // 아이템 높이 지정
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(15),
+                            ),
+                            border: Border.all(
+                              color: Colors.black.withOpacity(0.5),
+                            ),
+                          ),
+                          child: Container(
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 1,
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                              color: Colors.grey
+                                                  .withOpacity(0.3),
+                                              borderRadius:
+                                                  const BorderRadius.only(
+                                                      topLeft:
+                                                          Radius.circular(15))),
+                                          child: const Center(
+                                            child: Text(
+                                              '품번',
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 5,
+                                        child: Container(
+                                          //color: Colors.grey.withOpacity(0.3),
+                                          child: Center(
+                                            child: Text(
+                                              '${_controller.model.rsData[index]["ITEM_CD"]}',
+                                              style:
+                                                  const TextStyle(fontSize: 14),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                    flex: 1,
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          flex: 1,
+                                          child: Container(
+                                            color: Colors.grey.withOpacity(0.3),
+                                            child: const Center(
+                                              child: Text(
+                                                '품명',
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 5,
+                                          child: Container(
+                                            //color: Colors.grey.withOpacity(0.3),
+                                            child: Center(
+                                              child: Text(
+                                                '${_controller.model.rsData[index]["ITEM_NM"]}',
+                                                style: const TextStyle(
+                                                    fontSize: 14),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    )),
+                                Expanded(
+                                  flex: 1,
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 1,
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                              color: Colors.grey
+                                                  .withOpacity(0.3),
+                                              borderRadius:
+                                                  const BorderRadius.only(
+                                                      bottomLeft:
+                                                          Radius.circular(15))),
+                                          child: const Center(
+                                            child: Text(
+                                              '단위',
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 2,
+                                        child: Container(
+                                          //color: Colors.grey.withOpacity(0.3),
+                                          child: Center(
+                                            child: Text(
+                                              '${_controller.model.rsData[index]["UNIT_DC"]}',
+                                              style:
+                                                  const TextStyle(fontSize: 14),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 1,
+                                        child: Container(
+                                          color: Colors.grey.withOpacity(0.3),
+                                          child: const Center(
+                                            child: Text(
+                                              '입고수량',
+                                              style: TextStyle(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 2,
+                                        child: Container(
+                                          //color: Colors.grey.withOpacity(0.3),
+                                          child: Center(
+                                            child: Text(
+                                              '${_controller.model.rsData[index]["ISU_QT"]}',
+                                              style:
+                                                  const TextStyle(fontSize: 14),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
             ),
-
-            
-            
           ],
         ),
         bottomNavigationBar: const BottomAppBar(

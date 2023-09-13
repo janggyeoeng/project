@@ -83,25 +83,25 @@ class ScmCheckModel {
     if (dzRes) {
       detailDataString = await SqlConn.readData(
           "SP_MOBILE_SCM_CHKECK_R '1001', '${scanData[0]}'");
-      //print('asdsadasdasd : ${detailDataString.replaceAll('tsst', 'replace')}');
-      List<dynamic> decodedData = jsonDecode(detailDataString);
+      String checkData = detailDataString.replaceAll('tsst', ' ');
+      List<dynamic> decodedData = jsonDecode(checkData);
       selectData = List<Map<String, dynamic>>.from(decodedData);
+      detailData.value = selectData;
+      // List<Map<String, dynamic>> modifiedData = decodedData.map((item) {
+      //   Map<String, dynamic> modifiedItem = {};
+      //   item.forEach((key, value) {
+      //     if (value is String) {
+      //       modifiedItem[key] = value.replaceAll('tsst', '');
+      //     } else {
+      //       modifiedItem[key] = value;
+      //     }
+      //   });
+      //   return modifiedItem;
+      // }).toList();
 
-      List<Map<String, dynamic>> modifiedData = decodedData.map((item) {
-        Map<String, dynamic> modifiedItem = {};
-        item.forEach((key, value) {
-          if (value is String) {
-            modifiedItem[key] = value.replaceAll('tsst', '');
-          } else {
-            modifiedItem[key] = value;
-          }
-        });
-        return modifiedItem;
-      }).toList();
+      // detailData.value = modifiedData;
 
-      detailData.value = modifiedData;
       await setTitleData(detailData[0]);
-      print('psu_nb : $psuNb');
     }
   }
 
