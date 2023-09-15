@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hnde_pda/src/output/output_controller/output_status_detail_controller.dart';
+import 'package:hnde_pda/src/output/output_status_detail/output_status_detail_controller.dart';
 
 class OutputStatusDetail extends StatefulWidget {
   String detailNumber;
@@ -21,7 +21,7 @@ class _OutputStatusDetailState extends State<OutputStatusDetail> {
   void initState() {
     super.initState();
     _controller = Get.put(OpDetailController());
-    _controller.OutputStDetailData(widget.detailNumber);
+    _controller.outputStDetailData(widget.detailNumber);
   }
 
   @override
@@ -125,7 +125,7 @@ class _OutputStatusDetailState extends State<OutputStatusDetail> {
               ),
               Expanded(
                 child: Obx(() {
-                  final detailData = _controller.detailData.value;
+                  final detailData = _controller.model.detailData.value;
                   return ListView.builder(
                     shrinkWrap: true,
                     itemCount: detailData.length,

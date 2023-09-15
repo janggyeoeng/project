@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hnde_pda/src/output/output_controller/output_status_controller.dart';
+import 'package:hnde_pda/src/output/output_status/output_status_controller.dart';
 
-import 'package:hnde_pda/src/output/output_view/output_status_detail.dart';
+import 'package:hnde_pda/src/output/output_status_detail/output_status_detail.dart';
 
 class OutputStatus extends StatelessWidget {
   OutputStatus({
@@ -21,11 +21,11 @@ class OutputStatus extends StatelessWidget {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          elevation: 0.7,
           title: Text(
             '출고 현황',
-            style: GoogleFonts.lato(fontWeight: FontWeight.bold),
+            style: GoogleFonts.lato(fontSize: 25, fontWeight: FontWeight.bold),
           ),
+          centerTitle: true,
         ),
         body: Padding(
           padding: const EdgeInsets.all(7.0),
@@ -60,7 +60,7 @@ class OutputStatus extends StatelessWidget {
                     child: Column(
                       children: [
                         Obx(() => Text(
-                              "${_controller.dateck.selectedDateRange.start.toLocal().toString().split(' ')[0]} ~ ${_controller.dateck.selectedDateRange.end.toLocal().toString().split(' ')[0]}",
+                              "${_controller.model.selectedDateRange.start.toLocal().toString().split(' ')[0]} ~ ${_controller.model.selectedDateRange.end.toLocal().toString().split(' ')[0]}",
                               style: const TextStyle(fontSize: 17),
                               textAlign: TextAlign.center,
                             )),
@@ -71,7 +71,8 @@ class OutputStatus extends StatelessWidget {
                       flex: 1,
                       child: IconButton(
                           onPressed: () async {
-                            await _controller.dateck.selectDateRange(context);
+                            await _controller.selectDate(context);
+                            _controller.outputdata();
                           },
                           icon: const Icon(
                             Icons.calendar_month,
@@ -120,7 +121,7 @@ class OutputStatus extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.only(left: 5, right: 3),
                       child: TextField(
-                        controller: _controller.searchController,
+                        controller: _controller.getSearch(),
                         decoration:
                             const InputDecoration(hintText: ' 출고번호를 입력하세요.'),
                         onSubmitted: (value) {
@@ -165,14 +166,15 @@ class OutputStatus extends StatelessWidget {
                 child: Container(
                   child: Obx(
                     () => ListView.builder(
-                      itemCount: _controller.outputlist.length,
+                      itemCount: _controller.model.outputlist.length,
                       itemBuilder: (context, index) {
-                        final selectedItem = _controller.outputlist[index];
+                        final selectedItem =
+                            _controller.model.outputlist[index];
                         return GestureDetector(
                           onTap: () async {
                             await _controller.setInfo(index);
                             Get.to(() => OutputStatusDetail(
-                                  trNm: _controller.trNm,
+                                  trNm: _controller.model.trNm,
                                   detailNumber: selectedItem["ISU_NB"],
                                 ));
                           },

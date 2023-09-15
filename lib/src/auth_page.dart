@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hnde_pda/src/output/output_order/output_order.dart';
 import 'package:hnde_pda/src/scm_admin/return_item_register.dart';
 import 'package:hnde_pda/src/scm_admin/scmcheck.dart';
 import 'package:hnde_pda/src/home.dart';
 import 'package:hnde_pda/src/scm_admin/input_register.dart';
 import 'package:hnde_pda/src/scm_admin/input_delete.dart';
-import 'package:hnde_pda/src/output/output_view/output_register.dart';
-import 'package:hnde_pda/src/output/output_view/output_status.dart';
+import 'package:hnde_pda/src/output/output_regitser/output_register.dart';
+import 'package:hnde_pda/src/output/output_status/output_status.dart';
 
 class AuthPage extends StatelessWidget {
   const AuthPage({super.key});
@@ -98,10 +99,10 @@ class AuthPage extends StatelessWidget {
                 physics: const NeverScrollableScrollPhysics(), //스크롤 불가하도록 ㅎ마
                 children: [
                   gridRouter("SCM수입검사", Icons.pageview, () {
-                    Get.to(() => ScmCheck());
+                    Get.to(() => const ScmCheck());
                   }),
                   gridRouter("SCM입고등록", Icons.move_to_inbox, () {
-                    Get.to(() => InputRegister());
+                    Get.to(() => const InputRegister());
                   }),
                   gridRouter("SCM입고삭제", Icons.gpp_bad, () {
                     Get.to(() => InputDelete());
@@ -110,7 +111,7 @@ class AuthPage extends StatelessWidget {
                     Get.to(() => ReturnItemRegister());
                   }),
                   gridRouter("출고등록", Icons.open_in_browser_rounded, () {
-                    Get.to(() => OutputRegister());
+                    Get.to(() => OutPutOrder());
                   }),
                   gridRouter("출고현황", Icons.reorder, () {
                     Get.to(() => OutputStatus());
