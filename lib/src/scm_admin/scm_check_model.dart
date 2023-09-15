@@ -75,7 +75,7 @@ class ScmCheckModel {
     List<String> scanData = [];
     scanData = barcode.split('/');
     String detailDataString = '';
-    //print(scanData);
+    print('scanData : ${scanData}');
 
     var dzRes = await SqlConn.writeData("exec SP_DZIF_PO_C '1001'");
     print('바코드 : $barcode');
