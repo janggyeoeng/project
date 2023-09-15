@@ -122,9 +122,9 @@ class _ScmCheckState extends State<ScmCheck> {
                             print('saas $value');
                           },
                           onChanged: (value) async {
-                             print('??? : $value');
-                             await _controller.scanBarcode(value);
-                            print('ttttttttt : ${_controller.model.psuNb}');
+
+                           //print(txtCon.text);
+                            await _controller.scanBarcode(value);
 
                             txtCon.text = '';
                             txtCon.clear();
@@ -495,7 +495,7 @@ class _ScmCheckState extends State<ScmCheck> {
                                           //color: Colors.grey.withOpacity(0.3),
                                           child: Center(
                                             child: Text(
-                                              '${_controller.model.detailData[index]["PSU_QT"]}',
+                                              '${_controller.model.selectData[index]["PSU_QT"]}',
                                               style:
                                                   const TextStyle(fontSize: 14),
                                             ),
