@@ -24,6 +24,8 @@ class _ScmCheckState extends State<ScmCheck> {
 
 // });
 
+   var testNodes = FocusNode();
+
   final ScmCheckController _controller = ScmCheckController();
 
   String testStd = '';
@@ -72,15 +74,32 @@ class _ScmCheckState extends State<ScmCheck> {
               height: 10,
             ),
             // RawKeyboardListener(
-            //   focusNode: _controller.getBarcodeNode(),
-            //   onKey: (e){
-            //       if(e.isKeyPressed(LogicalKeyboardKey.enter)){
-            //         print(txtCon.text);
-            //         txt
-            //         txtCon.clear();
+            //   focusNode: testNodes,
+            //   onKey: (e)async{
+            //     if(e.isKeyPressed(LogicalKeyboardKey.enter)){
+            //         print('testStd : ${testStd}'); //.replaceAll('Shift', '').replaceAll('Left', '').replaceAll(' ', '')
+            //         await _controller.scanBarcode(testStd.replaceAll('Shift', '').replaceAll('Left', '').replaceAll(' ', ''));
+            //         testStd = '';
+            //         setState(() {});
+            //     }else{
+            //       if(e.runtimeType.toString() == 'RawKeyDownEvent'){
+                  
+            //         String key = e.logicalKey.keyLabel;
+            //         if(key != null){
+            //           setState(() {
+            //            testStd += key;
+            //           });
+            //         }
+                  
             //       }
+            //     }
+                
+            //     // testStd += e.data.logicalKey.toString();
+            //     //   if(e.isKeyPressed(LogicalKeyboardKey.enter)){
+            //     //     print(testStd);
+            //     //   }
             //   },
-            Row(
+            Row( //child: 
               //child:
               children: [
                 Expanded(
@@ -103,7 +122,8 @@ class _ScmCheckState extends State<ScmCheck> {
                             print('saas $value');
                           },
                           onChanged: (value) async {
-                            //print(txtCon.text);
+
+                           //print(txtCon.text);
                             await _controller.scanBarcode(value);
 
                             txtCon.text = '';
@@ -205,8 +225,9 @@ class _ScmCheckState extends State<ScmCheck> {
                     //     FocusScope.of(context).unfocus();
                     //   },
                     // ),
-                    ),
+                    ), 
               ],
+            
             ),
             // ),
             const SizedBox(
