@@ -1,13 +1,14 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sql_conn/sql_conn.dart';
 
-class OpDetailController extends GetxController {
+class OutputStatusDetailModel {
   Rx<List<Map<String, dynamic>>> detailData =
       Rx<List<Map<String, dynamic>>>([]);
 
-  Future<void> OutputStDetailData(String detailNumber) async {
+  Future<void> outputStDetailData(String detailNumber) async {
     String detailDataString =
         await SqlConn.readData("SP_MOBILE_DELIVER_R4 '1001', '$detailNumber'");
     List<dynamic> decodedData = jsonDecode(detailDataString);
