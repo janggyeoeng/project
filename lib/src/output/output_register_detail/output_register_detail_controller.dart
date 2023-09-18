@@ -1,304 +1,100 @@
-import 'dart:convert';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:sql_conn/sql_conn.dart';
+import 'package:hnde_pda/src/output/output_register_detail/output_register_deatil_model.dart';
 
-class OpRegisterDetailController extends GetxController {
-  Rx<List<Map<String, dynamic>>> detailData =
-      Rx<List<Map<String, dynamic>>>([]);
-  Rx<List<Map<String, dynamic>>> outputEnd = Rx<List<Map<String, dynamic>>>([]);
-  Rx<List<Map<String, dynamic>>> deadLine = Rx<List<Map<String, dynamic>>>([]);
-  List<TextEditingController> outcontroller = [];
-  int? _selectedOutputend = 0;
-  int? _selectedDeadline = 0;
-  int? get selectedOutputend => _selectedOutputend;
-  int? get selectedDeadline => _selectedDeadline;
-  List<bool> setColor = [];
-  List<Map<String, dynamic>> combinedData = [];
-  String detailNumber = '';
+class OpRegisterDetailController {
+  OutPutRegisterDetailModel model = OutPutRegisterDetailModel();
 
   Widget detailcontainar(String text, TextStyle style, int index) {
-    return Container(
-      height: 50,
-      width: 85,
-      decoration: BoxDecoration(
-        color: selectColor(index),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(1),
-          ),
-        ],
-      ),
-      child: Center(
-        child: AutoSizeText(
-          text,
-          style: style,
-          textAlign: TextAlign.center,
-        ),
-      ),
-    );
+    return model.detailcontainar(text, style, index);
   }
 
   Widget containarwhite(
     String text,
     TextStyle style,
   ) {
-    return GestureDetector(
-      child: Container(
-        height: 50,
-        width: 85,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(1),
-            ),
-          ],
-        ),
-        child: Center(
-            child: AutoSizeText(
-          text,
-          style: style,
-          textAlign: TextAlign.center,
-        )),
-      ),
-    );
+    return model.containarwhite(text, style);
   }
 
 //page 로딩시
   Future<void> pageLoad(String detailNumber) async {
-    await outputStDetailData(detailNumber);
-    await setController();
-    await outputEndData();
-    await deadLineData();
+    return model.pageLoad(detailNumber);
   }
 
   Future<void> outputStDetailData(String detailNumber) async {
-    this.detailNumber = detailNumber;
-    String detailDataString = await SqlConn.readData(
-        "exec SP_MOBILE_DELIVER_R2 '1001', '$detailNumber'");
-
-    List<dynamic> decodedData = jsonDecode(detailDataString);
-
-    List<Map<String, dynamic>> modifiedData = decodedData.map((item) {
-      Map<String, dynamic> modifiedItem = {};
-      item.forEach((key, value) {
-        if (value is String) {
-          modifiedItem[key] = value.replaceAll('TSST_', '');
-        } else {
-          modifiedItem[key] = value;
-        }
-      });
-      return modifiedItem;
-    }).toList();
-
-    detailData.value = modifiedData;
-    print('map? : ${detailData.value}');
+    return model.outputStDetailData(detailNumber);
   }
 
   //출고수량 controller
   Future<void> setController() async {
-    for (int i = 0; i < detailData.value.length; i++) {
-      outcontroller.add(
-          TextEditingController()); //detailData만큼 TextEditingController를 add한다
-
-      outcontroller[i].text =
-          detailData.value[i]['ISU_QT'].replaceAll('TSST_', '').toString();
-      setColor.add(false);
-    }
+    return model.setController();
   }
 
   Future<void> selectItem(int index, bool selectSate) async {
-    setColor[index] = selectSate;
-    detailData.value[index]['CHK'] = selectSate;
+    return model.selectItem(index, selectSate);
   }
 
   Future<void> checkValue(BuildContext context, int index, String value) async {
-    if (int.parse(detailData.value[index]['SO_QT']) < int.parse(value)) {
-      //print('큰값들어왔다');
-      isuQtCheckDialog(context, '출고수량은 주문수량을 \n초과할 수 없습니다.');
-    } else {
-      await selectItem(index, true);
-    }
+    return model.checkValue(context, index, value);
   }
 
   Future<void> setSelectItem(int index, String value, String col) async {
-    detailData.value[index][col] = value;
-
-    print('변경됬나? : ${detailData.value[index]}');
+    return model.setSelectItem(index, value, col);
   }
 
   Future<void> saveClick(BuildContext context) async {
-    String lists = '';
-    for (int i = 0; i < detailData.value.length; i++) {
-      //print(this.detailData.value[i]['CHK']);
-      if (detailData.value[i]['CHK'] == true) {
-        lists +=
-            '$detailNumber${detailData.value[i]['SO_SQ'].toString().padLeft(4, '0')}|';
-        lists += detailData.value[i]['ISU_QT'] == null
-            ? ''
-            : detailData.value[i]['ISU_QT'] + '|';
-        lists += detailData.value[i]['LOT_NB'] == null
-            ? ''
-            : detailData.value[i]['LOT_NB'] + ',';
-      }
-    }
-    //print(lists.substring(0,lists.length-1));
-    // print(_selectedOutputend);
-    // print(_selectedDeadline);
-    await saveIsu(context, lists.substring(0, lists.length - 1));
+    return model.saveClick(context);
   }
 
   Future<void> saveIsu(BuildContext contexts, String str) async {
-    var res = await SqlConn.writeData(
-        "exec SP_MOBILE_DELIVER_C1 '1001', '$_selectedOutputend', '$_selectedDeadline', '$str'");
-
-    if (res) {
-      showDialog(
-          context: contexts,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              content: const Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text('저장이 완료되었습니다.'),
-                ],
-              ),
-              actions: [
-                TextButton(
-                    onPressed: () async {
-                      Navigator.pop(context);
-                      await saveEnd();
-                    },
-                    child: const Text('확인'))
-              ],
-            );
-          });
-    }
+    return model.saveIsu(contexts, str);
   }
 
   Future<void> saveEnd() async {
     // 화면 새로 그리지 말고 그냥 초기화 하고 setupdate 하자
-    setColor = [];
-    outcontroller = [];
-    await pageLoad(detailNumber);
-    update();
+    return model.saveEnd();
   }
 
   void isuQtCheckDialog(BuildContext context, String errorMessage) {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(errorMessage),
-              ],
-            ),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text('확인'))
-            ],
-          );
-        });
+    return model.isuQtCheckDialog(context, errorMessage);
   }
 
   //출고구분 controller code
   Future<void> outputEndData() async {
-    String detailDataString =
-        await SqlConn.readData("exec SP_MOBILE_DROPBOX 'SO_FG'");
-    List<dynamic> decodedData = jsonDecode(detailDataString);
-    List<Map<String, dynamic>> processedData =
-        List<Map<String, dynamic>>.from(decodedData);
-    outputEnd.value = processedData;
+    return model.outputEndData();
   }
 
   //마감 controller code
   Future<void> deadLineData() async {
-    String detailDataString =
-        await SqlConn.readData("exec SP_MOBILE_DROPBOX 'PROC_FG'");
-    List<dynamic> decodedData = jsonDecode(detailDataString);
-    List<Map<String, dynamic>> processedData =
-        List<Map<String, dynamic>>.from(decodedData);
-    deadLine.value = processedData;
+    return model.deadLineData();
   }
 
   //출고구분 선택된 값 가져오는 controller
   void setSelectedOutputend(int newValue) {
-    _selectedOutputend = newValue;
-    update();
+    return model.setSelectedOutputend(newValue);
   }
 
   //마감 선택된 값을 가져오는 controller
   void setSelectedDeadline(int newValue) {
-    _selectedDeadline = newValue;
-    update();
+    return model.setSelectedDeadline(newValue);
   }
 
   //컬러 값 컨트롤러
   Color selectColor(int index) {
-    if (setColor[index] == true) {
-      return Colors.blue.shade300;
-    }
-    return Colors.grey.shade300;
+    return model.selectColor(index);
   }
 
   Future<void> colorBool(int index) async {
-    if (setColor[index] == true) {
-      setColor[index] = false;
-      detailData.value[index]['CHK'] = false;
-    } else {
-      setColor[index] = true;
-      detailData.value[index]['CHK'] = true;
-    }
-
-    // print(this.detailData.value[index]['CHK']);
-
-    if (setColor[index] == true) {
-      Map<String, dynamic> selectedOutputend;
-      if (_selectedOutputend == 0) {
-        selectedOutputend = outputEnd.value[0];
-      } else {
-        selectedOutputend = outputEnd.value[1];
-      }
-
-      Map<String, dynamic> selectedDeadline;
-      if (_selectedDeadline == 0) {
-        selectedDeadline = deadLine.value[0];
-      } else {
-        selectedDeadline = deadLine.value[1];
-      }
-
-      await combineData(index, selectedOutputend, selectedDeadline);
-    }
+    return model.colorBool(index);
   }
 
   //출고등록 controller
   Future<void> combineData(int index, Map<String, dynamic> selectedOutputend,
       Map<String, dynamic> selectedDeadline) async {
-    combinedData.clear(); //데이터 초기화
-    Map<String, dynamic> combinedItem = {};
+    return model.combineData(index, selectedOutputend, selectedDeadline);
+  }
 
-    print('1 : $selectedOutputend');
-    print('2 : $selectedDeadline');
-    print('3 : ${detailData.value[index]}');
-
-    combinedItem.addAll(selectedOutputend);
-    combinedItem.addAll(selectedDeadline);
-    combinedItem.addAll(detailData.value[index]);
-
-    combinedData.add(combinedItem);
-
-    print('여기 : $combinedData');
+  List<TextEditingController> getSearch() {
+    return model.outcontroller;
   }
 }
 

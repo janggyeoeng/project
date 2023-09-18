@@ -111,7 +111,7 @@ class AuthPage extends StatelessWidget {
                     Get.to(() => ReturnItemRegister());
                   }),
                   gridRouter("출고등록", Icons.open_in_browser_rounded, () {
-                    Get.to(() => OutPutOrder());
+                    Get.to(() => OutputRegister());
                   }),
                   gridRouter("출고현황", Icons.reorder, () {
                     Get.to(() => OutputStatus());
