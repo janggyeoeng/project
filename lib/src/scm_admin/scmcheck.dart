@@ -186,29 +186,29 @@ class _ScmCheckState extends State<ScmCheck> {
                               ),
                             ]),
                           ),
-                          // Expanded(
-                          //     flex: 1,
-                          //     child: GestureDetector(
-                          //       child: SizedBox(
-                          //         width: 20,
-                          //         height: 20,
-                          //         //color: Colors.green,
-                          //         child: Icon(Icons.keyboard,
-                          //             color: _controller
-                          //                 .setKeyboardColor() //Colors.blue,
-                          //             ),
-                          //       ),
-                          //       onTap: () async {
-                          //         print('클릭');
+                          Expanded(
+                              flex: 1,
+                              child: GestureDetector(
+                                child: SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  //color: Colors.green,
+                                  child: Icon(Icons.keyboard,
+                                      color: _controller
+                                          .setKeyboardColor() //Colors.blue,
+                                      ),
+                                ),
+                                onTap: () async {
+                                  print('클릭');
 
-                          //         await _controller.setKeyboardClick(true);
-                          //         outTap = true;
-                          //         FocusScope.of(context)
-                          //             .requestFocus(_controller.getTextNode());
+                                  await _controller.setKeyboardClick(true);
+                                  outTap = true;
+                                  FocusScope.of(context)
+                                      .requestFocus(_controller.getTextNode());
 
-                          //         setState(() {});
-                          //       },
-                          //     ))
+                                  setState(() {});
+                                },
+                              ))
                         ],
                       ),
                     )
