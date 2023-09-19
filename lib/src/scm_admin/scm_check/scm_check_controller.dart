@@ -1,4 +1,4 @@
-import 'package:hnde_pda/src/scm_admin/scm_check_model.dart';
+import 'package:hnde_pda/src/scm_admin/scm_check/scm_check_model.dart';
 import 'package:flutter/material.dart';
 
 class ScmCheckController {

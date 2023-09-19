@@ -3,19 +3,18 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ScmCheck extends StatefulWidget {
-  ScmCheck({Key? key}) : super(key: key);
+  const ScmCheck({Key? key}) : super(key: key);
 
   @override
   State<ScmCheck> createState() => _ScmCheckState();
 }
 
 class _ScmCheckState extends State<ScmCheck> {
-  
 //   var focusNode = FocusNode(onKey: (node, event) {
 //     if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
 //         // Do something
 //         // Next 2 line needed If you don't want to update the text field with new line.
-//         // node.unfocus(); 
+//         // node.unfocus();
 //         // return true;
 //     }
 //     return false;
@@ -24,16 +23,12 @@ class _ScmCheckState extends State<ScmCheck> {
 
   var focusNodes = FocusNode();
 
-
-
   @override
   Widget build(BuildContext context) {
-
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
       },
-      
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -46,7 +41,7 @@ class _ScmCheckState extends State<ScmCheck> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Row(
@@ -73,16 +68,15 @@ class _ScmCheckState extends State<ScmCheck> {
                     flex: 7,
                     child: RawKeyboardListener(
                       focusNode: focusNodes,
-                      onKey: (e){
-                        if(e.isKeyPressed(LogicalKeyboardKey.enter)){
+                      onKey: (e) {
+                        if (e.isKeyPressed(LogicalKeyboardKey.enter)) {
                           print('enter');
                         }
                       },
-                      child: Text(
-                        'fkfkfk'
-                        //autofocus: true,
-                        //decoration: InputDecoration(hintText: '바코드를 입력하세요'),
-                      ),
+                      child: const Text('fkfkfk'
+                          //autofocus: true,
+                          //decoration: InputDecoration(hintText: '바코드를 입력하세요'),
+                          ),
                     ),
                   ),
                 ],
@@ -109,12 +103,13 @@ class _ScmCheckState extends State<ScmCheck> {
                     return Column(
                       children: [
                         Container(
-                          margin: EdgeInsets.all(3),
+                          margin: const EdgeInsets.all(3),
                           height: 100,
                           width: double.infinity,
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(15)),
                             border: Border.all(
                                 color: Colors.black.withOpacity(0.5)),
                           ),

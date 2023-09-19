@@ -95,8 +95,7 @@ class OutPutRegisterDetailModel {
       outcontroller.add(
           TextEditingController()); //detailData만큼 TextEditingController를 add한다
 
-      outcontroller[i].text =
-          detailData.value[i]['ISU_QT'].replaceAll('TSST_', '').toString();
+      outcontroller[i].text = detailData.value[i]['ISU_QT'];
       setColor.add(false);
     }
   }
@@ -145,6 +144,7 @@ class OutPutRegisterDetailModel {
   }
 
   Future<void> saveIsu(BuildContext contexts, String str) async {
+    print('parameter? : $str, $_selectedOutputend, $_selectedDeadline');
     var res = await SqlConn.writeData(
         "exec SP_MOBILE_DELIVER_C1 '1001', '$_selectedOutputend', '$_selectedDeadline', '$str'");
 

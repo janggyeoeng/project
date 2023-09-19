@@ -30,7 +30,7 @@ class OutputRegister extends StatelessWidget {
           elevation: 0.7,
           title: Text(
             '출고 등록',
-            style: GoogleFonts.lato(fontWeight: FontWeight.bold),
+            style: GoogleFonts.lato(fontWeight: FontWeight.bold, fontSize: 25),
           ),
           centerTitle: true,
         ),
