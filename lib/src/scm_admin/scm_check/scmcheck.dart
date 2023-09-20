@@ -1,9 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hnde_pda/src/scm_admin/scm_check/scm_check_controller.dart';
 import 'package:get/get.dart';
+
 import 'package:hnde_pda/src/scm_admin/scm_check_detail/scm_check_detail.dart';
 
 class ScmCheck extends StatefulWidget {
@@ -25,8 +27,6 @@ class _ScmCheckState extends State<ScmCheck> {
 
 // });
 
-  var testNodes = FocusNode();
-
   final ScmCheckController _controller = ScmCheckController();
   String detailNumber = '';
   String testStd = '';
@@ -44,6 +44,7 @@ class _ScmCheckState extends State<ScmCheck> {
   void initState() {
     //setInputType(false);
     //print('asasas ${txtCon.value}');
+    print('4444');
     _controller.pageLoad();
     _controller.textFocusListner(context, pageUpdate);
     _controller.barcodeFocusListner(context);
@@ -343,7 +344,9 @@ class _ScmCheckState extends State<ScmCheck> {
                     itemBuilder: (context, index) {
                       //final selectedItem = _controller.outputlist[index];
                       return GestureDetector(
-                        onTap: () {
+                        onTap: () async {
+                          await _controller.setKeyboardClick(true);
+                          FocusScope.of(context).offset;
                           Get.to(() => ScmCheckDetail(
                               detailNumber: _controller.model.detailData[index]
                                   ["PSU_NB"],

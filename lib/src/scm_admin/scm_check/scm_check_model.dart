@@ -51,6 +51,7 @@ class ScmCheckModel {
       print(textFocusNodes.hasFocus);
       if (textFocusNodes.hasFocus == false) {
         keyboardClick = false;
+
         FocusScope.of(context).requestFocus(barcodeFocusNodes);
         state;
       }
@@ -75,18 +76,20 @@ class ScmCheckModel {
     List<String> scanData = [];
     scanData = barcode.split('/');
     String detailDataString = '';
-    print('scanData : ${scanData}');
+    print('scanData : $scanData');
 
     var dzRes = await SqlConn.writeData("exec SP_DZIF_PO_C '1001'");
-    print('바코드 : $barcode');
+    print('바코드 :$barcode');
     //print('더존 결과 : ${dzRes}');
     if (dzRes) {
       detailDataString = await SqlConn.readData(
           "SP_MOBILE_SCM_CHKECK_R '1001', '${scanData[0]}'");
-      String checkData = detailDataString.replaceAll('tsst', ' ');
+      String checkData = detailDataString.replaceAll('tsst', '');
       List<dynamic> decodedData = jsonDecode(checkData);
       selectData = List<Map<String, dynamic>>.from(decodedData);
       detailData.value = selectData;
+      print(selectData);
+
       // List<Map<String, dynamic>> modifiedData = decodedData.map((item) {
       //   Map<String, dynamic> modifiedItem = {};
       //   item.forEach((key, value) {

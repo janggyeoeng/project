@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hnde_pda/src/scm_admin/scm_check_detail/scm_check_detail_controller.dart';
 
 class ScmCheckDetail extends StatefulWidget {
-  String detailNumber = '';
+  String detailNumber;
   String trNm = '';
   ScmCheckDetail({super.key, required this.detailNumber, required this.trNm});
 
@@ -16,20 +16,28 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
   final ScmCheckDetailController _controller = ScmCheckDetailController();
 
   TextEditingController txtCon = TextEditingController();
-  TextEditingController txtCon2 = TextEditingController();
+
   bool outTap = false;
+
+  void pageUpdate() {
+    setState(() {});
+  }
 
   @override
   void initState() {
-    _controller.getTextNode().addListener(() {
-      if (_controller.getTextNode().hasFocus == false) {
-        FocusScope.of(context).requestFocus(_controller.getBarcodeNode());
-      }
-    });
-    _controller.boxData();
+    _controller.boxData(widget.detailNumber);
+
     super.initState();
+    _controller.textFocusListner(context, pageUpdate);
+    _controller.barcodeFocusListner(context);
+    // _controller.getTextNode().addListener(() {
+    //   if (_controller.getTextNode().hasFocus == false) {
+    //     FocusScope.of(context).requestFocus(_controller.getBarcodeNode());
+    //   }
+    // });
   }
 
+  FocusNode aafocus = FocusNode();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,12 +61,12 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
                         child: Container(
                           //width: 50,
                           child: TextField(
-                            focusNode: _controller.getBarcodeNode(),
+                            focusNode: _controller.getBcNode(),
                             controller: txtCon,
                             autofocus: true,
                             cursorColor: Colors.transparent,
                             cursorWidth: 0,
-                            keyboardType: TextInputType.text,
+                            keyboardType: TextInputType.none,
                             decoration: const InputDecoration(
                                 //border: InputBorder.none
                                 ),
@@ -104,23 +112,24 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
                               flex: 5,
                               child: Stack(children: [
                                 TextFormField(
-                                  controller: txtCon2,
-                                  // focusNode: _controller.getTextNode(),
+                                  //controller: _controller.gettxtCon(),
+                                  //focusNode: _controller.getTextNode(),
                                   cursorColor: Colors.transparent,
-                                  cursorWidth: 0,
+                                  cursorWidth: 1,
                                   decoration: const InputDecoration(
                                       border: InputBorder.none),
                                   onFieldSubmitted: (value) async {
                                     print(value);
                                     //await _controller.scanBarcode(value);
+                                    _controller.check();
                                     outTap = false;
                                     _controller.setFocus(context);
                                     setState(() {});
                                   },
                                 ),
                                 TextFormField(
-                                  //controller: txtCon2,
-                                  focusNode: _controller.getTextNode(),
+                                  controller: _controller.gettxtCon(),
+                                  focusNode: _controller.getTxtNode(),
                                   // readOnly: true,
                                   // cursorColor: Colors.transparent,
                                   // cursorWidth: 0,
@@ -129,6 +138,12 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
                                       focusedBorder: UnderlineInputBorder(
                                           borderSide:
                                               BorderSide(color: Colors.grey))),
+                                  onFieldSubmitted: (value) {
+                                    _controller.check();
+                                    outTap = false;
+                                    _controller.setFocus(context);
+                                    setState(() {});
+                                  },
                                 ),
                               ]),
                             ),
@@ -148,10 +163,10 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
                                   onTap: () async {
                                     print('클릭');
 
-                                    // await _controller.setKeyboardClick(true);
+                                    await _controller.setKeyboardClick(true);
                                     outTap = true;
-                                    FocusScope.of(context).requestFocus(
-                                        _controller.getTextNode());
+                                    FocusScope.of(context)
+                                        .requestFocus(_controller.getTxtNode());
 
                                     setState(() {});
                                   },
@@ -274,7 +289,7 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
                                       GoogleFonts.lato(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 15),
-                                      Colors.grey.shade300,
+                                      _controller.getColor(index),
                                     ),
                                   ),
                                   Expanded(
@@ -298,7 +313,7 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
                                       GoogleFonts.lato(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 15),
-                                      Colors.grey.shade300,
+                                      _controller.getColor(index),
                                     ),
                                   ),
                                   Expanded(
@@ -318,7 +333,7 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
                                       GoogleFonts.lato(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 15),
-                                      Colors.grey.shade300,
+                                      _controller.getColor(index),
                                     ),
                                   ),
                                   Expanded(

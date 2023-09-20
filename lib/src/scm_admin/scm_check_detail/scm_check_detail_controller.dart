@@ -4,14 +4,12 @@ import 'package:hnde_pda/src/scm_admin/scm_check_detail/scm_check_detail_model.d
 class ScmCheckDetailController {
   ScmCheckDetailModel model = ScmCheckDetailModel();
 
-  Future<void> boxData() async {
-    return model.boxData();
+  Future<void> boxData(String detailNumber) async {
+    return model.boxData(detailNumber);
   }
 
-  dynamic textFocusListner(BuildContext context) {
-    return model.textFocusListner(
-      context,
-    );
+  dynamic textFocusListner(BuildContext context, void Function()? state) {
+    return model.textFocusListner(context, state);
   }
 
   dynamic barcodeFocusListner(BuildContext context) {
@@ -22,15 +20,32 @@ class ScmCheckDetailController {
     return model.setFocus(context);
   }
 
-  FocusNode getTextNode() {
-    return model.textFocusNodes;
+  Future<void> setKeyboardClick(bool bo) async {
+    return model.setKeyboardClick(bo);
+    //print('불값 : ${this.keyboardClick}');
   }
 
-  FocusNode getBarcodeNode() {
-    return model.barcodeFocusNodes;
+  Future<void> check() async {
+    return model.check();
+  }
+
+  TextEditingController gettxtCon() {
+    return model.gettxtCon();
+  }
+
+  FocusNode getTxtNode() {
+    return model.getTxtNode();
+  }
+
+  FocusNode getBcNode() {
+    return model.getBcNode();
   }
 
   Widget detailcontainar(String text, TextStyle style, Color color) {
     return model.detailcontainar(text, style, color);
+  }
+
+  Color getColor(int index) {
+    return model.getColor(index);
   }
 }
