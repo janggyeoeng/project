@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hnde_pda/src/output/output_order/output_order.dart';
 import 'package:hnde_pda/src/scm_admin/return_item_register.dart';
-import 'package:hnde_pda/src/scm_admin/scmcheck.dart';
+import 'package:hnde_pda/src/scm_admin/scm_check/scmcheck.dart';
 import 'package:hnde_pda/src/home.dart';
 import 'package:hnde_pda/src/scm_admin/input_register.dart';
 import 'package:hnde_pda/src/scm_admin/input_delete.dart';
@@ -111,7 +111,7 @@ class AuthPage extends StatelessWidget {
                     Get.to(() => ReturnItemRegister());
                   }),
                   gridRouter("출고등록", Icons.open_in_browser_rounded, () {
-                    Get.to(() => OutPutOrder());
+                    Get.to(() => OutputRegister());
                   }),
                   gridRouter("출고현황", Icons.reorder, () {
                     Get.to(() => OutputStatus());

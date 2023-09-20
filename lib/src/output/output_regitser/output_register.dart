@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -29,7 +30,7 @@ class OutputRegister extends StatelessWidget {
           elevation: 0.7,
           title: Text(
             '출고 등록',
-            style: GoogleFonts.lato(fontWeight: FontWeight.bold),
+            style: GoogleFonts.lato(fontWeight: FontWeight.bold, fontSize: 25),
           ),
           centerTitle: true,
         ),
@@ -44,15 +45,17 @@ class OutputRegister extends StatelessWidget {
                   Expanded(
                     flex: 2,
                     child: Container(
-                      padding: const EdgeInsets.all(4),
+                      padding: const EdgeInsets.only(
+                          left: 4, bottom: 7, right: 4, top: 7),
                       margin: const EdgeInsets.all(5.0),
                       decoration: BoxDecoration(
                         color: Colors.grey.withOpacity(0.3),
                         borderRadius:
                             const BorderRadius.all(Radius.circular(8)),
                       ),
-                      child: const Text(
-                        '주문일자',
+                      child: const AutoSizeText(
+                        maxLines: 1,
+                        '출고지시일자',
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
@@ -67,7 +70,7 @@ class OutputRegister extends StatelessWidget {
                     child: Column(
                       children: [
                         Obx(() => Text(
-                              "${_controller.datechk.selectedDateRange.start.toLocal().toString().split(' ')[0]} ~ ${_controller.datechk.selectedDateRange.end.toLocal().toString().split(' ')[0]}",
+                              "${_controller.model.datechk.selectedDateRange.start.toLocal().toString().split(' ')[0]} ~ ${_controller.model.datechk.selectedDateRange.end.toLocal().toString().split(' ')[0]}",
                               style: const TextStyle(fontSize: 17),
                               textAlign: TextAlign.center,
                               //overflow: TextOverflow.ellipsis,
@@ -79,7 +82,7 @@ class OutputRegister extends StatelessWidget {
                       flex: 1,
                       child: IconButton(
                           onPressed: () async {
-                            await _controller.datechk.selectDateRange(
+                            await _controller.model.datechk.selectDateRange(
                                 context); // Call selectDateRange
                             _controller.outputregisterdata();
                           },
@@ -94,15 +97,17 @@ class OutputRegister extends StatelessWidget {
                   Expanded(
                     flex: 2,
                     child: Container(
-                        padding: const EdgeInsets.all(4),
+                        padding: const EdgeInsets.only(
+                            left: 4, bottom: 7, right: 4, top: 7),
                         margin: const EdgeInsets.all(5.0),
                         decoration: BoxDecoration(
                           color: Colors.grey.withOpacity(0.3),
                           borderRadius:
                               const BorderRadius.all(Radius.circular(8)),
                         ),
-                        child: const Text(
-                          '주문번호',
+                        child: const AutoSizeText(
+                          maxLines: 1,
+                          '출고지시번호',
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
@@ -114,9 +119,12 @@ class OutputRegister extends StatelessWidget {
                       padding: const EdgeInsets.all(4),
                       margin: const EdgeInsets.only(left: 5, right: 25),
                       child: TextField(
-                        controller: _controller.searchController,
+                        controller: _controller.model.searchController,
                         decoration:
                             const InputDecoration(hintText: '주문번호를 입력하세요.'),
+                        onSubmitted: (value) {
+                          _controller.outputregisterdata();
+                        },
                       ),
                     ),
                   ),
@@ -147,7 +155,7 @@ class OutputRegister extends StatelessWidget {
                       padding: const EdgeInsets.all(4),
                       margin: const EdgeInsets.only(left: 5, right: 5),
                       child: TextField(
-                        controller: _controller.customerController,
+                        controller: _controller.model.customerController,
                         decoration:
                             const InputDecoration(hintText: ' 거래처를 입력하세요.'),
                       ),
@@ -179,8 +187,8 @@ class OutputRegister extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        _controller.container('주문번호'),
-                        _controller.container('주문일자'),
+                        _controller.container('출고지시번호'),
+                        _controller.container('출고지시일자'),
                         _controller.container('거래처'),
                       ],
                     ),
@@ -190,15 +198,15 @@ class OutputRegister extends StatelessWidget {
                     Expanded(
                       child: Obx(
                         () => ListView.builder(
-                          itemCount: _controller.outputregisterlist.length,
+                          itemCount:
+                              _controller.model.outputregisterlist.length,
                           itemBuilder: (context, index) {
                             final selectedItem =
-                                _controller.outputregisterlist[index];
+                                _controller.model.outputregisterlist[index];
                             return GestureDetector(
                               onTap: () {
-                                print(selectedItem["SO_NB"]);
                                 Get.to(() => OutputRegisterDetail(
-                                    detailNumber: selectedItem["SO_NB"]));
+                                    detailNumber: selectedItem["ISUREQ_NB"]));
                               },
                               child: SizedBox(
                                 height: 40,
@@ -210,15 +218,11 @@ class OutputRegister extends StatelessWidget {
                                           MainAxisAlignment.center,
                                       children: [
                                         _controller.expanded(
-                                            '${selectedItem["SO_NB"]}'),
+                                            '${selectedItem["ISUREQ_NB"]}'),
                                         _controller.expanded(
-                                          '${selectedItem["SO_DT"]}'
-                                              .replaceAll('TSST_', ''),
-                                        ),
+                                            '${selectedItem["ISUREQ_DT"]}'),
                                         _controller.expanded(
-                                          '${selectedItem["TR_NM"]}'
-                                              .replaceAll('TSST_', ''),
-                                        ),
+                                            '${selectedItem["TR_NM"]}'),
                                       ],
                                     ),
                                   ],

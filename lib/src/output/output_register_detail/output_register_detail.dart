@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -46,15 +47,17 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
                 Expanded(
                   flex: 2,
                   child: Container(
-                      padding: const EdgeInsets.all(4),
+                      padding: const EdgeInsets.only(
+                          left: 4, bottom: 7, right: 4, top: 7),
                       margin: const EdgeInsets.all(5.0),
                       decoration: BoxDecoration(
                         color: Colors.grey.withOpacity(0.3),
                         borderRadius:
                             const BorderRadius.all(Radius.circular(8)),
                       ),
-                      child: const Text(
-                        '주문번호',
+                      child: const AutoSizeText(
+                        maxLines: 1,
+                        '출고지시번호',
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
@@ -95,9 +98,9 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
                   flex: 7,
                   child: Obx(() {
                     return DropdownButton(
-                      value: _controller
+                      value: _controller.model
                           .selectedOutputend, // Use the value from the controller
-                      items: _controller.outputEnd.value.map(
+                      items: _controller.model.outputEnd.value.map(
                         (outputEnd) {
                           return DropdownMenuItem(
                             value: outputEnd['CODE'] as int,
@@ -152,8 +155,8 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
                   flex: 7,
                   child: Obx(() {
                     return DropdownButton(
-                      value: _controller.selectedDeadline,
-                      items: _controller.deadLine.value.map(
+                      value: _controller.model.selectedDeadline,
+                      items: _controller.model.deadLine.value.map(
                         (deadLine) {
                           return DropdownMenuItem(
                             value: deadLine['CODE'] as int,
@@ -198,7 +201,7 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
               child: SizedBox(
                 width: 390,
                 child: Obx(() {
-                  final detailData = _controller.detailData.value;
+                  final detailData = _controller.model.detailData.value;
                   return ListView.builder(
                     itemCount: detailData.length,
                     itemBuilder: (context, index) {
@@ -277,7 +280,7 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
                                             //     240, 248, 255, 1),
                                             ),
                                         _controller.containarwhite(
-                                          '${selectedItem["SO_QT"]}',
+                                          '${selectedItem["ISUREQ_QT"]}',
                                           GoogleFonts.lato(fontSize: 15),
                                         ),
                                       ],
@@ -312,7 +315,7 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
                                             ),
                                             child: TextField(
                                               controller: _controller
-                                                  .outcontroller[index],
+                                                  .getSearch()[index],
                                               keyboardType:
                                                   TextInputType.number,
                                               inputFormatters: [
@@ -321,7 +324,9 @@ class _OutputRegisterDetailState extends State<OutputRegisterDetail> {
                                               ],
                                               textAlign: TextAlign.center,
                                               onSubmitted: (value) async {
-                                                print(_controller.detailData
+                                                print(_controller
+                                                    .model
+                                                    .detailData
                                                     .value[index]['CHK']);
                                                 print(value);
                                                 await _controller

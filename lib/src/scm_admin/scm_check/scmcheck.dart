@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hnde_pda/src/scm_admin/scm_check_controller.dart';
+import 'package:hnde_pda/src/scm_admin/scm_check/scm_check_controller.dart';
 import 'package:get/get.dart';
+import 'package:hnde_pda/src/scm_admin/scm_check_detail/scm_check_detail.dart';
 
 class ScmCheck extends StatefulWidget {
   const ScmCheck({Key? key}) : super(key: key);
@@ -24,10 +25,10 @@ class _ScmCheckState extends State<ScmCheck> {
 
 // });
 
-   var testNodes = FocusNode();
+  var testNodes = FocusNode();
 
   final ScmCheckController _controller = ScmCheckController();
-
+  String detailNumber = '';
   String testStd = '';
   String psuNb = '';
   bool outTap = false;
@@ -83,23 +84,24 @@ class _ScmCheckState extends State<ScmCheck> {
             //         setState(() {});
             //     }else{
             //       if(e.runtimeType.toString() == 'RawKeyDownEvent'){
-                  
+
             //         String key = e.logicalKey.keyLabel;
             //         if(key != null){
             //           setState(() {
             //            testStd += key;
             //           });
             //         }
-                  
+
             //       }
             //     }
-                
+
             //     // testStd += e.data.logicalKey.toString();
             //     //   if(e.isKeyPressed(LogicalKeyboardKey.enter)){
             //     //     print(testStd);
             //     //   }
             //   },
-            Row( //child: 
+            Row(
+              //child:
               //child:
               children: [
                 Expanded(
@@ -122,8 +124,7 @@ class _ScmCheckState extends State<ScmCheck> {
                             print('saas $value');
                           },
                           onChanged: (value) async {
-
-                           //print(txtCon.text);
+                            //print(txtCon.text);
                             await _controller.scanBarcode(value);
 
                             txtCon.text = '';
@@ -167,7 +168,9 @@ class _ScmCheckState extends State<ScmCheck> {
                                 cursorWidth: 0,
                                 decoration: const InputDecoration(
                                     border: InputBorder.none),
-                                onFieldSubmitted: (value) {
+                                onFieldSubmitted: (value) async {
+                                  print(value);
+                                  await _controller.scanBarcode(value);
                                   outTap = false;
                                   _controller.setFocus(context);
                                   setState(() {});
@@ -225,9 +228,8 @@ class _ScmCheckState extends State<ScmCheck> {
                     //     FocusScope.of(context).unfocus();
                     //   },
                     // ),
-                    ), 
+                    ),
               ],
-            
             ),
             // ),
             const SizedBox(
@@ -342,15 +344,18 @@ class _ScmCheckState extends State<ScmCheck> {
                       //final selectedItem = _controller.outputlist[index];
                       return GestureDetector(
                         onTap: () {
-                          // Get.to(() => OutputStatusDetail(
-                          //     detailNumber: selectedItem["ISU_NB"],));
+                          Get.to(() => ScmCheckDetail(
+                              detailNumber: _controller.model.detailData[index]
+                                  ["PSU_NB"],
+                              trNm: _controller.model.detailData[index]
+                                  ["TR_NM"]));
+                          //     ));
                         },
                         child: Container(
                           margin: const EdgeInsets.all(3),
                           height: 100, // 아이템 높이 지정
                           width: double.infinity,
                           decoration: BoxDecoration(
-                            color: Colors.white,
                             borderRadius: const BorderRadius.all(
                               Radius.circular(15),
                             ),
