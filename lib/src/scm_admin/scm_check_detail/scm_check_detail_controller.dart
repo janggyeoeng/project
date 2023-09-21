@@ -25,8 +25,16 @@ class ScmCheckDetailController {
     //print('불값 : ${this.keyboardClick}');
   }
 
-  Future<void> check() async {
-    return model.check();
+  Future<void> check(BuildContext context) async {
+    return model.check(context);
+  }
+
+  Future<void> checkNb(BuildContext context, String detailNumber) async {
+    return model.checkNb(context, detailNumber);
+  }
+
+  Future<void> saveEnd(String detailNumber) async {
+    return model.saveEnd(detailNumber);
   }
 
   TextEditingController gettxtCon() {
