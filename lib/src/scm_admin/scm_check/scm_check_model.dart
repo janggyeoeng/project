@@ -10,6 +10,7 @@ class ScmCheckModel {
   bool keyboardClick = false;
   List<Map<String, dynamic>> selectData = [];
   RxList<Map<String, dynamic>> detailData = RxList<Map<String, dynamic>>([]);
+  bool datavalue = false;
 
   String psuNb = '';
   String trNm = '';
@@ -26,6 +27,10 @@ class ScmCheckModel {
 
   String getTrNm() {
     return trNm;
+  }
+
+  bool getdata() {
+    return datavalue;
   }
 
   Future<void> setTitleData(Map<String, dynamic> map) async {
@@ -88,7 +93,6 @@ class ScmCheckModel {
       List<dynamic> decodedData = jsonDecode(checkData);
       selectData = List<Map<String, dynamic>>.from(decodedData);
       detailData.value = selectData;
-      print(selectData);
 
       // List<Map<String, dynamic>> modifiedData = decodedData.map((item) {
       //   Map<String, dynamic> modifiedItem = {};
@@ -115,5 +119,13 @@ class ScmCheckModel {
 
   Color setKeyboardColor() {
     return keyboardClick ? Colors.blue : Colors.grey.withOpacity(0.3);
+  }
+
+  Color getColor(int index) {
+    if (getdata() == true) {
+      return Colors.blue.shade300;
+    } else {
+      return Colors.grey.shade300;
+    }
   }
 }

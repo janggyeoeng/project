@@ -29,7 +29,6 @@ class ScmCheckDetailModel {
     List<dynamic> decodedData = jsonDecode(checkData);
     boxdata = List<Map<String, dynamic>>.from(decodedData);
     detailData.value = boxdata;
-    print(boxdata);
   }
 
   TextEditingController gettxtCon() {
@@ -121,6 +120,7 @@ class ScmCheckDetailModel {
     // 화면 새로 그리지 말고 그냥 초기화 하고 setupdate 하자
     // getColor = [];
     // outcontroller = [];
+
     await boxData(detailNumber);
   }
 

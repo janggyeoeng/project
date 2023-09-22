@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hnde_pda/src/scm_admin/scm_check/scm_check_controller.dart';
+import 'package:hnde_pda/src/scm_admin/scm_check/scmcheck.dart';
+
 import 'package:hnde_pda/src/scm_admin/scm_check_detail/scm_check_detail_controller.dart';
 
 class ScmCheckDetail extends StatefulWidget {
   String detailNumber;
   String trNm = '';
-  ScmCheckDetail({super.key, required this.detailNumber, required this.trNm});
+  ScmCheckController controller1;
+  ScmCheckDetail(
+      {super.key,
+      required this.detailNumber,
+      required this.trNm,
+      required this.controller1});
 
   @override
   State<ScmCheckDetail> createState() => _ScmCheckDetailState();
@@ -14,6 +22,7 @@ class ScmCheckDetail extends StatefulWidget {
 
 class _ScmCheckDetailState extends State<ScmCheckDetail> {
   final ScmCheckDetailController _controller = ScmCheckDetailController();
+  ScmCheck page = const ScmCheck();
 
   TextEditingController txtCon = TextEditingController();
 
@@ -26,7 +35,7 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
   @override
   void initState() {
     _controller.boxData(widget.detailNumber);
-
+    print("a:${widget.controller1.model.datavalue}");
     super.initState();
     _controller.textFocusListner(context, pageUpdate);
     _controller.barcodeFocusListner(context);
@@ -384,6 +393,12 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
             ),
           ),
           onTap: () async {
+            print("a:${widget.controller1.getdata()}");
+            widget.controller1.model.datavalue = true;
+            print("b:${widget.controller1.getdata()}");
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              return const ScmCheck();
+            }));
             _controller.saveEnd(widget.detailNumber);
           },
         ),

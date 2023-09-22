@@ -1,10 +1,12 @@
+import 'package:get/get.dart';
 import 'package:hnde_pda/src/scm_admin/scm_check/scm_check_model.dart';
 import 'package:flutter/material.dart';
 
-class ScmCheckController {
+class ScmCheckController extends GetxController {
   ScmCheckModel model = ScmCheckModel();
 
   Future<void> pageLoad() async {
+    update();
     await model.pageLoad();
   }
 
@@ -18,6 +20,11 @@ class ScmCheckController {
 
   dynamic barcodeFocusListner(BuildContext context) {
     return model.barcodeFocusListner(context);
+  }
+
+  bool getdata() {
+    update();
+    return model.getdata();
   }
 
   FocusNode getTextNode() {
@@ -34,6 +41,10 @@ class ScmCheckController {
 
   Color setKeyboardColor() {
     return model.setKeyboardColor();
+  }
+
+  Color getColor(int index) {
+    return model.getColor(index);
   }
 
   Future<void> scanBarcode(String barcode) async {

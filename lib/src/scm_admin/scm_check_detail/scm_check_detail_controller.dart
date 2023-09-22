@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hnde_pda/src/scm_admin/scm_check_detail/scm_check_detail_model.dart';
 
-class ScmCheckDetailController {
+class ScmCheckDetailController extends GetxController {
   ScmCheckDetailModel model = ScmCheckDetailModel();
 
   Future<void> boxData(String detailNumber) async {

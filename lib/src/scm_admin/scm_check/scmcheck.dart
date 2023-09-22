@@ -44,7 +44,7 @@ class _ScmCheckState extends State<ScmCheck> {
   void initState() {
     //setInputType(false);
     //print('asasas ${txtCon.value}');
-    print('4444');
+    print("a:${_controller.model.datavalue}");
     _controller.pageLoad();
     _controller.textFocusListner(context, pageUpdate);
     _controller.barcodeFocusListner(context);
@@ -346,12 +346,18 @@ class _ScmCheckState extends State<ScmCheck> {
                       return GestureDetector(
                         onTap: () async {
                           await _controller.setKeyboardClick(true);
+                          // _controller.model.datavalue = true;
+                          print(_controller.model.datavalue);
                           FocusScope.of(context).offset;
                           Get.to(() => ScmCheckDetail(
-                              detailNumber: _controller.model.detailData[index]
-                                  ["PSU_NB"],
-                              trNm: _controller.model.detailData[index]
-                                  ["TR_NM"]));
+                                detailNumber: _controller
+                                    .model.detailData[index]["PSU_NB"],
+                                trNm: _controller.model.detailData[index]
+                                    ["TR_NM"],
+                                controller1: ScmCheckController(),
+                              ));
+                          setState(() {});
+
                           //     ));
                         },
                         child: Container(
@@ -378,8 +384,8 @@ class _ScmCheckState extends State<ScmCheck> {
                                         child: Container(
                                           alignment: Alignment.center,
                                           decoration: BoxDecoration(
-                                              color: Colors.grey
-                                                  .withOpacity(0.3),
+                                              color: _controller.getColor(
+                                                  index),
                                               borderRadius:
                                                   const BorderRadius.only(
                                                       topLeft:
@@ -418,7 +424,7 @@ class _ScmCheckState extends State<ScmCheck> {
                                       Expanded(
                                         flex: 1,
                                         child: Container(
-                                          color: Colors.grey.withOpacity(0.3),
+                                          color: _controller.getColor(index),
                                           child: const Center(
                                             child: Text(
                                               '품명',
@@ -454,8 +460,8 @@ class _ScmCheckState extends State<ScmCheck> {
                                         child: Container(
                                           alignment: Alignment.center,
                                           decoration: BoxDecoration(
-                                              color: Colors.grey
-                                                  .withOpacity(0.3),
+                                              color: _controller.getColor(
+                                                  index),
                                               borderRadius:
                                                   const BorderRadius.only(
                                                       bottomLeft:
@@ -486,7 +492,7 @@ class _ScmCheckState extends State<ScmCheck> {
                                       Expanded(
                                         flex: 1,
                                         child: Container(
-                                          color: Colors.grey.withOpacity(0.3),
+                                          color: _controller.getColor(index),
                                           child: const Center(
                                             child: Text(
                                               '입고수량',
