@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hnde_pda/src/scm_admin/scm_check/scm_check_controller.dart';
@@ -393,13 +394,12 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
             ),
           ),
           onTap: () async {
-            print("a:${widget.controller1.getdata()}");
-            widget.controller1.model.datavalue = true;
-            print("b:${widget.controller1.getdata()}");
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return const ScmCheck();
-            }));
+            widget.controller1.click();
+            print("b:${widget.controller1.model.datavalue}");
+
+            Get.back();
             _controller.saveEnd(widget.detailNumber);
+            setState(() {});
           },
         ),
       ),

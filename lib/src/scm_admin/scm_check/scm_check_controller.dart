@@ -7,7 +7,10 @@ class ScmCheckController extends GetxController {
 
   Future<void> pageLoad() async {
     update();
-    await model.pageLoad();
+  }
+
+  Future<void> click() async {
+    return model.click();
   }
 
   Future<void> setKeyboardClick(bool bo) async {
@@ -22,9 +25,8 @@ class ScmCheckController extends GetxController {
     return model.barcodeFocusListner(context);
   }
 
-  bool getdata() {
-    update();
-    return model.getdata();
+  Future<void> setController() async {
+    return model.setController();
   }
 
   FocusNode getTextNode() {

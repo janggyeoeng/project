@@ -2,15 +2,17 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hnde_pda/src/scm_admin/scm_check_detail/scm_check_detail_model.dart';
 import 'package:sql_conn/sql_conn.dart';
 
 class ScmCheckModel {
+  ScmCheckDetailModel model = ScmCheckDetailModel();
   var barcodeFocusNodes = FocusNode();
   var textFocusNodes = FocusNode();
   bool keyboardClick = false;
   List<Map<String, dynamic>> selectData = [];
   RxList<Map<String, dynamic>> detailData = RxList<Map<String, dynamic>>([]);
-  bool datavalue = false;
+  List<bool> datavalue = [];
 
   String psuNb = '';
   String trNm = '';
@@ -29,8 +31,27 @@ class ScmCheckModel {
     return trNm;
   }
 
-  bool getdata() {
-    return datavalue;
+  // List<bool> getdata() {
+  //   return datavalue;
+  // }
+  Future<void> setController() async {
+    for (int i = 1; i < detailData.length; i++) {
+      datavalue.add(false);
+    }
+  }
+
+  Future<void> click() async {
+    for (int i = 0; i < detailData.length; i++) {
+      if (model.same = true) {
+        // model.detailData.value[i]["SCANYN"] == '1') {
+        datavalue[i] = true;
+        print('abc');
+        print(model.boxdata);
+        break;
+      } else {
+        print(model.boxdata);
+      }
+    }
   }
 
   Future<void> setTitleData(Map<String, dynamic> map) async {
@@ -93,6 +114,7 @@ class ScmCheckModel {
       List<dynamic> decodedData = jsonDecode(checkData);
       selectData = List<Map<String, dynamic>>.from(decodedData);
       detailData.value = selectData;
+      datavalue.add(false);
 
       // List<Map<String, dynamic>> modifiedData = decodedData.map((item) {
       //   Map<String, dynamic> modifiedItem = {};
@@ -122,7 +144,7 @@ class ScmCheckModel {
   }
 
   Color getColor(int index) {
-    if (getdata() == true) {
+    if (datavalue[index] == true) {
       return Colors.blue.shade300;
     } else {
       return Colors.grey.shade300;

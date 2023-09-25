@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:sql_conn/sql_conn.dart';
 
 class ScmCheckDetailModel {
+  //ScmCheckModel model = ScmCheckModel();
   Rx<List<Map<String, dynamic>>> detailData =
       Rx<List<Map<String, dynamic>>>([]);
   List<Map<String, dynamic>> boxdata = [];

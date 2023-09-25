@@ -172,6 +172,7 @@ class _ScmCheckState extends State<ScmCheck> {
                                 onFieldSubmitted: (value) async {
                                   print(value);
                                   await _controller.scanBarcode(value);
+                                  await _controller.setController();
                                   outTap = false;
                                   _controller.setFocus(context);
                                   setState(() {});
@@ -354,7 +355,7 @@ class _ScmCheckState extends State<ScmCheck> {
                                     .model.detailData[index]["PSU_NB"],
                                 trNm: _controller.model.detailData[index]
                                     ["TR_NM"],
-                                controller1: ScmCheckController(),
+                                controller1: _controller,
                               ));
                           setState(() {});
 
