@@ -38,6 +38,15 @@ class ScmCheckDetailController extends GetxController {
     return model.saveEnd(detailNumber);
   }
 
+  Future<void> setSelectChk() async {
+    update();
+    return model.setSelectChk();
+  }
+
+  bool getselect() {
+    return model.getselect();
+  }
+
   TextEditingController gettxtCon() {
     return model.gettxtCon();
   }

@@ -31,26 +31,15 @@ class ScmCheckModel {
     return trNm;
   }
 
-  // List<bool> getdata() {
-  //   return datavalue;
-  // }
-  Future<void> setController() async {
-    for (int i = 1; i < detailData.length; i++) {
-      datavalue.add(false);
+  Future<void> cleardata() async {
+    for (int i = 0; i < datavalue.length; i++) {
+      datavalue[i] = false;
     }
   }
 
-  Future<void> click() async {
-    for (int i = 0; i < detailData.length; i++) {
-      if (model.same = true) {
-        // model.detailData.value[i]["SCANYN"] == '1') {
-        datavalue[i] = true;
-        print('abc');
-        print(model.boxdata);
-        break;
-      } else {
-        print(model.boxdata);
-      }
+  Future<void> setController() async {
+    for (int i = 1; i < detailData.length; i++) {
+      datavalue.add(false);
     }
   }
 
@@ -106,10 +95,11 @@ class ScmCheckModel {
 
     var dzRes = await SqlConn.writeData("exec SP_DZIF_PO_C '1001'");
     print('바코드 :$barcode');
-    //print('더존 결과 : ${dzRes}');
+    print('더존 결과 : $dzRes');
     if (dzRes) {
       detailDataString = await SqlConn.readData(
           "SP_MOBILE_SCM_CHKECK_R '1001', '${scanData[0]}'");
+      print('mes 결과 : $detailDataString');
       String checkData = detailDataString.replaceAll('tsst', '');
       List<dynamic> decodedData = jsonDecode(checkData);
       selectData = List<Map<String, dynamic>>.from(decodedData);

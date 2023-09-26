@@ -9,10 +9,6 @@ class ScmCheckController extends GetxController {
     update();
   }
 
-  Future<void> click() async {
-    return model.click();
-  }
-
   Future<void> setKeyboardClick(bool bo) async {
     await model.setKeyboardClick(bo);
   }
@@ -51,6 +47,10 @@ class ScmCheckController extends GetxController {
 
   Future<void> scanBarcode(String barcode) async {
     await model.scanBarcode(barcode);
+  }
+
+  Future<void> cleardata() async {
+    return model.cleardata();
   }
 
   String getPsuNb() {

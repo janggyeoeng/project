@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hnde_pda/src/scm_admin/scm_check/scm_check_controller.dart';
-import 'package:hnde_pda/src/scm_admin/scm_check/scmcheck.dart';
 
 import 'package:hnde_pda/src/scm_admin/scm_check_detail/scm_check_detail_controller.dart';
 
@@ -11,11 +10,14 @@ class ScmCheckDetail extends StatefulWidget {
   String detailNumber;
   String trNm = '';
   ScmCheckController controller1;
+  int index;
+
   ScmCheckDetail(
       {super.key,
       required this.detailNumber,
       required this.trNm,
-      required this.controller1});
+      required this.controller1,
+      required this.index});
 
   @override
   State<ScmCheckDetail> createState() => _ScmCheckDetailState();
@@ -23,7 +25,6 @@ class ScmCheckDetail extends StatefulWidget {
 
 class _ScmCheckDetailState extends State<ScmCheckDetail> {
   final ScmCheckDetailController _controller = ScmCheckDetailController();
-  ScmCheck page = const ScmCheck();
 
   TextEditingController txtCon = TextEditingController();
 
@@ -394,10 +395,14 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
             ),
           ),
           onTap: () async {
-            widget.controller1.click();
-            print("b:${widget.controller1.model.datavalue}");
+            // widget.controller1.model.datavalue[widget.index] = true;
+            _controller.setSelectChk();
+            widget.controller1.model.datavalue[widget.index] =
+                _controller.getselect();
+            print('accca:${widget.controller1.model.datavalue[widget.index]}');
 
             Get.back();
+
             _controller.saveEnd(widget.detailNumber);
             setState(() {});
           },

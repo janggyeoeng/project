@@ -36,6 +36,8 @@ class _ScmCheckState extends State<ScmCheck> {
   TextEditingController txtCon = TextEditingController();
   TextEditingController txtCon2 = TextEditingController();
 
+  FocusNode testNode = FocusNode();
+
   void pageUpdate() {
     setState(() {});
   }
@@ -75,32 +77,32 @@ class _ScmCheckState extends State<ScmCheck> {
             const SizedBox(
               height: 10,
             ),
-            // RawKeyboardListener(
-            //   focusNode: testNodes,
-            //   onKey: (e)async{
-            //     if(e.isKeyPressed(LogicalKeyboardKey.enter)){
-            //         print('testStd : ${testStd}'); //.replaceAll('Shift', '').replaceAll('Left', '').replaceAll(' ', '')
-            //         await _controller.scanBarcode(testStd.replaceAll('Shift', '').replaceAll('Left', '').replaceAll(' ', ''));
-            //         testStd = '';
-            //         setState(() {});
-            //     }else{
-            //       if(e.runtimeType.toString() == 'RawKeyDownEvent'){
+            //RawKeyboardListener(
+            // focusNode: testNode,
+            //onKey: (e) async {
+            //  if (e.isKeyPressed(LogicalKeyboardKey.enter)) {
+//print(
+            //        'testStd : $testStd'); //.replaceAll('Shift', '').replaceAll('Left', '').replaceAll(' ', '')
+            //   await _controller.scanBarcode(testStd
+//.replaceAll('Shift', '')
+            //      .replaceAll('Left', '')
+            //      .replaceAll(' ', ''));
+            //  testStd = '';
+            //  setState(() {});
+            //} else {
+            //   if (e.runtimeType.toString() == 'RawKeyDownEvent') {
+            //      String key = e.logicalKey.keyLabel;
+            //      setState(() {
+            //        testStd += key;
+            //      });
+            //  }
+            //}
 
-            //         String key = e.logicalKey.keyLabel;
-            //         if(key != null){
-            //           setState(() {
-            //            testStd += key;
-            //           });
-            //         }
-
-            //       }
-            //     }
-
-            //     // testStd += e.data.logicalKey.toString();
-            //     //   if(e.isKeyPressed(LogicalKeyboardKey.enter)){
-            //     //     print(testStd);
-            //     //   }
-            //   },
+            // // testStd += e.data.logicalKey.toString();
+            // //   if(e.isKeyPressed(LogicalKeyboardKey.enter)){
+            // //     print(testStd);
+            // //   }
+            //},
             Row(
               //child:
               //child:
@@ -237,7 +239,6 @@ class _ScmCheckState extends State<ScmCheck> {
             const SizedBox(
               height: 10,
             ),
-
             Row(
               children: [
                 Expanded(
@@ -276,11 +277,9 @@ class _ScmCheckState extends State<ScmCheck> {
                     ])),
               ],
             ),
-
             const SizedBox(
               height: 10,
             ),
-
             Row(
               children: [
                 Expanded(
@@ -328,7 +327,6 @@ class _ScmCheckState extends State<ScmCheck> {
                 color: Colors.grey.shade800,
               ),
             ),
-
             Expanded(
               flex: 2,
               child: Container(
@@ -346,6 +344,7 @@ class _ScmCheckState extends State<ScmCheck> {
                       //final selectedItem = _controller.outputlist[index];
                       return GestureDetector(
                         onTap: () async {
+                          print(_controller.model.datavalue[index]);
                           await _controller.setKeyboardClick(true);
                           // _controller.model.datavalue = true;
                           print(_controller.model.datavalue);
@@ -356,6 +355,7 @@ class _ScmCheckState extends State<ScmCheck> {
                                 trNm: _controller.model.detailData[index]
                                     ["TR_NM"],
                                 controller1: _controller,
+                                index: index,
                               ));
                           setState(() {});
 
@@ -532,21 +532,27 @@ class _ScmCheckState extends State<ScmCheck> {
             ),
           ],
         ),
-        bottomNavigationBar: const BottomAppBar(
+        bottomNavigationBar: BottomAppBar(
           color: Colors.grey,
           height: 60,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.border_color, color: Colors.white),
-              SizedBox(
-                width: 3,
-              ),
-              Text(
-                ' 수입검사',
-                style: TextStyle(fontSize: 30, color: Colors.white),
-              ),
-            ],
+          child: GestureDetector(
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.border_color, color: Colors.white),
+                SizedBox(
+                  width: 3,
+                ),
+                Text(
+                  ' 수입검사',
+                  style: TextStyle(fontSize: 30, color: Colors.white),
+                ),
+              ],
+            ),
+            onTap: () {
+              _controller.cleardata();
+              print('delete');
+            },
           ),
         ),
       ),

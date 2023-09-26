@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import 'package:sql_conn/sql_conn.dart';
 
 class ScmCheckDetailModel {
-  //ScmCheckModel model = ScmCheckModel();
   Rx<List<Map<String, dynamic>>> detailData =
       Rx<List<Map<String, dynamic>>>([]);
   List<Map<String, dynamic>> boxdata = [];
@@ -17,6 +17,8 @@ class ScmCheckDetailModel {
   bool a = false;
   bool same = false;
   bool same1 = false;
+  bool same2 = false;
+  bool select = false;
 
   TextEditingController txtCon = TextEditingController();
   TextEditingController txtCon2 = TextEditingController();
@@ -84,12 +86,12 @@ class ScmCheckDetailModel {
     for (int i = 0; i < detailData.value.length; i++) {
       if (a == true && bcData["BOX_NO"] == boxdata[i]["BOX_NO"]) {
         // 1 : TURE , 0 : FALSE
-        boxdata[i]["SCANYN"] = '1';
+        boxdata[i]["SCANYN"] = true;
         same = true;
-      } else if (boxdata[i]["SCANYN"] == '1') {
+      } else if (boxdata[i]["SCANYN"] == true) {
         continue;
       } else {
-        boxdata[i]["SCANYN"] = '0';
+        boxdata[i]["SCANYN"] = false;
       }
     }
     if (a == false) {
@@ -99,8 +101,28 @@ class ScmCheckDetailModel {
     }
   }
 
+  bool getselect() {
+    return select;
+  }
+
+  Future<void> setSelectChk() async {
+    for (int i = 0; i < detailData.value.length; i++) {
+      if (boxdata[i]["SCANYN"] == true) {
+        same2 = true;
+        break;
+      } else {
+        print('no');
+      }
+    }
+    if (same2 == true) {
+      select = true;
+
+      print('AAAAAAA');
+    }
+  }
+
   Color getColor(int index) {
-    if (boxdata[index]["SCANYN"] == '1') {
+    if (boxdata[index]["SCANYN"] == true) {
       return Colors.blue.shade300;
     } else {
       return Colors.grey.shade300;
