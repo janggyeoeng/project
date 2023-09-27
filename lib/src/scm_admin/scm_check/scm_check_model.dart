@@ -6,7 +6,6 @@ import 'package:hnde_pda/src/scm_admin/scm_check_detail/scm_check_detail_model.d
 import 'package:sql_conn/sql_conn.dart';
 
 class ScmCheckModel {
-  ScmCheckDetailModel model = ScmCheckDetailModel();
   var barcodeFocusNodes = FocusNode();
   var textFocusNodes = FocusNode();
   bool keyboardClick = false;
@@ -87,19 +86,29 @@ class ScmCheckModel {
     });
   }
 
-  Future<void> scanBarcode(String barcode) async {
+  Future<void> scanBarcode(BuildContext context, String barcode) async {
     List<String> scanData = [];
     scanData = barcode.split('/');
     String detailDataString = '';
     print('scanData : $scanData');
 
+    if (barcode.isEmpty) {
+      return isuQtCheckDialog(context, '바코드가 입력되지 않았습니다.');
+    }
+
+    for (int i = 0; i < detailData.length; i++) {
+      if (barcode != selectData[i]['PSU_NB']) {
+        return isuQtCheckDialog(context, '바코드가 올바르지 않습니다.');
+      }
+    }
+
     var dzRes = await SqlConn.writeData("exec SP_DZIF_PO_C '1001'");
-    print('바코드 :$barcode');
-    print('더존 결과 : $dzRes');
+    //print('바코드 :$barcode');
+    //print('더존 결과 : $dzRes');
     if (dzRes) {
       detailDataString = await SqlConn.readData(
           "SP_MOBILE_SCM_CHKECK_R '1001', '${scanData[0]}'");
-      print('mes 결과 : $detailDataString');
+      //print('mes 결과 : $detailDataString');
       String checkData = detailDataString.replaceAll('tsst', '');
       List<dynamic> decodedData = jsonDecode(checkData);
       selectData = List<Map<String, dynamic>>.from(decodedData);
@@ -133,11 +142,59 @@ class ScmCheckModel {
     return keyboardClick ? Colors.blue : Colors.grey.withOpacity(0.3);
   }
 
+  Future<void> backKey(BuildContext context) async {
+    return FocusScope.of(context).requestFocus(barcodeFocusNodes);
+    // await showDialog(
+    //     context: context,
+    //     builder: (BuildContext context) {
+    //       return AlertDialog(
+    //         backgroundColor: Colors.white,
+    //         title: const Text('끝내시겠습니까?'),
+    //         actions: [
+    //           TextButton(
+    //               onPressed: () {
+    //                 Navigator.pop(context, true);
+    //               },
+    //               child: const Text('끝내기')),
+    //           TextButton(
+    //               onPressed: () {
+    //                 Navigator.pop(context, false);
+    //               },
+    //               child: const Text('아니요'))
+    //         ],
+    //       );
+    //     });
+  }
+
   Color getColor(int index) {
     if (datavalue[index] == true) {
       return Colors.blue.shade300;
     } else {
       return Colors.grey.shade300;
     }
+  }
+
+  void isuQtCheckDialog(BuildContext context, String errorMessage) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(errorMessage),
+              ],
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('확인'))
+            ],
+          );
+        });
   }
 }

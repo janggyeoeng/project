@@ -164,15 +164,14 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
                           Expanded(
                               flex: 1,
                               child: GestureDetector(
-                                child: const SizedBox(
+                                child: SizedBox(
                                   width: 20,
                                   height: 20,
                                   //color: Colors.green,
-                                  child: Icon(
-                                    Icons.keyboard,
-                                    // color: _controller
-                                    //     .setKeyboardColor() //Colors.blue,
-                                  ),
+                                  child: Icon(Icons.keyboard,
+                                      color: _controller
+                                          .setKeyboardColor() //Colors.blue,
+                                      ),
                                 ),
                                 onTap: () async {
                                   print('클릭');
@@ -400,7 +399,7 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
             widget.controller1.model.datavalue[widget.index] =
                 _controller.getselect();
             print('accca:${widget.controller1.model.datavalue[widget.index]}');
-
+            widget.controller1.setKeyboardClick(false);
             Get.back();
 
             _controller.saveEnd(widget.detailNumber);

@@ -41,12 +41,16 @@ class ScmCheckController extends GetxController {
     return model.setKeyboardColor();
   }
 
+  Future<void> backKey(BuildContext context) async {
+    return model.backKey(context);
+  }
+
   Color getColor(int index) {
     return model.getColor(index);
   }
 
-  Future<void> scanBarcode(String barcode) async {
-    await model.scanBarcode(barcode);
+  Future<void> scanBarcode(BuildContext context, String barcode) async {
+    await model.scanBarcode(context, barcode);
   }
 
   Future<void> cleardata() async {

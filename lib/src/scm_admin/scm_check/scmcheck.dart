@@ -1,7 +1,4 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hnde_pda/src/scm_admin/scm_check/scm_check_controller.dart';
 import 'package:get/get.dart';
@@ -81,10 +78,10 @@ class _ScmCheckState extends State<ScmCheck> {
             // focusNode: testNode,
             //onKey: (e) async {
             //  if (e.isKeyPressed(LogicalKeyboardKey.enter)) {
-//print(
+            //print(
             //        'testStd : $testStd'); //.replaceAll('Shift', '').replaceAll('Left', '').replaceAll(' ', '')
             //   await _controller.scanBarcode(testStd
-//.replaceAll('Shift', '')
+            //.replaceAll('Shift', '')
             //      .replaceAll('Left', '')
             //      .replaceAll(' ', ''));
             //  testStd = '';
@@ -128,7 +125,7 @@ class _ScmCheckState extends State<ScmCheck> {
                           },
                           onChanged: (value) async {
                             //print(txtCon.text);
-                            await _controller.scanBarcode(value);
+                            await _controller.scanBarcode(context, value);
 
                             txtCon.text = '';
                             txtCon.clear();
@@ -173,10 +170,10 @@ class _ScmCheckState extends State<ScmCheck> {
                                     border: InputBorder.none),
                                 onFieldSubmitted: (value) async {
                                   print(value);
-                                  await _controller.scanBarcode(value);
+                                  await _controller.scanBarcode(context, value);
                                   await _controller.setController();
                                   outTap = false;
-                                  _controller.setFocus(context);
+                                  // _controller.setFocus(context);
                                   setState(() {});
                                 },
                               ),
@@ -344,11 +341,11 @@ class _ScmCheckState extends State<ScmCheck> {
                       //final selectedItem = _controller.outputlist[index];
                       return GestureDetector(
                         onTap: () async {
-                          print(_controller.model.datavalue[index]);
                           await _controller.setKeyboardClick(true);
                           // _controller.model.datavalue = true;
-                          print(_controller.model.datavalue);
-                          FocusScope.of(context).offset;
+                          // FocusManager.instance.primaryFocus?.unfocus();
+                          //FocusScope.of(context).offset;
+
                           Get.to(() => ScmCheckDetail(
                                 detailNumber: _controller
                                     .model.detailData[index]["PSU_NB"],

@@ -82,6 +82,9 @@ class ScmCheckDetailModel {
 
   Future<void> check(BuildContext context) async {
     List<String> barcode = txtCon2.text.split('/');
+    if (txtCon2.text.isEmpty) {
+      return isuQtCheckDialog(context, '바코드가 입력되지 않았습니다.');
+    }
     Map<String, dynamic> bcData = {"PSU_NB": barcode[0], "BOX_NO": barcode[1]};
     for (int i = 0; i < detailData.value.length; i++) {
       if (a == true && bcData["BOX_NO"] == boxdata[i]["BOX_NO"]) {
@@ -132,6 +135,10 @@ class ScmCheckDetailModel {
   Future<void> setKeyboardClick(bool bo) async {
     keyboardClick = bo;
     //print('불값 : ${this.keyboardClick}');
+  }
+
+  Color setKeyboardColor() {
+    return keyboardClick ? Colors.blue : Colors.grey.withOpacity(0.3);
   }
 
   Future<void> setFocus(BuildContext context) async {

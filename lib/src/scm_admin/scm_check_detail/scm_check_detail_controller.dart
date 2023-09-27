@@ -26,6 +26,10 @@ class ScmCheckDetailController extends GetxController {
     //print('불값 : ${this.keyboardClick}');
   }
 
+  Color setKeyboardColor() {
+    return model.setKeyboardColor();
+  }
+
   Future<void> check(BuildContext context) async {
     return model.check(context);
   }
