@@ -96,12 +96,6 @@ class ScmCheckModel {
       return isuQtCheckDialog(context, '바코드가 입력되지 않았습니다.');
     }
 
-    for (int i = 0; i < detailData.length; i++) {
-      if (barcode != selectData[i]['PSU_NB']) {
-        return isuQtCheckDialog(context, '바코드가 올바르지 않습니다.');
-      }
-    }
-
     var dzRes = await SqlConn.writeData("exec SP_DZIF_PO_C '1001'");
     //print('바코드 :$barcode');
     //print('더존 결과 : $dzRes');

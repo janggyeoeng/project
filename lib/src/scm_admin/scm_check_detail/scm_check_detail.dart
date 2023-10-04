@@ -398,7 +398,7 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
             _controller.setSelectChk();
             widget.controller1.model.datavalue[widget.index] =
                 _controller.getselect();
-            print('accca:${widget.controller1.model.datavalue[widget.index]}');
+
             widget.controller1.setKeyboardClick(false);
             Get.back();
 

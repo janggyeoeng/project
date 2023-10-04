@@ -26,7 +26,7 @@ class ScmCheckDetailModel {
   Future<void> boxData(String detailNumber) async {
     // scanData = barcode.split('/');
     String detailDataString = await SqlConn.readData(
-        "SELECT ('TSST_'+A.PSU_NB)AS PSU_NB,('TSST_'+A.BOX_NO)AS BOX_NO,('TSST_'+A.ITEM_CD)AS ITEM_CD,('TSST_'+CONVERT(NVARCHAR,A.PACK_QT))AS PACK_QT,'' AS SCANYN FROM TSPODELIVER_D_BOX A  LEFT JOIN TSPODELIVER_D B ON A.PSU_NB = B.PSU_NB  WHERE A.PSU_NB = '$detailNumber'");
+        "SELECT ('TSST_'+A.PSU_NB)AS PSU_NB,('TSST_'+A.BOX_NO)AS BOX_NO,('TSST_'+A.ITEM_CD)AS ITEM_CD,('TSST_'+CONVERT(NVARCHAR,A.PACK_QT))AS PACK_QT,'' AS SCANYN,'' AS IMPORTSPEC FROM TSPODELIVER_D_BOX A  LEFT JOIN TSPODELIVER_D B ON A.PSU_NB = B.PSU_NB  WHERE A.PSU_NB = '$detailNumber'");
 
     String checkData = detailDataString.replaceAll('TSST_', '');
     List<dynamic> decodedData = jsonDecode(checkData);
@@ -90,6 +90,7 @@ class ScmCheckDetailModel {
       if (a == true && bcData["BOX_NO"] == boxdata[i]["BOX_NO"]) {
         // 1 : TURE , 0 : FALSE
         boxdata[i]["SCANYN"] = true;
+        boxdata[i]["IMPORTSPEC"] = 'Y';
         same = true;
       } else if (boxdata[i]["SCANYN"] == true) {
         continue;
@@ -112,6 +113,7 @@ class ScmCheckDetailModel {
     for (int i = 0; i < detailData.value.length; i++) {
       if (boxdata[i]["SCANYN"] == true) {
         same2 = true;
+        print(boxdata[i]["IMPORTSPEC"]);
         break;
       } else {
         print('no');
@@ -119,8 +121,6 @@ class ScmCheckDetailModel {
     }
     if (same2 == true) {
       select = true;
-
-      print('AAAAAAA');
     }
   }
 
