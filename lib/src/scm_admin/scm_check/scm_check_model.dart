@@ -13,6 +13,8 @@ class ScmCheckModel {
   RxList<Map<String, dynamic>> detailData = RxList<Map<String, dynamic>>([]);
   List<bool> datavalue = [];
 
+  Map<String, List<String>> selectCheckDataList = {};
+
   String psuNb = '';
   String trNm = '';
 

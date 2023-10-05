@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hnde_pda/src/scm_admin/scm_check/scm_check_controller.dart';
 
 import 'package:sql_conn/sql_conn.dart';
 
@@ -14,24 +15,45 @@ class ScmCheckDetailModel {
   var textFocusNodes = FocusNode();
   bool keyboardClick = false;
   List<String> scanData = [];
-  bool a = false;
+  bool psunb = false;
   bool same = false;
   bool same1 = false;
   bool same2 = false;
   bool select = false;
 
+  String superKey = "";
+
   TextEditingController txtCon = TextEditingController();
   TextEditingController txtCon2 = TextEditingController();
 
-  Future<void> boxData(String detailNumber) async {
+  Future<void> boxData(String detailNumber,
+      ScmCheckController scmCheckController, int superIndex) async {
     // scanData = barcode.split('/');
     String detailDataString = await SqlConn.readData(
-        "SELECT ('TSST_'+A.PSU_NB)AS PSU_NB,('TSST_'+A.BOX_NO)AS BOX_NO,('TSST_'+A.ITEM_CD)AS ITEM_CD,('TSST_'+CONVERT(NVARCHAR,A.PACK_QT))AS PACK_QT,'' AS SCANYN,'' AS IMPORTSPEC FROM TSPODELIVER_D_BOX A  LEFT JOIN TSPODELIVER_D B ON A.PSU_NB = B.PSU_NB  WHERE A.PSU_NB = '$detailNumber'");
+        "SELECT ('TSST_'+A.PSU_NB)AS PSU_NB,('TSST_'+CONVERT(NVARCHAR,A.PSU_SQ))AS PSU_SQ,('TSST_'+A.BOX_NO)AS BOX_NO,('TSST_'+A.ITEM_CD)AS ITEM_CD,('TSST_'+CONVERT(NVARCHAR,A.PACK_QT))AS PACK_QT,('TSST_'+A.BARCODE)AS BARCODE,('TSST_'+A.IMPORTSPEC)AS IMPORTSPEC FROM TSPODELIVER_D_BOX A  LEFT JOIN TSPODELIVER_D B ON A.PSU_NB = B.PSU_NB  AND A.PSU_SQ = B.PSU_SQ WHERE A.PSU_NB = '$detailNumber'");
 
     String checkData = detailDataString.replaceAll('TSST_', '');
     List<dynamic> decodedData = jsonDecode(checkData);
+
+    superKey = superIndex.toString();
+    scmCheckController.model.selectCheckDataList[superIndex.toString()] = [];
+
+    for (int i = 0; i < decodedData.length; i++) {
+      scmCheckController.model.selectCheckDataList[superIndex.toString()]!
+          .add("0");
+    }
+
+    print('asdqweasd : ${scmCheckController.model.selectCheckDataList}');
+
     boxdata = List<Map<String, dynamic>>.from(decodedData);
     detailData.value = boxdata;
+    print(boxdata);
+  }
+
+  Future<void> updatedata() async {
+    bool updata = await SqlConn.writeData(
+        "UPDATE TSPODELIVER_D_BOX SET IMPORTSPEC ='Y' WHERE PSU_NB ='PD2308000002' AND PSU_SQ ='1' AND BARCODE ='1'");
+    print(updata);
   }
 
   TextEditingController gettxtCon() {
@@ -69,40 +91,54 @@ class ScmCheckDetailModel {
     });
   }
 
-  Future<void> checkNb(BuildContext context, String detailNumber) async {
+  Future<void> checkNb(String detailNumber) async {
     List<String> barcode = txtCon2.text.split('/');
     Map<String, dynamic> bcData = {"PSU_NB": barcode[0]};
     if (bcData["PSU_NB"] != detailNumber) {
-      a = false;
+      psunb = false;
     } else {
-      a = true;
+      psunb = true;
       same = false;
     }
   }
 
-  Future<void> check(BuildContext context) async {
+  Future<void> check(
+      BuildContext context, ScmCheckController scmCheckController) async {
     List<String> barcode = txtCon2.text.split('/');
     if (txtCon2.text.isEmpty) {
       return isuQtCheckDialog(context, '바코드가 입력되지 않았습니다.');
     }
-    Map<String, dynamic> bcData = {"PSU_NB": barcode[0], "BOX_NO": barcode[1]};
+    Map<String, dynamic> bcData = {
+      "PSU_NB": barcode[0],
+      "PSU_SQ": barcode[1],
+      "BOX_NO": barcode[2]
+    };
     for (int i = 0; i < detailData.value.length; i++) {
-      if (a == true && bcData["BOX_NO"] == boxdata[i]["BOX_NO"]) {
+      if (psunb == true &&
+          bcData["PSU_SQ"] == boxdata[i]["PSU_SQ"] &&
+          bcData["BOX_NO"] == boxdata[i]["BOX_NO"]) {
         // 1 : TURE , 0 : FALSE
-        boxdata[i]["SCANYN"] = true;
-        boxdata[i]["IMPORTSPEC"] = 'Y';
+        boxdata[i]["BARCODE"] = '1';
+        scmCheckController.model.selectCheckDataList[superKey]![i] = '1';
+
+        updatedata();
+        print("aaaa:${boxdata[2]["BARCODE"]}");
+
         same = true;
-      } else if (boxdata[i]["SCANYN"] == true) {
+      } else if (boxdata[i]["BARCODE"] == '1') {
         continue;
       } else {
-        boxdata[i]["SCANYN"] = false;
+        boxdata[i]["BARCODE"] = '0';
+        scmCheckController.model.selectCheckDataList[superKey]![i] = '0';
       }
     }
-    if (a == false) {
+    if (psunb == false) {
       isuQtCheckDialog(context, '출고번호가 올바르지 않습니다.');
-    } else if (a == true && same == false) {
+    } else if (psunb == true && same == false) {
       isuQtCheckDialog(context, '박스번호가 올바르지 않습니다.');
     }
+
+    print(scmCheckController.model.selectCheckDataList);
   }
 
   bool getselect() {
@@ -111,9 +147,14 @@ class ScmCheckDetailModel {
 
   Future<void> setSelectChk() async {
     for (int i = 0; i < detailData.value.length; i++) {
-      if (boxdata[i]["SCANYN"] == true) {
+      if (boxdata[i]["BARCODE"] == '1') {
         same2 = true;
-        print(boxdata[i]["IMPORTSPEC"]);
+        print('a:${boxdata[0]["BARCODE"]}');
+        print('a:${boxdata[1]["BARCODE"]}');
+        print('b:${boxdata[0]["IMPORTSPEC"]}');
+        print('d:${boxdata[1]["IMPORTSPEC"]}');
+        print('c:${boxdata[3]["IMPORTSPEC"]}');
+
         break;
       } else {
         print('no');
@@ -125,7 +166,7 @@ class ScmCheckDetailModel {
   }
 
   Color getColor(int index) {
-    if (boxdata[index]["SCANYN"] == true) {
+    if (boxdata[index]["BARCODE"] == '1') {
       return Colors.blue.shade300;
     } else {
       return Colors.grey.shade300;
@@ -146,13 +187,13 @@ class ScmCheckDetailModel {
     FocusScope.of(context).requestFocus(barcodeFocusNodes);
   }
 
-  Future<void> saveEnd(String detailNumber) async {
-    // 화면 새로 그리지 말고 그냥 초기화 하고 setupdate 하자
-    // getColor = [];
-    // outcontroller = [];
+  // Future<void> saveEnd(String detailNumber) async {
+  //   // 화면 새로 그리지 말고 그냥 초기화 하고 setupdate 하자
+  //   // getColor = [];
+  //   // outcontroller = [];
 
-    await boxData(detailNumber);
-  }
+  //   await boxData(detailNumber);
+  // }
 
   void isuQtCheckDialog(BuildContext context, String errorMessage) {
     showDialog(

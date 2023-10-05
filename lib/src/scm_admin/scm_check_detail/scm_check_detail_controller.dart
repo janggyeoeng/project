@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hnde_pda/src/scm_admin/scm_check/scm_check_controller.dart';
 import 'package:hnde_pda/src/scm_admin/scm_check_detail/scm_check_detail_model.dart';
 
 class ScmCheckDetailController extends GetxController {
   ScmCheckDetailModel model = ScmCheckDetailModel();
 
-  Future<void> boxData(String detailNumber) async {
-    return model.boxData(detailNumber);
+  Future<void> boxData(String detailNumber,
+      ScmCheckController scmCheckController, int superIndex) async {
+    return model.boxData(detailNumber, scmCheckController, superIndex);
   }
 
   dynamic textFocusListner(BuildContext context, void Function()? state) {
@@ -30,17 +32,18 @@ class ScmCheckDetailController extends GetxController {
     return model.setKeyboardColor();
   }
 
-  Future<void> check(BuildContext context) async {
-    return model.check(context);
+  Future<void> check(
+      BuildContext context, ScmCheckController scmCheckController) async {
+    return model.check(context, scmCheckController);
   }
 
-  Future<void> checkNb(BuildContext context, String detailNumber) async {
-    return model.checkNb(context, detailNumber);
+  Future<void> checkNb(String detailNumber) async {
+    return model.checkNb(detailNumber);
   }
 
-  Future<void> saveEnd(String detailNumber) async {
-    return model.saveEnd(detailNumber);
-  }
+  // Future<void> saveEnd(String detailNumber) async {
+  //   return model.saveEnd(detailNumber);
+  // }
 
   Future<void> setSelectChk() async {
     update();

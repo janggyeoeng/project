@@ -36,7 +36,7 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
 
   @override
   void initState() {
-    _controller.boxData(widget.detailNumber);
+    _controller.boxData(widget.detailNumber, widget.controller1, widget.index);
     print("a:${widget.controller1.model.datavalue}");
     super.initState();
     _controller.textFocusListner(context, pageUpdate);
@@ -132,7 +132,8 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
                                 onFieldSubmitted: (value) async {
                                   print(value);
                                   //await _controller.scanBarcode(value);
-                                  _controller.check(context);
+                                  _controller.check(
+                                      context, widget.controller1);
 
                                   outTap = false;
                                   _controller.setFocus(context);
@@ -151,9 +152,9 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
                                         borderSide:
                                             BorderSide(color: Colors.grey))),
                                 onFieldSubmitted: (value) async {
-                                  _controller.checkNb(
-                                      context, widget.detailNumber);
-                                  _controller.check(context);
+                                  _controller.checkNb(widget.detailNumber);
+                                  _controller.check(
+                                      context, widget.controller1);
                                   outTap = false;
                                   _controller.setFocus(context);
                                   setState(() {});
@@ -398,11 +399,11 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
             _controller.setSelectChk();
             widget.controller1.model.datavalue[widget.index] =
                 _controller.getselect();
-
+            print('AAAA:${_controller.model.boxdata}');
             widget.controller1.setKeyboardClick(false);
             Get.back();
 
-            _controller.saveEnd(widget.detailNumber);
+            // _controller.saveEnd(widget.detailNumber);
             setState(() {});
           },
         ),
