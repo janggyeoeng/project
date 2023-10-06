@@ -37,7 +37,7 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
   @override
   void initState() {
     _controller.boxData(widget.detailNumber, widget.controller1, widget.index);
-    print("a:${widget.controller1.model.datavalue}");
+    // print("a:${widget.controller1.model.datavalue}");
     super.initState();
     _controller.textFocusListner(context, pageUpdate);
     _controller.barcodeFocusListner(context);
@@ -399,7 +399,7 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
             _controller.setSelectChk();
             widget.controller1.model.datavalue[widget.index] =
                 _controller.getselect();
-            print('AAAA:${_controller.model.boxdata}');
+            // print('AAAA:${_controller.model.boxdata}');
             widget.controller1.setKeyboardClick(false);
             Get.back();
 

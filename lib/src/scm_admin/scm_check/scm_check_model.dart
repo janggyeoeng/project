@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hnde_pda/src/scm_admin/scm_check_detail/scm_check_detail_model.dart';
 import 'package:sql_conn/sql_conn.dart';
 
 class ScmCheckModel {
@@ -17,6 +16,7 @@ class ScmCheckModel {
 
   String psuNb = '';
   String trNm = '';
+  bool check = false;
 
   Future<void> pageLoad() async {}
 
@@ -86,6 +86,32 @@ class ScmCheckModel {
 
       //barcodeFocusNodes.hasFocus == false ? FocusScope.of(context).requestFocus(barcodeFocusNodes) : '';
     });
+  }
+
+  Future<void> checkList(BuildContext context) async {
+    for (var key in selectCheckDataList.keys) {
+      List<String>? values = selectCheckDataList[key];
+      if (values != null && values.contains('1')) {
+        check = true;
+        break;
+      } else {
+        check = false;
+      }
+    }
+    if (check == true) {
+      print('검사완료');
+    } else {
+      isuQtCheckDialog(context, '검사 목록이 없습니다.');
+    }
+
+    // if (selectCheckDataList.values.toList()[i][i] == '1' &&
+    //     selectCheckDataList.values.toList()[i][i] == '0') {
+
+    //   print('a:${selectCheckDataList.values.toList()[i]}');
+    //   break;
+    // } else if (selectCheckDataList.values.toList()[i][i] == '0') {
+    //   check = false;
+    // }
   }
 
   Future<void> scanBarcode(BuildContext context, String barcode) async {

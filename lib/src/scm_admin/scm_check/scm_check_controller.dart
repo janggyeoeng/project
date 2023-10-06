@@ -45,6 +45,10 @@ class ScmCheckController extends GetxController {
     return model.backKey(context);
   }
 
+  Future<void> checkList(BuildContext context) async {
+    return model.checkList(context);
+  }
+
   Color getColor(int index) {
     return model.getColor(index);
   }

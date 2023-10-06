@@ -30,7 +30,7 @@ class ScmCheckDetailModel {
       ScmCheckController scmCheckController, int superIndex) async {
     // scanData = barcode.split('/');
     String detailDataString = await SqlConn.readData(
-        "SELECT ('TSST_'+A.PSU_NB)AS PSU_NB,('TSST_'+CONVERT(NVARCHAR,A.PSU_SQ))AS PSU_SQ,('TSST_'+A.BOX_NO)AS BOX_NO,('TSST_'+A.ITEM_CD)AS ITEM_CD,('TSST_'+CONVERT(NVARCHAR,A.PACK_QT))AS PACK_QT,('TSST_'+A.BARCODE)AS BARCODE,('TSST_'+A.IMPORTSPEC)AS IMPORTSPEC FROM TSPODELIVER_D_BOX A  LEFT JOIN TSPODELIVER_D B ON A.PSU_NB = B.PSU_NB  AND A.PSU_SQ = B.PSU_SQ WHERE A.PSU_NB = '$detailNumber'");
+        "SELECT ('TSST_'+A.PSU_NB)AS PSU_NB,('TSST_'+CONVERT(NVARCHAR,A.PSU_SQ))AS PSU_SQ,('TSST_'+A.BOX_NO)AS BOX_NO,('TSST_'+A.ITEM_CD)AS ITEM_CD,('TSST_'+CONVERT(NVARCHAR,A.PACK_QT))AS PACK_QT,('TSST_'+A.BARCODE)AS BARCODE,('TSST_'+A.IMPORTSPEC)AS IMPORTSPEC FROM TSPODELIVER_D_BOX A  LEFT JOIN TSPODELIVER_D B ON A.PSU_NB = B.PSU_NB  AND A.PSU_SQ = B.PSU_SQ WHERE A.PSU_NB = '$detailNumber' AND A.PSU_SQ = '${superIndex + 1}'");
 
     String checkData = detailDataString.replaceAll('TSST_', '');
     List<dynamic> decodedData = jsonDecode(checkData);
@@ -47,7 +47,6 @@ class ScmCheckDetailModel {
 
     boxdata = List<Map<String, dynamic>>.from(decodedData);
     detailData.value = boxdata;
-    print(boxdata);
   }
 
   Future<void> updatedata() async {
@@ -122,7 +121,6 @@ class ScmCheckDetailModel {
         scmCheckController.model.selectCheckDataList[superKey]![i] = '1';
 
         updatedata();
-        print("aaaa:${boxdata[2]["BARCODE"]}");
 
         same = true;
       } else if (boxdata[i]["BARCODE"] == '1') {
@@ -149,11 +147,6 @@ class ScmCheckDetailModel {
     for (int i = 0; i < detailData.value.length; i++) {
       if (boxdata[i]["BARCODE"] == '1') {
         same2 = true;
-        print('a:${boxdata[0]["BARCODE"]}');
-        print('a:${boxdata[1]["BARCODE"]}');
-        print('b:${boxdata[0]["IMPORTSPEC"]}');
-        print('d:${boxdata[1]["IMPORTSPEC"]}');
-        print('c:${boxdata[3]["IMPORTSPEC"]}');
 
         break;
       } else {

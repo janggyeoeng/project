@@ -547,9 +547,9 @@ class _ScmCheckState extends State<ScmCheck> {
               ],
             ),
             onTap: () {
-              print("qqqqqqqqq : ${_controller.model.selectCheckDataList}");
+              _controller.checkList(context);
+              // print("qqqqqqqqq : ${_controller.model.selectCheckDataList}");
               _controller.cleardata();
-              print('delete');
             },
           ),
         ),
