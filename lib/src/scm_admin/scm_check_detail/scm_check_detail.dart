@@ -132,8 +132,8 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
                                 onFieldSubmitted: (value) async {
                                   print(value);
                                   //await _controller.scanBarcode(value);
-                                  _controller.check(
-                                      context, widget.controller1);
+                                  _controller.check(context, widget.controller1,
+                                      widget.detailNumber, widget.index);
 
                                   outTap = false;
                                   _controller.setFocus(context);
@@ -153,8 +153,8 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
                                             BorderSide(color: Colors.grey))),
                                 onFieldSubmitted: (value) async {
                                   _controller.checkNb(widget.detailNumber);
-                                  _controller.check(
-                                      context, widget.controller1);
+                                  _controller.check(context, widget.controller1,
+                                      widget.detailNumber, widget.index);
                                   outTap = false;
                                   _controller.setFocus(context);
                                   setState(() {});
@@ -402,7 +402,7 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
             // print('AAAA:${_controller.model.boxdata}');
             widget.controller1.setKeyboardClick(false);
             Get.back();
-
+            //_controller.updatedata(widget.detailNumber, widget.index);
             // _controller.saveEnd(widget.detailNumber);
             setState(() {});
           },

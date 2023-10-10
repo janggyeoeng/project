@@ -32,16 +32,23 @@ class ScmCheckModel {
     return trNm;
   }
 
-  Future<void> cleardata() async {
+  Future<void> cleardata(String detailNumber) async {
     for (int i = 0; i < datavalue.length; i++) {
       datavalue[i] = false;
     }
+    await SqlConn.writeData(
+        "UPDATE TSPODELIVER_D_BOX SET BARCODE =null,IMPORTSPEC =null WHERE PSU_NB ='$detailNumber'");
   }
 
   Future<void> setController() async {
     for (int i = 1; i < detailData.length; i++) {
       datavalue.add(false);
     }
+  }
+
+  Future<void> updatedata(String detailNumber) async {
+    await SqlConn.writeData(
+        "UPDATE TSIMPORTINSPEC SET IMPORTSPEC = CASE WHEN (SELECT COUNT(IMPORTSPEC) FROM TSPODELIVER_D_BOX WHERE PSU_NB = '$detailNumber') > 0 THEN 'Y' ELSE NULL END WHERE PSU_NB = '$detailNumber'");
   }
 
   Future<void> setTitleData(Map<String, dynamic> map) async {

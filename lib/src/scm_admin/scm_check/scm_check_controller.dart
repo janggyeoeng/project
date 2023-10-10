@@ -57,8 +57,12 @@ class ScmCheckController extends GetxController {
     await model.scanBarcode(context, barcode);
   }
 
-  Future<void> cleardata() async {
-    return model.cleardata();
+  Future<void> cleardata(String detailNumber) async {
+    return model.cleardata(detailNumber);
+  }
+
+  Future<void> updatedata(String detailNumber) async {
+    return model.updatedata(detailNumber);
   }
 
   String getPsuNb() {

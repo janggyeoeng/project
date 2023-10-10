@@ -546,10 +546,14 @@ class _ScmCheckState extends State<ScmCheck> {
                 ),
               ],
             ),
-            onTap: () {
-              _controller.checkList(context);
+            onTap: () async {
+              await _controller.checkList(context);
               // print("qqqqqqqqq : ${_controller.model.selectCheckDataList}");
-              _controller.cleardata();
+              //_controller.cleardata(_controller.getPsuNb());
+              await _controller.updatedata(_controller.getPsuNb());
+              Get.back();
+
+              setState(() {});
             },
           ),
         ),

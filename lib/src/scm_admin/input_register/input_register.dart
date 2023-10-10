@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hnde_pda/src/scm_admin/input_register_controller.dart';
+import 'package:hnde_pda/src/scm_admin/input_register/input_register_controller.dart';
 
 import 'package:get/get.dart';
 
@@ -37,6 +37,8 @@ class _InputRegisterState extends State<InputRegister> {
 
   @override
   void initState() {
+    pageUpdate();
+
     setInputType(false);
     focusNodes2.addListener(() {
       print(focusNodes2.hasFocus);
@@ -61,7 +63,7 @@ class _InputRegisterState extends State<InputRegister> {
     FocusScope.of(context).requestFocus(focusNodes);
   }
 
-  Future<void> pageUpdate() async {
+  void pageUpdate() {
     setState(() {});
   }
 
@@ -119,10 +121,11 @@ class _InputRegisterState extends State<InputRegister> {
                             txtCon.text = '';
                           },
                           onChanged: (value) async {
-                            await _controller.barcodeScan(value);
+                            await _controller.barcodeScan(value, context);
                             //print('aaa');
-                            setState(() {});
+
                             txtCon.text = '';
+                            setState(() {});
                           },
                           //  onTapOutside: (value){
                           //    print('ddd');
@@ -166,9 +169,11 @@ class _InputRegisterState extends State<InputRegister> {
                                 cursorWidth: 0,
                                 decoration: const InputDecoration(
                                     border: InputBorder.none),
-                                onFieldSubmitted: (value) {
+                                onFieldSubmitted: (value) async {
                                   outTap = false;
+                                  await _controller.barcodeScan(value, context);
                                   setFocus();
+                                  setState(() {});
                                 },
                               ),
                               TextFormField(
@@ -184,6 +189,28 @@ class _InputRegisterState extends State<InputRegister> {
                               ),
                             ]),
                           ),
+                          Expanded(
+                              flex: 1,
+                              child: GestureDetector(
+                                child: const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  //color: Colors.green,
+                                  child: Icon(Icons.keyboard,
+                                      color: Colors.greenAccent //Colors.blue,
+                                      ),
+                                ),
+                                onTap: () async {
+                                  print('클릭');
+
+                                  //await _controller.setKeyboardClick(true);
+                                  outTap = true;
+                                  FocusScope.of(context)
+                                      .requestFocus(focusNodes2);
+
+                                  setState(() {});
+                                },
+                              ))
                           // Expanded(
                           //     flex: 1,
                           //     child: GestureDetector(

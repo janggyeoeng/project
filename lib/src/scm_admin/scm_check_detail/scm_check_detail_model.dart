@@ -49,12 +49,6 @@ class ScmCheckDetailModel {
     detailData.value = boxdata;
   }
 
-  Future<void> updatedata() async {
-    bool updata = await SqlConn.writeData(
-        "UPDATE TSPODELIVER_D_BOX SET IMPORTSPEC ='Y' WHERE PSU_NB ='PD2308000002' AND PSU_SQ ='1' AND BARCODE ='1'");
-    print(updata);
-  }
-
   TextEditingController gettxtCon() {
     return txtCon2;
   }
@@ -90,6 +84,19 @@ class ScmCheckDetailModel {
     });
   }
 
+  Future<void> updatedata(
+      String detailNumber, int superIndex, String box) async {
+    bool updata = await SqlConn.writeData(
+        "UPDATE TSPODELIVER_D_BOX SET BARCODE = '1' WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='${superIndex + 1}'AND BOX_NO =$box");
+    print('a:$updata');
+  }
+
+  Future<void> updatespec(String detailNumber, int superIndex) async {
+    bool updata = await SqlConn.writeData(
+        "UPDATE TSPODELIVER_D_BOX SET IMPORTSPEC = 'Y' WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='${superIndex + 1}' AND BARCODE = '1'");
+    print('a:$updata');
+  }
+
   Future<void> checkNb(String detailNumber) async {
     List<String> barcode = txtCon2.text.split('/');
     Map<String, dynamic> bcData = {"PSU_NB": barcode[0]};
@@ -102,7 +109,10 @@ class ScmCheckDetailModel {
   }
 
   Future<void> check(
-      BuildContext context, ScmCheckController scmCheckController) async {
+      BuildContext context,
+      ScmCheckController scmCheckController,
+      String detailNumber,
+      int superIndex) async {
     List<String> barcode = txtCon2.text.split('/');
     if (txtCon2.text.isEmpty) {
       return isuQtCheckDialog(context, '바코드가 입력되지 않았습니다.');
@@ -119,11 +129,11 @@ class ScmCheckDetailModel {
         // 1 : TURE , 0 : FALSE
         boxdata[i]["BARCODE"] = '1';
         scmCheckController.model.selectCheckDataList[superKey]![i] = '1';
-
-        updatedata();
-
+        updatedata(detailNumber, superIndex, bcData["BOX_NO"]);
+        updatespec(detailNumber, superIndex);
         same = true;
       } else if (boxdata[i]["BARCODE"] == '1') {
+        scmCheckController.model.selectCheckDataList[superKey]![i] = '1';
         continue;
       } else {
         boxdata[i]["BARCODE"] = '0';
