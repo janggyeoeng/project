@@ -170,6 +170,7 @@ class _ScmCheckState extends State<ScmCheck> {
                                     border: InputBorder.none),
                                 onFieldSubmitted: (value) async {
                                   print(value);
+                                  await _controller.specCheck(value);
                                   await _controller.scanBarcode(context, value);
                                   await _controller.setController();
                                   outTap = false;

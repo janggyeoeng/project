@@ -12,6 +12,14 @@ class ScmRegisterController {
     return model.textFocusListner(context, state);
   }
 
+  Future<void> setController() async {
+    return model.setController();
+  }
+
+  Color getColor(int index) {
+    return model.getColor(index);
+  }
+
   String getPsuNb() {
     return model.getPsuNb();
   }

@@ -9,8 +9,10 @@ class ScmCheckModel {
   var textFocusNodes = FocusNode();
   bool keyboardClick = false;
   List<Map<String, dynamic>> selectData = [];
+  List<Map<String, dynamic>> speccheckData = [];
   RxList<Map<String, dynamic>> detailData = RxList<Map<String, dynamic>>([]);
   List<bool> datavalue = [];
+  bool specTF = false;
 
   Map<String, List<String>> selectCheckDataList = {};
 
@@ -49,6 +51,16 @@ class ScmCheckModel {
   Future<void> updatedata(String detailNumber) async {
     await SqlConn.writeData(
         "UPDATE TSIMPORTINSPEC SET IMPORTSPEC = CASE WHEN (SELECT COUNT(IMPORTSPEC) FROM TSPODELIVER_D_BOX WHERE PSU_NB = '$detailNumber') > 0 THEN 'Y' ELSE NULL END WHERE PSU_NB = '$detailNumber'");
+  }
+
+  Future<void> specCheck(String detailNumber) async {
+    String spec = await SqlConn.readData(
+        "SELECT ('tsst'+IMPORTSPEC) AS IMPORTSPEC FROM TSIMPORTINSPEC WHERE PSU_NB = '$detailNumber'");
+    String specData = spec.replaceAll('tsst', '');
+    List<dynamic> decodedspec = jsonDecode(specData);
+    speccheckData = List<Map<String, dynamic>>.from(decodedspec);
+
+    print(speccheckData);
   }
 
   Future<void> setTitleData(Map<String, dynamic> map) async {
@@ -131,34 +143,52 @@ class ScmCheckModel {
       return isuQtCheckDialog(context, '바코드가 입력되지 않았습니다.');
     }
 
-    var dzRes = await SqlConn.writeData("exec SP_DZIF_PO_C '1001'");
-    //print('바코드 :$barcode');
-    //print('더존 결과 : $dzRes');
-    if (dzRes) {
-      detailDataString = await SqlConn.readData(
-          "SP_MOBILE_SCM_CHKECK_R '1001', '${scanData[0]}'");
-      //print('mes 결과 : $detailDataString');
-      String checkData = detailDataString.replaceAll('tsst', '');
-      List<dynamic> decodedData = jsonDecode(checkData);
-      selectData = List<Map<String, dynamic>>.from(decodedData);
-      detailData.value = selectData;
-      datavalue.add(false);
+    // if (detailData[0]["PSU_NB"] != scanData[0]) {
+    //   isuQtCheckDialog(context, '출고번호가 올바르지 않습니다.');
+    // }
 
-      // List<Map<String, dynamic>> modifiedData = decodedData.map((item) {
-      //   Map<String, dynamic> modifiedItem = {};
-      //   item.forEach((key, value) {
-      //     if (value is String) {
-      //       modifiedItem[key] = value.replaceAll('tsst', '');
-      //     } else {
-      //       modifiedItem[key] = value;
-      //     }
-      //   });
-      //   return modifiedItem;
-      // }).toList();
+    for (int i = 0; i < speccheckData.length; i++) {
+      if (speccheckData[i]["IMPORTSPEC"] == 'Y') {
+        specTF = true;
+        break;
+      } else {
+        specTF = false;
+      }
+    }
+    if (specTF == true) {
+      isuQtCheckDialog(context, '수입검사가 완료되었습니다.');
+    }
+    if (specTF == false) {
+      var dzRes = await SqlConn.writeData("exec SP_DZIF_PO_C '1001'");
+      //print('바코드 :$barcode');
+      //print('더존 결과 : $dzRes');
+      if (dzRes) {
+        detailDataString = await SqlConn.readData(
+            "SP_MOBILE_SCM_CHKECK_R '1001', '${scanData[0]}'");
+        //print('mes 결과 : $detailDataString');
+        String checkData = detailDataString.replaceAll('tsst', '');
+        List<dynamic> decodedData = jsonDecode(checkData);
+        selectData = List<Map<String, dynamic>>.from(decodedData);
+        detailData.value = selectData;
 
-      // detailData.value = modifiedData;
+        datavalue.add(false);
 
-      await setTitleData(detailData[0]);
+        // List<Map<String, dynamic>> modifiedData = decodedData.map((item) {
+        //   Map<String, dynamic> modifiedItem = {};
+        //   item.forEach((key, value) {
+        //     if (value is String) {
+        //       modifiedItem[key] = value.replaceAll('tsst', '');
+        //     } else {
+        //       modifiedItem[key] = value;
+        //     }
+        //   });
+        //   return modifiedItem;
+        // }).toList();
+
+        // detailData.value = modifiedData;
+
+        await setTitleData(detailData[0]);
+      }
     }
   }
 
