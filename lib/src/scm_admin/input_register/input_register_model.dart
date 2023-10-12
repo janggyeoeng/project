@@ -40,6 +40,24 @@ class ScmRegisterModel {
     trNm = map['TR_NM'];
   }
 
+  //각 인덱스마다 체크된 항목이 있는지 검사하는 리스트  1있으면 검사완료 아니면 팝업창 출력
+  Future<void> checkList(BuildContext context) async {
+    for (var key in selectCheckDataList.keys) {
+      List<String>? values = selectCheckDataList[key];
+      if (values != null && values.contains('1')) {
+        check = true;
+        break;
+      } else {
+        check = false;
+      }
+    }
+    if (check == true) {
+      print('검사완료');
+    } else {
+      isuQtCheckDialog(context, '검사 목록이 없습니다.');
+    }
+  }
+
   dynamic textFocusListner(BuildContext context, void Function()? state) {
     return textFocusNodes.addListener(() {
       print(textFocusNodes.hasFocus);
@@ -52,11 +70,12 @@ class ScmRegisterModel {
     });
   }
 
+  // 바코드 스캔 영역
   Future<void> barcodeScan(String barcode, BuildContext context) async {
     List scanData = [];
     scanData = barcode.split('/');
     String detailDataString = '';
-
+    // 수입검사가 이루어진 데이터 찾아내기
     String count = await SqlConn.readData(
         "SELECT COUNT(IMPORTSPEC) AS NUMBER FROM TSIMPORTINSPEC WHERE PSU_NB = '${scanData[0]}'");
     List<dynamic> decodedData = jsonDecode(count);
@@ -69,7 +88,9 @@ class ScmRegisterModel {
         check = false;
       }
     }
+
     if (check == true) {
+      //수입검사완료된 리스트 생성
       detailDataString = await SqlConn.readData(
           "exec SP_MOBILE_SCM_REGIST_R '1001', '${scanData[0]}'");
       String detailData = detailDataString.replaceAll('tsst', '');
@@ -78,6 +99,7 @@ class ScmRegisterModel {
       rsData.value = selectData1;
       await setTitleData(rsData[0]);
     } else {
+      // 수입검사가 이루어진게 없을때
       isuQtCheckDialog(context, '수입검사가 이루어지지않았습니다.');
     }
   }

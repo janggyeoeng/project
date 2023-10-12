@@ -131,8 +131,11 @@ class _ScmRegisterDetailState extends State<ScmRegisterDetail> {
                                 onFieldSubmitted: (value) async {
                                   print(value);
                                   //await _controller.scanBarcode(value);
-                                  _controller.check(context, widget.controller1,
-                                      widget.detailNumber, widget.index);
+                                  _controller.barcodecheck(
+                                      context,
+                                      widget.controller1,
+                                      widget.detailNumber,
+                                      widget.index);
 
                                   outTap = false;
                                   _controller.setFocus(context);
@@ -152,8 +155,11 @@ class _ScmRegisterDetailState extends State<ScmRegisterDetail> {
                                             BorderSide(color: Colors.grey))),
                                 onFieldSubmitted: (value) async {
                                   _controller.checkNb(widget.detailNumber);
-                                  _controller.check(context, widget.controller1,
-                                      widget.detailNumber, widget.index);
+                                  _controller.barcodecheck(
+                                      context,
+                                      widget.controller1,
+                                      widget.detailNumber,
+                                      widget.index);
                                   outTap = false;
                                   _controller.setFocus(context);
                                   setState(() {});

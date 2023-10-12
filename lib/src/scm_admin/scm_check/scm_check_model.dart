@@ -48,11 +48,13 @@ class ScmCheckModel {
     }
   }
 
+  //Y로 변경
   Future<void> updatedata(String detailNumber) async {
     await SqlConn.writeData(
         "UPDATE TSIMPORTINSPEC SET IMPORTSPEC = CASE WHEN (SELECT COUNT(IMPORTSPEC) FROM TSPODELIVER_D_BOX WHERE PSU_NB = '$detailNumber') > 0 THEN 'Y' ELSE NULL END WHERE PSU_NB = '$detailNumber'");
   }
 
+  //SPEC =Y인지 체크
   Future<void> specCheck(String detailNumber) async {
     String spec = await SqlConn.readData(
         "SELECT ('tsst'+IMPORTSPEC) AS IMPORTSPEC FROM TSIMPORTINSPEC WHERE PSU_NB = '$detailNumber'");
@@ -107,6 +109,7 @@ class ScmCheckModel {
     });
   }
 
+  //선택한 박스가 하나라도 있으면 수입검사로 넘어감
   Future<void> checkList(BuildContext context) async {
     for (var key in selectCheckDataList.keys) {
       List<String>? values = selectCheckDataList[key];

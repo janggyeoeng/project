@@ -130,12 +130,13 @@ class InputDelete extends StatelessWidget {
                 child: ListView.builder(
                   itemBuilder: (context, index) {
                     return Container(
-                      margin: EdgeInsets.all(3),
+                      margin: const EdgeInsets.all(3),
                       height: 100,
                       width: double.infinity,
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(15)),
                         border:
                             Border.all(color: Colors.black.withOpacity(0.5)),
                       ),

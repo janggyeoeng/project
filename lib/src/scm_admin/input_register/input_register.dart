@@ -548,21 +548,27 @@ class _InputRegisterState extends State<InputRegister> {
             ),
           ],
         ),
-        bottomNavigationBar: const BottomAppBar(
+        bottomNavigationBar: BottomAppBar(
           color: Colors.grey,
           height: 60,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.border_color, color: Colors.white),
-              SizedBox(
-                width: 3,
-              ),
-              Text(
-                ' 입고등록',
-                style: TextStyle(fontSize: 30, color: Colors.white),
-              ),
-            ],
+          child: GestureDetector(
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.border_color, color: Colors.white),
+                SizedBox(
+                  width: 3,
+                ),
+                Text(
+                  ' 입고등록',
+                  style: TextStyle(fontSize: 30, color: Colors.white),
+                ),
+              ],
+            ),
+            onTap: () {
+              _controller.checkList(context);
+              print('${_controller.model.selectCheckDataList}');
+            },
           ),
         ),
       ),

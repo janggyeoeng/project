@@ -33,12 +33,12 @@ class ScmRegisterDetailController extends GetxController {
     return model.setKeyboardColor();
   }
 
-  Future<void> check(
+  Future<void> barcodecheck(
       BuildContext context,
       ScmRegisterController scmRegisterController,
       String detailNumber,
       int superIndex) async {
-    return model.check(
+    return model.barcodecheck(
         context, scmRegisterController, detailNumber, superIndex);
   }
 

@@ -16,6 +16,10 @@ class ScmRegisterController {
     return model.setController();
   }
 
+  Future<void> checkList(BuildContext context) async {
+    return model.checkList(context);
+  }
+
   Color getColor(int index) {
     return model.getColor(index);
   }
