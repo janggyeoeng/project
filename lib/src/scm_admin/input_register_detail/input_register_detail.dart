@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hnde_pda/src/scm_admin/scm_check/scm_check_controller.dart';
+import 'package:hnde_pda/src/scm_admin/input_register/input_register_controller.dart';
+import 'package:hnde_pda/src/scm_admin/input_register_detail/input_register_detail_controller.dart';
 
-import 'package:hnde_pda/src/scm_admin/scm_check_detail/scm_check_detail_controller.dart';
-
-class ScmCheckDetail extends StatefulWidget {
-  String detailNumber;
+class ScmRegisterDetail extends StatefulWidget {
+  String detailNumber = '';
   String trNm = '';
-  ScmCheckController controller1;
+  ScmRegisterController controller1;
   int index;
 
-  ScmCheckDetail(
+  ScmRegisterDetail(
       {super.key,
       required this.detailNumber,
       required this.trNm,
@@ -20,11 +19,11 @@ class ScmCheckDetail extends StatefulWidget {
       required this.index});
 
   @override
-  State<ScmCheckDetail> createState() => _ScmCheckDetailState();
+  State<ScmRegisterDetail> createState() => _ScmRegisterDetailState();
 }
 
-class _ScmCheckDetailState extends State<ScmCheckDetail> {
-  final ScmCheckDetailController _controller = ScmCheckDetailController();
+class _ScmRegisterDetailState extends State<ScmRegisterDetail> {
+  final ScmRegisterDetailController _controller = ScmRegisterDetailController();
 
   TextEditingController txtCon = TextEditingController();
 
@@ -132,8 +131,11 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
                                 onFieldSubmitted: (value) async {
                                   print(value);
                                   //await _controller.scanBarcode(value);
-                                  _controller.check(context, widget.controller1,
-                                      widget.detailNumber, widget.index);
+                                  _controller.barcodecheck(
+                                      context,
+                                      widget.controller1,
+                                      widget.detailNumber,
+                                      widget.index);
 
                                   outTap = false;
                                   _controller.setFocus(context);
@@ -153,8 +155,11 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
                                             BorderSide(color: Colors.grey))),
                                 onFieldSubmitted: (value) async {
                                   _controller.checkNb(widget.detailNumber);
-                                  _controller.check(context, widget.controller1,
-                                      widget.detailNumber, widget.index);
+                                  _controller.barcodecheck(
+                                      context,
+                                      widget.controller1,
+                                      widget.detailNumber,
+                                      widget.index);
                                   outTap = false;
                                   _controller.setFocus(context);
                                   setState(() {});
@@ -395,12 +400,12 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
             ),
           ),
           onTap: () async {
-            // widget.controller1.model.datavalue[widget.index] = true;
+            //widget.controller1.model.datavalue[widget.index] = true;
             _controller.setSelectChk();
             widget.controller1.model.datavalue[widget.index] =
                 _controller.getselect();
             // print('AAAA:${_controller.model.boxdata}');
-            widget.controller1.setKeyboardClick(false);
+            //widget.controller1.setKeyboardClick(false);
             Get.back();
             //_controller.updatedata(widget.detailNumber, widget.index);
             // _controller.saveEnd(widget.detailNumber);

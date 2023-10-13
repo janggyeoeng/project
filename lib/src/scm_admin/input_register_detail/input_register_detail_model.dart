@@ -2,11 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hnde_pda/src/scm_admin/input_register/input_register_controller.dart';
 import 'package:hnde_pda/src/scm_admin/scm_check/scm_check_controller.dart';
 
 import 'package:sql_conn/sql_conn.dart';
 
-class ScmCheckDetailModel {
+class ScmRegisterDetailModel {
   Rx<List<Map<String, dynamic>>> detailData =
       Rx<List<Map<String, dynamic>>>([]);
   List<Map<String, dynamic>> boxdata = [];
@@ -15,19 +16,19 @@ class ScmCheckDetailModel {
   var textFocusNodes = FocusNode();
   bool keyboardClick = false;
   List<String> scanData = [];
-  bool psunb = false;
-  bool same = false;
-  bool same1 = false;
-  bool same2 = false;
-  bool select = false;
+  bool psunb = false; //출고번호
+  bool bccheck = false; //바코드 체크
+  bool hdcheck = false; //헤더체크
+  bool select = false; //datavalue 변경
 
   String superKey = "";
 
   TextEditingController txtCon = TextEditingController();
   TextEditingController txtCon2 = TextEditingController();
 
+  // 디테일박스 조회
   Future<void> boxData(String detailNumber,
-      ScmCheckController scmCheckController, int superIndex) async {
+      ScmRegisterController scmRegisterController, int superIndex) async {
     // scanData = barcode.split('/');
     String detailDataString = await SqlConn.readData(
         "SELECT ('TSST_'+A.PSU_NB)AS PSU_NB,('TSST_'+CONVERT(NVARCHAR,A.PSU_SQ))AS PSU_SQ,('TSST_'+A.BOX_NO)AS BOX_NO,('TSST_'+A.ITEM_CD)AS ITEM_CD,('TSST_'+CONVERT(NVARCHAR,A.PACK_QT))AS PACK_QT,('TSST_'+A.BARCODE)AS BARCODE,('TSST_'+A.IMPORTSPEC)AS IMPORTSPEC FROM TSPODELIVER_D_BOX A  LEFT JOIN TSPODELIVER_D B ON A.PSU_NB = B.PSU_NB  AND A.PSU_SQ = B.PSU_SQ WHERE A.PSU_NB = '$detailNumber' AND A.PSU_SQ = '${superIndex + 1}'");
@@ -36,14 +37,14 @@ class ScmCheckDetailModel {
     List<dynamic> decodedData = jsonDecode(checkData);
 
     superKey = superIndex.toString();
-    scmCheckController.model.selectCheckDataList[superIndex.toString()] = [];
+    scmRegisterController.model.selectCheckDataList[superIndex.toString()] = [];
 
     for (int i = 0; i < decodedData.length; i++) {
-      scmCheckController.model.selectCheckDataList[superIndex.toString()]!
+      scmRegisterController.model.selectCheckDataList[superIndex.toString()]!
           .add("0");
     }
 
-    print('asdqweasd : ${scmCheckController.model.selectCheckDataList}');
+    //print('asdqweasd : ${scmRegisterController.model.selectCheckDataList}');
 
     boxdata = List<Map<String, dynamic>>.from(decodedData);
     detailData.value = boxdata;
@@ -51,6 +52,10 @@ class ScmCheckDetailModel {
 
   TextEditingController gettxtCon() {
     return txtCon2;
+  }
+
+  bool getselect() {
+    return select;
   }
 
   FocusNode getTxtNode() {
@@ -84,6 +89,7 @@ class ScmCheckDetailModel {
     });
   }
 
+  //맞는 인덱스의 박스 바코드 변경
   Future<void> updatedata(
       String detailNumber, int superIndex, String box) async {
     bool updata = await SqlConn.writeData(
@@ -91,12 +97,14 @@ class ScmCheckDetailModel {
     print('a:$updata');
   }
 
+  //바코드가 1인값들에 IMPORTSPEC에 Y 넣기
   Future<void> updatespec(String detailNumber, int superIndex) async {
     bool updata = await SqlConn.writeData(
         "UPDATE TSPODELIVER_D_BOX SET IMPORTSPEC = 'Y' WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='${superIndex + 1}' AND BARCODE = '1'");
     print('a:$updata');
   }
 
+  // 출고번호 체크
   Future<void> checkNb(String detailNumber) async {
     List<String> barcode = txtCon2.text.split('/');
     Map<String, dynamic> bcData = {"PSU_NB": barcode[0]};
@@ -104,13 +112,14 @@ class ScmCheckDetailModel {
       psunb = false;
     } else {
       psunb = true;
-      same = false;
+      bccheck = false;
     }
   }
 
-  Future<void> check(
+  //바코드 체크
+  Future<void> barcodecheck(
       BuildContext context,
-      ScmCheckController scmCheckController,
+      ScmRegisterController scmRegisterController,
       String detailNumber,
       int superIndex) async {
     List<String> barcode = txtCon2.text.split('/');
@@ -126,44 +135,42 @@ class ScmCheckDetailModel {
       if (psunb == true &&
           bcData["PSU_SQ"] == boxdata[i]["PSU_SQ"] &&
           bcData["BOX_NO"] == boxdata[i]["BOX_NO"]) {
+        //출고번호와 박스번호 비교
         // 1 : TURE , 0 : FALSE
         boxdata[i]["BARCODE"] = '1';
-        scmCheckController.model.selectCheckDataList[superKey]![i] = '1';
+        scmRegisterController.model.selectCheckDataList[superKey]![i] =
+            '1'; //체크리스트에 1넣기
         updatedata(detailNumber, superIndex, bcData["BOX_NO"]);
         updatespec(detailNumber, superIndex);
-        same = true;
+        bccheck = true;
       } else if (boxdata[i]["BARCODE"] == '1') {
-        scmCheckController.model.selectCheckDataList[superKey]![i] = '1';
+        scmRegisterController.model.selectCheckDataList[superKey]![i] = '1';
         continue;
       } else {
         boxdata[i]["BARCODE"] = '0';
-        scmCheckController.model.selectCheckDataList[superKey]![i] = '0';
+        scmRegisterController.model.selectCheckDataList[superKey]![i] = '0';
       }
     }
     if (psunb == false) {
       isuQtCheckDialog(context, '출고번호가 올바르지 않습니다.');
-    } else if (psunb == true && same == false) {
+    } else if (psunb == true && bccheck == false) {
       isuQtCheckDialog(context, '박스번호가 올바르지 않습니다.');
     }
 
-    print(scmCheckController.model.selectCheckDataList);
-  }
-
-  bool getselect() {
-    return select;
+    print(scmRegisterController.model.selectCheckDataList);
   }
 
   Future<void> setSelectChk() async {
+    //헤더박스 색깔변경위한 체크
     for (int i = 0; i < detailData.value.length; i++) {
       if (boxdata[i]["BARCODE"] == '1') {
-        same2 = true;
-
+        hdcheck = true;
         break;
       } else {
         print('no');
       }
     }
-    if (same2 == true) {
+    if (hdcheck == true) {
       select = true;
     }
   }

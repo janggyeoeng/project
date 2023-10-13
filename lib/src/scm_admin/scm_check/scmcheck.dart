@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hnde_pda/src/scm_admin/scm_check/scm_check_controller.dart';
 import 'package:get/get.dart';
+
 import 'package:hnde_pda/src/scm_admin/scm_check_detail/scm_check_detail.dart';
 
 class ScmCheck extends StatefulWidget {
@@ -25,8 +24,6 @@ class _ScmCheckState extends State<ScmCheck> {
 
 // });
 
-  var testNodes = FocusNode();
-
   final ScmCheckController _controller = ScmCheckController();
   String detailNumber = '';
   String testStd = '';
@@ -36,6 +33,8 @@ class _ScmCheckState extends State<ScmCheck> {
   TextEditingController txtCon = TextEditingController();
   TextEditingController txtCon2 = TextEditingController();
 
+  FocusNode testNode = FocusNode();
+
   void pageUpdate() {
     setState(() {});
   }
@@ -44,6 +43,7 @@ class _ScmCheckState extends State<ScmCheck> {
   void initState() {
     //setInputType(false);
     //print('asasas ${txtCon.value}');
+    print("a:${_controller.model.datavalue}");
     _controller.pageLoad();
     _controller.textFocusListner(context, pageUpdate);
     _controller.barcodeFocusListner(context);
@@ -74,32 +74,32 @@ class _ScmCheckState extends State<ScmCheck> {
             const SizedBox(
               height: 10,
             ),
-            // RawKeyboardListener(
-            //   focusNode: testNodes,
-            //   onKey: (e)async{
-            //     if(e.isKeyPressed(LogicalKeyboardKey.enter)){
-            //         print('testStd : ${testStd}'); //.replaceAll('Shift', '').replaceAll('Left', '').replaceAll(' ', '')
-            //         await _controller.scanBarcode(testStd.replaceAll('Shift', '').replaceAll('Left', '').replaceAll(' ', ''));
-            //         testStd = '';
-            //         setState(() {});
-            //     }else{
-            //       if(e.runtimeType.toString() == 'RawKeyDownEvent'){
+            //RawKeyboardListener(
+            // focusNode: testNode,
+            //onKey: (e) async {
+            //  if (e.isKeyPressed(LogicalKeyboardKey.enter)) {
+            //print(
+            //        'testStd : $testStd'); //.replaceAll('Shift', '').replaceAll('Left', '').replaceAll(' ', '')
+            //   await _controller.scanBarcode(testStd
+            //.replaceAll('Shift', '')
+            //      .replaceAll('Left', '')
+            //      .replaceAll(' ', ''));
+            //  testStd = '';
+            //  setState(() {});
+            //} else {
+            //   if (e.runtimeType.toString() == 'RawKeyDownEvent') {
+            //      String key = e.logicalKey.keyLabel;
+            //      setState(() {
+            //        testStd += key;
+            //      });
+            //  }
+            //}
 
-            //         String key = e.logicalKey.keyLabel;
-            //         if(key != null){
-            //           setState(() {
-            //            testStd += key;
-            //           });
-            //         }
-
-            //       }
-            //     }
-
-            //     // testStd += e.data.logicalKey.toString();
-            //     //   if(e.isKeyPressed(LogicalKeyboardKey.enter)){
-            //     //     print(testStd);
-            //     //   }
-            //   },
+            // // testStd += e.data.logicalKey.toString();
+            // //   if(e.isKeyPressed(LogicalKeyboardKey.enter)){
+            // //     print(testStd);
+            // //   }
+            //},
             Row(
               //child:
               //child:
@@ -125,7 +125,7 @@ class _ScmCheckState extends State<ScmCheck> {
                           },
                           onChanged: (value) async {
                             //print(txtCon.text);
-                            await _controller.scanBarcode(value);
+                            await _controller.scanBarcode(context, value);
 
                             txtCon.text = '';
                             txtCon.clear();
@@ -170,9 +170,11 @@ class _ScmCheckState extends State<ScmCheck> {
                                     border: InputBorder.none),
                                 onFieldSubmitted: (value) async {
                                   print(value);
-                                  await _controller.scanBarcode(value);
+                                  await _controller.specCheck(value);
+                                  await _controller.scanBarcode(context, value);
+                                  await _controller.setController();
                                   outTap = false;
-                                  _controller.setFocus(context);
+                                  // _controller.setFocus(context);
                                   setState(() {});
                                 },
                               ),
@@ -235,7 +237,6 @@ class _ScmCheckState extends State<ScmCheck> {
             const SizedBox(
               height: 10,
             ),
-
             Row(
               children: [
                 Expanded(
@@ -274,11 +275,9 @@ class _ScmCheckState extends State<ScmCheck> {
                     ])),
               ],
             ),
-
             const SizedBox(
               height: 10,
             ),
-
             Row(
               children: [
                 Expanded(
@@ -326,7 +325,6 @@ class _ScmCheckState extends State<ScmCheck> {
                 color: Colors.grey.shade800,
               ),
             ),
-
             Expanded(
               flex: 2,
               child: Container(
@@ -343,12 +341,22 @@ class _ScmCheckState extends State<ScmCheck> {
                     itemBuilder: (context, index) {
                       //final selectedItem = _controller.outputlist[index];
                       return GestureDetector(
-                        onTap: () {
+                        onTap: () async {
+                          await _controller.setKeyboardClick(true);
+                          // _controller.model.datavalue = true;
+                          // FocusManager.instance.primaryFocus?.unfocus();
+                          //FocusScope.of(context).offset;
+
                           Get.to(() => ScmCheckDetail(
-                              detailNumber: _controller.model.detailData[index]
-                                  ["PSU_NB"],
-                              trNm: _controller.model.detailData[index]
-                                  ["TR_NM"]));
+                                detailNumber: _controller
+                                    .model.detailData[index]["PSU_NB"],
+                                trNm: _controller.model.detailData[index]
+                                    ["TR_NM"],
+                                controller1: _controller,
+                                index: index,
+                              ));
+                          setState(() {});
+
                           //     ));
                         },
                         child: Container(
@@ -375,8 +383,8 @@ class _ScmCheckState extends State<ScmCheck> {
                                         child: Container(
                                           alignment: Alignment.center,
                                           decoration: BoxDecoration(
-                                              color: Colors.grey
-                                                  .withOpacity(0.3),
+                                              color: _controller.getColor(
+                                                  index),
                                               borderRadius:
                                                   const BorderRadius.only(
                                                       topLeft:
@@ -415,7 +423,7 @@ class _ScmCheckState extends State<ScmCheck> {
                                       Expanded(
                                         flex: 1,
                                         child: Container(
-                                          color: Colors.grey.withOpacity(0.3),
+                                          color: _controller.getColor(index),
                                           child: const Center(
                                             child: Text(
                                               '품명',
@@ -451,8 +459,8 @@ class _ScmCheckState extends State<ScmCheck> {
                                         child: Container(
                                           alignment: Alignment.center,
                                           decoration: BoxDecoration(
-                                              color: Colors.grey
-                                                  .withOpacity(0.3),
+                                              color: _controller.getColor(
+                                                  index),
                                               borderRadius:
                                                   const BorderRadius.only(
                                                       bottomLeft:
@@ -483,7 +491,7 @@ class _ScmCheckState extends State<ScmCheck> {
                                       Expanded(
                                         flex: 1,
                                         child: Container(
-                                          color: Colors.grey.withOpacity(0.3),
+                                          color: _controller.getColor(index),
                                           child: const Center(
                                             child: Text(
                                               '입고수량',
@@ -522,21 +530,30 @@ class _ScmCheckState extends State<ScmCheck> {
             ),
           ],
         ),
-        bottomNavigationBar: const BottomAppBar(
+        bottomNavigationBar: BottomAppBar(
           color: Colors.grey,
           height: 60,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.border_color, color: Colors.white),
-              SizedBox(
-                width: 3,
-              ),
-              Text(
-                ' 수입검사',
-                style: TextStyle(fontSize: 30, color: Colors.white),
-              ),
-            ],
+          child: GestureDetector(
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.border_color, color: Colors.white),
+                SizedBox(
+                  width: 3,
+                ),
+                Text(
+                  ' 수입검사',
+                  style: TextStyle(fontSize: 30, color: Colors.white),
+                ),
+              ],
+            ),
+            onTap: () async {
+              await _controller.checkList(context);
+              await _controller.updatedata(_controller.getPsuNb());
+              Get.back();
+
+              setState(() {});
+            },
           ),
         ),
       ),

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hnde_pda/src/scm_admin/input_register/input_register_controller.dart';
+import 'package:hnde_pda/src/scm_admin/input_register_detail/input_register_detail_model.dart';
 import 'package:hnde_pda/src/scm_admin/scm_check/scm_check_controller.dart';
-import 'package:hnde_pda/src/scm_admin/scm_check_detail/scm_check_detail_model.dart';
 
-class ScmCheckDetailController extends GetxController {
-  ScmCheckDetailModel model = ScmCheckDetailModel();
+class ScmRegisterDetailController extends GetxController {
+  ScmRegisterDetailModel model = ScmRegisterDetailModel();
 
   Future<void> boxData(String detailNumber,
-      ScmCheckController scmCheckController, int superIndex) async {
-    return model.boxData(detailNumber, scmCheckController, superIndex);
+      ScmRegisterController scmRegisterController, int superIndex) async {
+    return model.boxData(detailNumber, scmRegisterController, superIndex);
   }
 
   dynamic textFocusListner(BuildContext context, void Function()? state) {
@@ -32,12 +33,13 @@ class ScmCheckDetailController extends GetxController {
     return model.setKeyboardColor();
   }
 
-  Future<void> check(
+  Future<void> barcodecheck(
       BuildContext context,
-      ScmCheckController scmCheckController,
+      ScmRegisterController scmRegisterController,
       String detailNumber,
       int superIndex) async {
-    return model.check(context, scmCheckController, detailNumber, superIndex);
+    return model.barcodecheck(
+        context, scmRegisterController, detailNumber, superIndex);
   }
 
   Future<void> updatedata(

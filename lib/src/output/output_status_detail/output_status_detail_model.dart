@@ -11,6 +11,7 @@ class OutputStatusDetailModel {
   Future<void> outputStDetailData(String detailNumber) async {
     String detailDataString =
         await SqlConn.readData("SP_MOBILE_DELIVER_R4 '1001', '$detailNumber'");
+    print('dkdsk : $detailDataString');
     List<dynamic> decodedData = jsonDecode(detailDataString);
     detailData.value = List<Map<String, dynamic>>.from(decodedData);
     print(detailData);

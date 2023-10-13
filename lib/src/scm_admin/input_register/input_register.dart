@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hnde_pda/src/scm_admin/input_register_controller.dart';
+import 'package:hnde_pda/src/scm_admin/input_register/input_register_controller.dart';
 
 import 'package:get/get.dart';
+import 'package:hnde_pda/src/scm_admin/input_register_detail/input_register_detail.dart';
 
 class InputRegister extends StatefulWidget {
   const InputRegister({Key? key}) : super(key: key);
@@ -37,6 +38,8 @@ class _InputRegisterState extends State<InputRegister> {
 
   @override
   void initState() {
+    pageUpdate();
+
     setInputType(false);
     focusNodes2.addListener(() {
       print(focusNodes2.hasFocus);
@@ -61,7 +64,7 @@ class _InputRegisterState extends State<InputRegister> {
     FocusScope.of(context).requestFocus(focusNodes);
   }
 
-  Future<void> pageUpdate() async {
+  void pageUpdate() {
     setState(() {});
   }
 
@@ -119,10 +122,11 @@ class _InputRegisterState extends State<InputRegister> {
                             txtCon.text = '';
                           },
                           onChanged: (value) async {
-                            await _controller.barcodeScan(value);
+                            await _controller.barcodeScan(value, context);
                             //print('aaa');
-                            setState(() {});
+
                             txtCon.text = '';
+                            setState(() {});
                           },
                           //  onTapOutside: (value){
                           //    print('ddd');
@@ -166,9 +170,13 @@ class _InputRegisterState extends State<InputRegister> {
                                 cursorWidth: 0,
                                 decoration: const InputDecoration(
                                     border: InputBorder.none),
-                                onFieldSubmitted: (value) {
+                                onFieldSubmitted: (value) async {
                                   outTap = false;
+                                  await _controller.barcodeScan(value, context);
+                                  await _controller.setController();
+                                  print('${_controller.model.datavalue}');
                                   setFocus();
+                                  setState(() {});
                                 },
                               ),
                               TextFormField(
@@ -184,6 +192,28 @@ class _InputRegisterState extends State<InputRegister> {
                               ),
                             ]),
                           ),
+                          Expanded(
+                              flex: 1,
+                              child: GestureDetector(
+                                child: const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  //color: Colors.green,
+                                  child: Icon(Icons.keyboard,
+                                      color: Colors.greenAccent //Colors.blue,
+                                      ),
+                                ),
+                                onTap: () async {
+                                  print('클릭');
+
+                                  //await _controller.setKeyboardClick(true);
+                                  outTap = true;
+                                  FocusScope.of(context)
+                                      .requestFocus(focusNodes2);
+
+                                  setState(() {});
+                                },
+                              ))
                           // Expanded(
                           //     flex: 1,
                           //     child: GestureDetector(
@@ -338,11 +368,14 @@ class _InputRegisterState extends State<InputRegister> {
                   () => ListView.builder(
                     itemCount: _controller.model.rsData.length,
                     itemBuilder: (context, index) {
-                      //final selectedItem = _controller.outputlist[index];
+                      final selectedItem = _controller.model.rsData[index];
                       return GestureDetector(
                         onTap: () {
-                          // Get.to(() => OutputStatusDetail(
-                          //     detailNumber: selectedItem["ISU_NB"],));
+                          Get.to(() => ScmRegisterDetail(
+                              detailNumber: selectedItem["PSU_NB"],
+                              trNm: selectedItem["TR_NM"],
+                              controller1: _controller,
+                              index: index));
                         },
                         child: Container(
                           margin: const EdgeInsets.all(3),
@@ -369,8 +402,8 @@ class _InputRegisterState extends State<InputRegister> {
                                         child: Container(
                                           alignment: Alignment.center,
                                           decoration: BoxDecoration(
-                                              color: Colors.grey
-                                                  .withOpacity(0.3),
+                                              color: _controller.getColor(
+                                                  index),
                                               borderRadius:
                                                   const BorderRadius.only(
                                                       topLeft:
@@ -408,7 +441,7 @@ class _InputRegisterState extends State<InputRegister> {
                                         Expanded(
                                           flex: 1,
                                           child: Container(
-                                            color: Colors.grey.withOpacity(0.3),
+                                            color: _controller.getColor(index),
                                             child: const Center(
                                               child: Text(
                                                 '품명',
@@ -444,8 +477,8 @@ class _InputRegisterState extends State<InputRegister> {
                                         child: Container(
                                           alignment: Alignment.center,
                                           decoration: BoxDecoration(
-                                              color: Colors.grey
-                                                  .withOpacity(0.3),
+                                              color: _controller.getColor(
+                                                  index),
                                               borderRadius:
                                                   const BorderRadius.only(
                                                       bottomLeft:
@@ -476,7 +509,7 @@ class _InputRegisterState extends State<InputRegister> {
                                       Expanded(
                                         flex: 1,
                                         child: Container(
-                                          color: Colors.grey.withOpacity(0.3),
+                                          color: _controller.getColor(index),
                                           child: const Center(
                                             child: Text(
                                               '입고수량',
@@ -493,7 +526,7 @@ class _InputRegisterState extends State<InputRegister> {
                                           //color: Colors.grey.withOpacity(0.3),
                                           child: Center(
                                             child: Text(
-                                              '${_controller.model.rsData[index]["ISU_QT"]}',
+                                              '${_controller.model.rsData[index]["PSU_QT"]}',
                                               style:
                                                   const TextStyle(fontSize: 14),
                                             ),
@@ -515,21 +548,27 @@ class _InputRegisterState extends State<InputRegister> {
             ),
           ],
         ),
-        bottomNavigationBar: const BottomAppBar(
+        bottomNavigationBar: BottomAppBar(
           color: Colors.grey,
           height: 60,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.border_color, color: Colors.white),
-              SizedBox(
-                width: 3,
-              ),
-              Text(
-                ' 입고등록',
-                style: TextStyle(fontSize: 30, color: Colors.white),
-              ),
-            ],
+          child: GestureDetector(
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.border_color, color: Colors.white),
+                SizedBox(
+                  width: 3,
+                ),
+                Text(
+                  ' 입고등록',
+                  style: TextStyle(fontSize: 30, color: Colors.white),
+                ),
+              ],
+            ),
+            onTap: () {
+              _controller.checkList(context);
+              print('${_controller.model.selectCheckDataList}');
+            },
           ),
         ),
       ),

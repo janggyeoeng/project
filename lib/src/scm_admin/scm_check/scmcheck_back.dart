@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ScmCheck extends StatefulWidget {
-  const ScmCheck({Key? key}) : super(key: key);
+class ScmCheck1 extends StatefulWidget {
+  const ScmCheck1({Key? key}) : super(key: key);
 
   @override
-  State<ScmCheck> createState() => _ScmCheckState();
+  State<ScmCheck1> createState() => _ScmCheck1State();
 }
 
-class _ScmCheckState extends State<ScmCheck> {
+class _ScmCheck1State extends State<ScmCheck1> {
 //   var focusNode = FocusNode(onKey: (node, event) {
 //     if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
 //         // Do something

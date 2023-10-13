@@ -4,8 +4,6 @@ import 'package:hnde_pda/src/output/output_status_detail/output_status_detail_mo
 
 class OpDetailController {
   OutputStatusDetailModel model = OutputStatusDetailModel();
-  Rx<List<Map<String, dynamic>>> detailData =
-      Rx<List<Map<String, dynamic>>>([]);
 
   Future<void> outputStDetailData(String detailNumber) async {
     return model.outputStDetailData(detailNumber);

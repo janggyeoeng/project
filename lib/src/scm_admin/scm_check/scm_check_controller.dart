@@ -1,11 +1,12 @@
+import 'package:get/get.dart';
 import 'package:hnde_pda/src/scm_admin/scm_check/scm_check_model.dart';
 import 'package:flutter/material.dart';
 
-class ScmCheckController {
+class ScmCheckController extends GetxController {
   ScmCheckModel model = ScmCheckModel();
 
   Future<void> pageLoad() async {
-    await model.pageLoad();
+    update();
   }
 
   Future<void> setKeyboardClick(bool bo) async {
@@ -18,6 +19,10 @@ class ScmCheckController {
 
   dynamic barcodeFocusListner(BuildContext context) {
     return model.barcodeFocusListner(context);
+  }
+
+  Future<void> setController() async {
+    return model.setController();
   }
 
   FocusNode getTextNode() {
@@ -36,8 +41,32 @@ class ScmCheckController {
     return model.setKeyboardColor();
   }
 
-  Future<void> scanBarcode(String barcode) async {
-    await model.scanBarcode(barcode);
+  Future<void> backKey(BuildContext context) async {
+    return model.backKey(context);
+  }
+
+  Future<void> checkList(BuildContext context) async {
+    return model.checkList(context);
+  }
+
+  Color getColor(int index) {
+    return model.getColor(index);
+  }
+
+  Future<void> scanBarcode(BuildContext context, String barcode) async {
+    await model.scanBarcode(context, barcode);
+  }
+
+  Future<void> specCheck(String detailNumber) async {
+    return model.specCheck(detailNumber);
+  }
+
+  Future<void> cleardata(String detailNumber) async {
+    return model.cleardata(detailNumber);
+  }
+
+  Future<void> updatedata(String detailNumber) async {
+    return model.updatedata(detailNumber);
   }
 
   String getPsuNb() {
