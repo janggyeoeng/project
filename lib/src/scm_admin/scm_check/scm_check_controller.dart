@@ -69,6 +69,10 @@ class ScmCheckController extends GetxController {
     return model.updatedata(detailNumber);
   }
 
+  String psuQt(int index) {
+    return model.psuQt(index);
+  }
+
   String getPsuNb() {
     return model.getPsuNb();
   }

@@ -14,12 +14,13 @@ class ScmCheckDetailModel {
   var barcodeFocusNodes = FocusNode();
   var textFocusNodes = FocusNode();
   bool keyboardClick = false;
-  List<String> scanData = [];
-  bool psunb = false;
-  bool same = false;
-  bool same1 = false;
-  bool same2 = false;
-  bool select = false;
+  List<String> scanData = []; //바코드 스캔
+  List<String> barcodedata = []; // 선택 바코드(PSU_NB + PSU_SQ)
+  bool psunb = false; //출고번호
+  bool bccheck = false; //바코드 체크
+  bool hdcheck = false; //헤더체크
+  bool select = false; //datavalue 변경
+  int sum = 0; //선택 입고 수량
 
   String superKey = "";
 
@@ -59,6 +60,10 @@ class ScmCheckDetailModel {
 
   FocusNode getBcNode() {
     return barcodeFocusNodes;
+  }
+
+  bool getselect() {
+    return select;
   }
 
   dynamic textFocusListner(BuildContext context, void Function()? state) {
@@ -104,7 +109,7 @@ class ScmCheckDetailModel {
       psunb = false;
     } else {
       psunb = true;
-      same = false;
+      bccheck = false;
     }
   }
 
@@ -128,10 +133,12 @@ class ScmCheckDetailModel {
           bcData["BOX_NO"] == boxdata[i]["BOX_NO"]) {
         // 1 : TURE , 0 : FALSE
         boxdata[i]["BARCODE"] = '1';
+        // await plus();
         scmCheckController.model.selectCheckDataList[superKey]![i] = '1';
         updatedata(detailNumber, superIndex, bcData["BOX_NO"]);
         updatespec(detailNumber, superIndex);
-        same = true;
+
+        bccheck = true;
       } else if (boxdata[i]["BARCODE"] == '1') {
         scmCheckController.model.selectCheckDataList[superKey]![i] = '1';
         continue;
@@ -142,28 +149,23 @@ class ScmCheckDetailModel {
     }
     if (psunb == false) {
       isuQtCheckDialog(context, '출고번호가 올바르지 않습니다.');
-    } else if (psunb == true && same == false) {
+    } else if (psunb == true && bccheck == false) {
       isuQtCheckDialog(context, '박스번호가 올바르지 않습니다.');
     }
 
     print(scmCheckController.model.selectCheckDataList);
   }
 
-  bool getselect() {
-    return select;
-  }
-
   Future<void> setSelectChk() async {
     for (int i = 0; i < detailData.value.length; i++) {
       if (boxdata[i]["BARCODE"] == '1') {
-        same2 = true;
-
+        hdcheck = true;
         break;
       } else {
         print('no');
       }
     }
-    if (same2 == true) {
+    if (hdcheck == true) {
       select = true;
     }
   }
@@ -197,6 +199,26 @@ class ScmCheckDetailModel {
 
   //   await boxData(detailNumber);
   // }
+
+  //선택된 PSU_SQ나타내기
+  Future<void> checkcount(String psu, String psusq) async {
+    for (int i = 0; i < detailData.value.length; i++) {
+      if (boxdata[i]['BARCODE'] == '1') {
+        barcodedata.addNonNull(psu + psusq.toString().padLeft(4, '0'));
+      } else {}
+    }
+  }
+
+  //선택된 수량 더하기
+  Future<void> plus() async {
+    for (int i = 0; i < detailData.value.length; i++) {
+      if (boxdata[i]['BARCODE'] == '1') {
+        sum = sum + int.parse(boxdata[i]['PACK_QT']);
+        print(int.parse(boxdata[i]['BARCODE']));
+        print(sum);
+      } else {}
+    }
+  }
 
   void isuQtCheckDialog(BuildContext context, String errorMessage) {
     showDialog(
