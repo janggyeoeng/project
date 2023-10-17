@@ -409,6 +409,7 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
             widget.controller1.setKeyboardClick(false);
             widget.controller1.model.sum[widget.index] =
                 _controller.model.sum.toString();
+            print('abc:${widget.controller1.model.sum[widget.index]}');
 
             widget.controller1.model.barcodedata =
                 _controller.model.barcodedata;

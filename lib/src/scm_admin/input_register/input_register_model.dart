@@ -70,6 +70,12 @@ class ScmRegisterModel {
     });
   }
 
+  Future<void> clearcolor(String detailNumber, int superIndex) async {
+    bool updata = await SqlConn.writeData(
+        "UPDATE TSPODELIVER_D_BOX SET BARCODE = null WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='${superIndex + 1}'");
+    print('a:$updata');
+  }
+
   // 바코드 스캔 영역
   Future<void> barcodeScan(String barcode, BuildContext context) async {
     List scanData = [];
@@ -92,7 +98,7 @@ class ScmRegisterModel {
     if (check == true) {
       //수입검사완료된 리스트 생성
       detailDataString = await SqlConn.readData(
-          "exec SP_MOBILE_SCM_REGIST_R '1001', '${scanData[0]}'");
+          "exec SP_MOBILE_SCM_REGIST_R_D '1001', '${scanData[0]}'");
       String detailData = detailDataString.replaceAll('tsst', '');
       List<dynamic> decodedData = jsonDecode(detailData);
       selectData1 = List<Map<String, dynamic>>.from(decodedData);

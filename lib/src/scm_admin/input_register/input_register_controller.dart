@@ -20,6 +20,10 @@ class ScmRegisterController {
     return model.checkList(context);
   }
 
+  Future<void> clearcolor(String detailNumber, int superIndex) async {
+    return model.clearcolor(detailNumber, superIndex);
+  }
+
   Color getColor(int index) {
     return model.getColor(index);
   }

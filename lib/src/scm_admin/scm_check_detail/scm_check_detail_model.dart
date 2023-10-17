@@ -27,6 +27,7 @@ class ScmCheckDetailModel {
   TextEditingController txtCon = TextEditingController();
   TextEditingController txtCon2 = TextEditingController();
 
+  //디테일 박스 조회
   Future<void> boxData(String detailNumber,
       ScmCheckController scmCheckController, int superIndex) async {
     // scanData = barcode.split('/');
@@ -39,6 +40,7 @@ class ScmCheckDetailModel {
     superKey = superIndex.toString();
     scmCheckController.model.selectCheckDataList[superIndex.toString()] = [];
 
+    //박스 개수만큼 0집어넣기
     for (int i = 0; i < decodedData.length; i++) {
       scmCheckController.model.selectCheckDataList[superIndex.toString()]!
           .add("0");
@@ -89,6 +91,7 @@ class ScmCheckDetailModel {
     });
   }
 
+//맞는 인덱스의 박스 바코드 변경
   Future<void> updatedata(
       String detailNumber, int superIndex, String box) async {
     bool updata = await SqlConn.writeData(
@@ -96,12 +99,14 @@ class ScmCheckDetailModel {
     print('a:$updata');
   }
 
+//바코드가 1인값들에 IMPORTSPEC에 Y 넣기
   Future<void> updatespec(String detailNumber, int superIndex) async {
     bool updata = await SqlConn.writeData(
         "UPDATE TSPODELIVER_D_BOX SET IMPORTSPEC = 'Y' WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='${superIndex + 1}' AND BARCODE = '1'");
     print('a:$updata');
   }
 
+// 출고번호 체크
   Future<void> checkNb(String detailNumber) async {
     List<String> barcode = txtCon2.text.split('/');
     Map<String, dynamic> bcData = {"PSU_NB": barcode[0]};
@@ -113,6 +118,7 @@ class ScmCheckDetailModel {
     }
   }
 
+//바코드 체크
   Future<void> check(
       BuildContext context,
       ScmCheckController scmCheckController,

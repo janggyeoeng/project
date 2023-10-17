@@ -46,7 +46,7 @@ class ScmCheckModel {
   }
 
   Future<void> setController() async {
-    for (int i = 1; i < detailData.length; i++) {
+    for (int i = 0; i < detailData.length; i++) {
       datavalue.add(false);
       sum.add('0');
     }
@@ -182,28 +182,36 @@ class ScmCheckModel {
         detailDataString = await SqlConn.readData(
             "SP_MOBILE_SCM_CHKECK_R '1001', '${scanData[0]}'");
         //print('mes 결과 : $detailDataString');
+
+        print("asdadsa : $detailDataString");
+
         String checkData = detailDataString.replaceAll('tsst', '');
         List<dynamic> decodedData = jsonDecode(checkData);
-        selectData = List<Map<String, dynamic>>.from(decodedData);
-        detailData.value = selectData;
 
-        datavalue.add(false); // 색깔변하기위한 조건 false = 회색 , true = 파랑
+        if (decodedData.isNotEmpty) {
+          selectData = List<Map<String, dynamic>>.from(decodedData);
+          detailData.value = selectData;
 
-        // List<Map<String, dynamic>> modifiedData = decodedData.map((item) {
-        //   Map<String, dynamic> modifiedItem = {};
-        //   item.forEach((key, value) {
-        //     if (value is String) {
-        //       modifiedItem[key] = value.replaceAll('tsst', '');
-        //     } else {
-        //       modifiedItem[key] = value;
-        //     }
-        //   });
-        //   return modifiedItem;
-        // }).toList();
+          datavalue.add(false); // 색깔변하기위한 조건 false = 회색 , true = 파랑
 
-        // detailData.value = modifiedData;
+          // List<Map<String, dynamic>> modifiedData = decodedData.map((item) {
+          //   Map<String, dynamic> modifiedItem = {};
+          //   item.forEach((key, value) {
+          //     if (value is String) {
+          //       modifiedItem[key] = value.replaceAll('tsst', '');
+          //     } else {
+          //       modifiedItem[key] = value;
+          //     }
+          //   });
+          //   return modifiedItem;
+          // }).toList();
 
-        await setTitleData(detailData[0]);
+          // detailData.value = modifiedData;
+
+          await setTitleData(detailData[0]);
+        } else {
+          isuQtCheckDialog(context, '바코드가 올바르지 않습니다.');
+        }
       }
     }
   }

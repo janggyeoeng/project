@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class OutPutOrderModel {
+  //선택 날짜 가져오기
   Future<DateTimeRange?> selectDateRange(
       BuildContext context, DateTimeRange selectedDateRange) async {
     return await showDateRangePicker(
