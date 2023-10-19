@@ -53,6 +53,14 @@ class ScmCheckDetailController extends GetxController {
   //   return model.saveEnd(detailNumber);
   // }
 
+  Future<void> plus() async {
+    return model.plus();
+  }
+
+  Future<void> checkcount(String psu, String psusq) async {
+    return model.checkcount(psu, psusq);
+  }
+
   Future<void> setSelectChk() async {
     update();
     return model.setSelectChk();

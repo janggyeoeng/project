@@ -8,16 +8,19 @@ class ScmCheckModel {
   var barcodeFocusNodes = FocusNode();
   var textFocusNodes = FocusNode();
   bool keyboardClick = false;
-  List<Map<String, dynamic>> selectData = [];
-  List<Map<String, dynamic>> speccheckData = [];
+  List<Map<String, dynamic>> selectData = []; // 조회데이터 리스트
+  List<Map<String, dynamic>> speccheckData = []; //IMPORTSPEC 리스트
   RxList<Map<String, dynamic>> detailData = RxList<Map<String, dynamic>>([]);
   List<bool> datavalue = [];
-  bool specTF = false;
+  List<String> sum = [];
+  List<String> barcodedata = [];
+  bool specTF = false; //IMPORTSPEC 체크
 
   Map<String, List<String>> selectCheckDataList = {};
 
   String psuNb = '';
   String trNm = '';
+  //String sum = '';
   bool check = false;
 
   Future<void> pageLoad() async {}
@@ -43,8 +46,9 @@ class ScmCheckModel {
   }
 
   Future<void> setController() async {
-    for (int i = 1; i < detailData.length; i++) {
+    for (int i = 0; i < detailData.length; i++) {
       datavalue.add(false);
+      sum.add('0');
     }
   }
 
@@ -136,6 +140,14 @@ class ScmCheckModel {
     // }
   }
 
+  String psuQt(int index) {
+    if (datavalue[index] == false) {
+      return detailData[index]["PSU_QT"];
+    } else {
+      return sum[index];
+    }
+  }
+
   Future<void> scanBarcode(BuildContext context, String barcode) async {
     List<String> scanData = [];
     scanData = barcode.split('/');
@@ -162,6 +174,7 @@ class ScmCheckModel {
       isuQtCheckDialog(context, '수입검사가 완료되었습니다.');
     }
     if (specTF == false) {
+      //수입체크가 안됐을때 실행
       var dzRes = await SqlConn.writeData("exec SP_DZIF_PO_C '1001'");
       //print('바코드 :$barcode');
       //print('더존 결과 : $dzRes');
@@ -169,28 +182,36 @@ class ScmCheckModel {
         detailDataString = await SqlConn.readData(
             "SP_MOBILE_SCM_CHKECK_R '1001', '${scanData[0]}'");
         //print('mes 결과 : $detailDataString');
+
+        print("asdadsa : $detailDataString");
+
         String checkData = detailDataString.replaceAll('tsst', '');
         List<dynamic> decodedData = jsonDecode(checkData);
-        selectData = List<Map<String, dynamic>>.from(decodedData);
-        detailData.value = selectData;
 
-        datavalue.add(false);
+        if (decodedData.isNotEmpty) {
+          selectData = List<Map<String, dynamic>>.from(decodedData);
+          detailData.value = selectData;
 
-        // List<Map<String, dynamic>> modifiedData = decodedData.map((item) {
-        //   Map<String, dynamic> modifiedItem = {};
-        //   item.forEach((key, value) {
-        //     if (value is String) {
-        //       modifiedItem[key] = value.replaceAll('tsst', '');
-        //     } else {
-        //       modifiedItem[key] = value;
-        //     }
-        //   });
-        //   return modifiedItem;
-        // }).toList();
+          datavalue.add(false); // 색깔변하기위한 조건 false = 회색 , true = 파랑
 
-        // detailData.value = modifiedData;
+          // List<Map<String, dynamic>> modifiedData = decodedData.map((item) {
+          //   Map<String, dynamic> modifiedItem = {};
+          //   item.forEach((key, value) {
+          //     if (value is String) {
+          //       modifiedItem[key] = value.replaceAll('tsst', '');
+          //     } else {
+          //       modifiedItem[key] = value;
+          //     }
+          //   });
+          //   return modifiedItem;
+          // }).toList();
 
-        await setTitleData(detailData[0]);
+          // detailData.value = modifiedData;
+
+          await setTitleData(detailData[0]);
+        } else {
+          isuQtCheckDialog(context, '바코드가 올바르지 않습니다.');
+        }
       }
     }
   }

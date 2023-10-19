@@ -132,8 +132,11 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
                                 onFieldSubmitted: (value) async {
                                   print(value);
                                   //await _controller.scanBarcode(value);
-                                  _controller.check(context, widget.controller1,
-                                      widget.detailNumber, widget.index);
+                                  await _controller.check(
+                                      context,
+                                      widget.controller1,
+                                      widget.detailNumber,
+                                      widget.index);
 
                                   outTap = false;
                                   _controller.setFocus(context);
@@ -155,6 +158,7 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
                                   _controller.checkNb(widget.detailNumber);
                                   _controller.check(context, widget.controller1,
                                       widget.detailNumber, widget.index);
+                                  //_controller.plus();
                                   outTap = false;
                                   _controller.setFocus(context);
                                   setState(() {});
@@ -396,15 +400,29 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
           ),
           onTap: () async {
             // widget.controller1.model.datavalue[widget.index] = true;
-            _controller.setSelectChk();
+            _controller.plus();
+            await _controller.setSelectChk();
+
             widget.controller1.model.datavalue[widget.index] =
                 _controller.getselect();
             // print('AAAA:${_controller.model.boxdata}');
             widget.controller1.setKeyboardClick(false);
+            widget.controller1.model.sum[widget.index] =
+                _controller.model.sum.toString();
+            print('abc:${widget.controller1.model.sum[widget.index]}');
+
+            widget.controller1.model.barcodedata =
+                _controller.model.barcodedata;
+
+            _controller.checkcount(
+                widget.controller1.model.detailData[widget.index]["PSU_NB"],
+                widget.controller1.model.detailData[widget.index]["PSU_SQ"]);
+            print(_controller.model.barcodedata);
+            print('a:${_controller.model.sum}');
             Get.back();
             //_controller.updatedata(widget.detailNumber, widget.index);
             // _controller.saveEnd(widget.detailNumber);
-            setState(() {});
+            //setState(() {});
           },
         ),
       ),

@@ -28,6 +28,7 @@ class _ScmCheckState extends State<ScmCheck> {
   String detailNumber = '';
   String testStd = '';
   String psuNb = '';
+
   bool outTap = false;
 
   TextEditingController txtCon = TextEditingController();
@@ -508,7 +509,7 @@ class _ScmCheckState extends State<ScmCheck> {
                                           //color: Colors.grey.withOpacity(0.3),
                                           child: Center(
                                             child: Text(
-                                              '${_controller.model.selectData[index]["PSU_QT"]}',
+                                              _controller.psuQt(index),
                                               style:
                                                   const TextStyle(fontSize: 14),
                                             ),
@@ -550,6 +551,7 @@ class _ScmCheckState extends State<ScmCheck> {
             onTap: () async {
               await _controller.checkList(context);
               await _controller.updatedata(_controller.getPsuNb());
+              print(_controller.model.barcodedata);
               Get.back();
 
               setState(() {});
