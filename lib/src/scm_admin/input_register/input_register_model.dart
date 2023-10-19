@@ -14,12 +14,13 @@ class ScmRegisterModel {
   String trNm = '';
   bool check = false;
   List<bool> datavalue = [];
-
+  List<String> sum = [];
   Map<String, List<String>> selectCheckDataList = {};
 
   Future<void> setController() async {
     for (int i = 0; i < rsData.length; i++) {
       datavalue.add(false);
+      sum.add('0');
     }
   }
 
@@ -33,6 +34,14 @@ class ScmRegisterModel {
 
   String getTrNm() {
     return trNm;
+  }
+
+  String psuQt(int index) {
+    if (datavalue[index] == false) {
+      return rsData[index]["PSU_QT"];
+    } else {
+      return sum[index];
+    }
   }
 
   Future<void> setTitleData(Map<String, dynamic> map) async {
@@ -81,13 +90,14 @@ class ScmRegisterModel {
     List scanData = [];
     scanData = barcode.split('/');
     String detailDataString = '';
+
     // 수입검사가 이루어진 데이터 찾아내기
     String count = await SqlConn.readData(
         "SELECT COUNT(IMPORTSPEC) AS NUMBER FROM TSIMPORTINSPEC WHERE PSU_NB = '${scanData[0]}'");
     List<dynamic> decodedData = jsonDecode(count);
     selectData = List<Map<String, dynamic>>.from(decodedData);
     for (int i = 0; i < selectData.length; i++) {
-      if (selectData[i]["NUMBER"] >= 1) {
+      if (selectData[i]["NUMBER"] >= 0) {
         check = true;
         break;
       } else {

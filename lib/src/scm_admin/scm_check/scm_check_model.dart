@@ -89,7 +89,6 @@ class ScmCheckModel {
 
   dynamic textFocusListner(BuildContext context, void Function()? state) {
     return textFocusNodes.addListener(() {
-      print(textFocusNodes.hasFocus);
       if (textFocusNodes.hasFocus == false) {
         keyboardClick = false;
 
@@ -157,60 +156,61 @@ class ScmCheckModel {
     if (barcode.isEmpty) {
       return isuQtCheckDialog(context, '바코드가 입력되지 않았습니다.');
     }
+    if (barcode.length != 12 || !barcode.startsWith('PD')) {
+      isuQtCheckDialog(context, '바코드가 올바르지 않습니다.');
+    } else {
+      // if (detailData[0]["PSU_NB"] != scanData[0]) {
+      //   isuQtCheckDialog(context, '출고번호가 올바르지 않습니다.');
+      // }
 
-    // if (detailData[0]["PSU_NB"] != scanData[0]) {
-    //   isuQtCheckDialog(context, '출고번호가 올바르지 않습니다.');
-    // }
-
-    for (int i = 0; i < speccheckData.length; i++) {
-      if (speccheckData[i]["IMPORTSPEC"] == 'Y') {
-        specTF = true;
-        break;
-      } else {
-        specTF = false;
-      }
-    }
-    if (specTF == true) {
-      isuQtCheckDialog(context, '수입검사가 완료되었습니다.');
-    }
-    if (specTF == false) {
-      //수입체크가 안됐을때 실행
-      var dzRes = await SqlConn.writeData("exec SP_DZIF_PO_C '1001'");
-      //print('바코드 :$barcode');
-      //print('더존 결과 : $dzRes');
-      if (dzRes) {
-        detailDataString = await SqlConn.readData(
-            "SP_MOBILE_SCM_CHKECK_R '1001', '${scanData[0]}'");
-        //print('mes 결과 : $detailDataString');
-
-        print("asdadsa : $detailDataString");
-
-        String checkData = detailDataString.replaceAll('tsst', '');
-        List<dynamic> decodedData = jsonDecode(checkData);
-
-        if (decodedData.isNotEmpty) {
-          selectData = List<Map<String, dynamic>>.from(decodedData);
-          detailData.value = selectData;
-
-          datavalue.add(false); // 색깔변하기위한 조건 false = 회색 , true = 파랑
-
-          // List<Map<String, dynamic>> modifiedData = decodedData.map((item) {
-          //   Map<String, dynamic> modifiedItem = {};
-          //   item.forEach((key, value) {
-          //     if (value is String) {
-          //       modifiedItem[key] = value.replaceAll('tsst', '');
-          //     } else {
-          //       modifiedItem[key] = value;
-          //     }
-          //   });
-          //   return modifiedItem;
-          // }).toList();
-
-          // detailData.value = modifiedData;
-
-          await setTitleData(detailData[0]);
+      for (int i = 0; i < speccheckData.length; i++) {
+        if (speccheckData[i]["IMPORTSPEC"] == 'Y') {
+          specTF = true;
+          break;
         } else {
-          isuQtCheckDialog(context, '바코드가 올바르지 않습니다.');
+          specTF = false;
+        }
+      }
+      if (specTF == true) {
+        isuQtCheckDialog(context, '수입검사가 완료되었습니다.');
+      }
+      if (specTF == false) {
+        //수입체크가 안됐을때 실행
+        var dzRes = await SqlConn.writeData("exec SP_DZIF_PO_C '1001'");
+        //print('바코드 :$barcode');
+        //print('더존 결과 : $dzRes');
+        if (dzRes) {
+          detailDataString = await SqlConn.readData(
+              "SP_MOBILE_SCM_CHKECK_R_BAK '1001', '${scanData[0]}'");
+          //print('mes 결과 : $detailDataString');
+
+          String checkData = detailDataString.replaceAll('tsst', '');
+          List<dynamic> decodedData = jsonDecode(checkData);
+          print("asdadsa : $checkData");
+          if (decodedData.isNotEmpty) {
+            selectData = List<Map<String, dynamic>>.from(decodedData);
+            detailData.value = selectData;
+
+            datavalue.add(false); // 색깔변하기위한 조건 false = 회색 , true = 파랑
+
+            // List<Map<String, dynamic>> modifiedData = decodedData.map((item) {
+            //   Map<String, dynamic> modifiedItem = {};
+            //   item.forEach((key, value) {
+            //     if (value is String) {
+            //       modifiedItem[key] = value.replaceAll('tsst', '');
+            //     } else {
+            //       modifiedItem[key] = value;
+            //     }
+            //   });
+            //   return modifiedItem;
+            // }).toList();
+
+            // detailData.value = modifiedData;
+
+            await setTitleData(detailData[0]);
+          } else {
+            isuQtCheckDialog(context, '수입검사 목록이 없습니다.');
+          }
         }
       }
     }

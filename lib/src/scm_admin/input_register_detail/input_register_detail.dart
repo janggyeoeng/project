@@ -401,9 +401,12 @@ class _ScmRegisterDetailState extends State<ScmRegisterDetail> {
           ),
           onTap: () async {
             //widget.controller1.model.datavalue[widget.index] = true;
+            _controller.plus();
             _controller.setSelectChk();
             widget.controller1.model.datavalue[widget.index] =
                 _controller.getselect();
+            widget.controller1.model.sum[widget.index] =
+                _controller.model.sum.toString();
             // print('AAAA:${_controller.model.boxdata}');
             //widget.controller1.setKeyboardClick(false);
             Get.back();

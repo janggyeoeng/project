@@ -20,6 +20,7 @@ class ScmRegisterDetailModel {
   bool bccheck = false; //바코드 체크
   bool hdcheck = false; //헤더체크
   bool select = false; //datavalue 변경
+  int sum = 0;
 
   String superKey = "";
 
@@ -172,6 +173,16 @@ class ScmRegisterDetailModel {
     }
     if (hdcheck == true) {
       select = true;
+    }
+  }
+
+  Future<void> plus() async {
+    for (int i = 0; i < detailData.value.length; i++) {
+      if (boxdata[i]['BARCODE'] == '1') {
+        sum = sum + int.parse(boxdata[i]['PACK_QT']);
+        print(int.parse(boxdata[i]['BARCODE']));
+        print(sum);
+      } else {}
     }
   }
 

@@ -60,6 +60,10 @@ class ScmRegisterDetailController extends GetxController {
     return model.setSelectChk();
   }
 
+  Future<void> plus() async {
+    return model.plus();
+  }
+
   bool getselect() {
     return model.getselect();
   }

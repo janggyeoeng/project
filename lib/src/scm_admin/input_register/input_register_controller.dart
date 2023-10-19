@@ -16,6 +16,10 @@ class ScmRegisterController {
     return model.setController();
   }
 
+  String psuQt(int index) {
+    return model.psuQt(index);
+  }
+
   Future<void> checkList(BuildContext context) async {
     return model.checkList(context);
   }

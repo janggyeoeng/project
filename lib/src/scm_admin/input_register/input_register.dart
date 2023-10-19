@@ -527,7 +527,7 @@ class _InputRegisterState extends State<InputRegister> {
                                           //color: Colors.grey.withOpacity(0.3),
                                           child: Center(
                                             child: Text(
-                                              '${_controller.model.rsData[index]["PSU_QT"]}',
+                                              _controller.psuQt(index),
                                               style:
                                                   const TextStyle(fontSize: 14),
                                             ),
