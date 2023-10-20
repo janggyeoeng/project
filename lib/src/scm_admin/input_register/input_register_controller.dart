@@ -24,7 +24,7 @@ class ScmRegisterController {
     return model.checkList(context);
   }
 
-  Future<void> clearcolor(String detailNumber, int superIndex) async {
+  Future<void> clearcolor(String detailNumber, String superIndex) async {
     return model.clearcolor(detailNumber, superIndex);
   }
 

@@ -8,7 +8,7 @@ class ScmRegisterDetailController extends GetxController {
   ScmRegisterDetailModel model = ScmRegisterDetailModel();
 
   Future<void> boxData(String detailNumber,
-      ScmRegisterController scmRegisterController, int superIndex) async {
+      ScmRegisterController scmRegisterController, String superIndex) async {
     return model.boxData(detailNumber, scmRegisterController, superIndex);
   }
 

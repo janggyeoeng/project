@@ -550,7 +550,7 @@ class _ScmCheckState extends State<ScmCheck> {
             ),
             onTap: () async {
               await _controller.checkList(context);
-              await _controller.updatedata(_controller.getPsuNb());
+              //await _controller.updatedata(_controller.getPsuNb());
               print(_controller.model.barcodedata);
               Get.back();
 

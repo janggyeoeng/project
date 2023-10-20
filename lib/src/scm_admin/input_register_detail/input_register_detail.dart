@@ -35,7 +35,8 @@ class _ScmRegisterDetailState extends State<ScmRegisterDetail> {
 
   @override
   void initState() {
-    _controller.boxData(widget.detailNumber, widget.controller1, widget.index);
+    _controller.boxData(widget.detailNumber, widget.controller1,
+        widget.controller1.model.selectData1[widget.index]["PSU_SQ"]);
     // print("a:${widget.controller1.model.datavalue}");
     super.initState();
     _controller.textFocusListner(context, pageUpdate);

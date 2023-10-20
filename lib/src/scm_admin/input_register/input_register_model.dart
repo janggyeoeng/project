@@ -79,9 +79,9 @@ class ScmRegisterModel {
     });
   }
 
-  Future<void> clearcolor(String detailNumber, int superIndex) async {
+  Future<void> clearcolor(String detailNumber, String superIndex) async {
     bool updata = await SqlConn.writeData(
-        "UPDATE TSPODELIVER_D_BOX SET BARCODE = null WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='${superIndex + 1}'");
+        "UPDATE TSPODELIVER_D_BOX SET BARCODE = null WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='$superIndex '");
     print('a:$updata');
   }
 
@@ -91,32 +91,42 @@ class ScmRegisterModel {
     scanData = barcode.split('/');
     String detailDataString = '';
 
-    // 수입검사가 이루어진 데이터 찾아내기
-    String count = await SqlConn.readData(
-        "SELECT COUNT(IMPORTSPEC) AS NUMBER FROM TSIMPORTINSPEC WHERE PSU_NB = '${scanData[0]}'");
-    List<dynamic> decodedData = jsonDecode(count);
-    selectData = List<Map<String, dynamic>>.from(decodedData);
-    for (int i = 0; i < selectData.length; i++) {
-      if (selectData[i]["NUMBER"] >= 0) {
-        check = true;
-        break;
-      } else {
-        check = false;
-      }
+    if (barcode.isEmpty) {
+      return isuQtCheckDialog(context, '바코드가 입력되지 않았습니다.');
     }
-
-    if (check == true) {
-      //수입검사완료된 리스트 생성
-      detailDataString = await SqlConn.readData(
-          "exec SP_MOBILE_SCM_REGIST_R_D '1001', '${scanData[0]}'");
-      String detailData = detailDataString.replaceAll('tsst', '');
-      List<dynamic> decodedData = jsonDecode(detailData);
-      selectData1 = List<Map<String, dynamic>>.from(decodedData);
-      rsData.value = selectData1;
-      await setTitleData(rsData[0]);
+    if (barcode.length != 12 || !barcode.startsWith('PD')) {
+      isuQtCheckDialog(context, '바코드가 올바르지 않습니다.');
     } else {
-      // 수입검사가 이루어진게 없을때
-      isuQtCheckDialog(context, '수입검사가 이루어지지않았습니다.');
+      // 수입검사가 이루어진 데이터 찾아내기
+      String count = await SqlConn.readData(
+          "SELECT COUNT(IMPORTSPEC) AS NUMBER FROM TSIMPORTINSPEC WHERE PSU_NB = '${scanData[0]}'");
+      List<dynamic> decodedData = jsonDecode(count);
+      selectData = List<Map<String, dynamic>>.from(decodedData);
+      for (int i = 0; i < selectData.length; i++) {
+        if (selectData[i]["NUMBER"] >= 0) {
+          check = true;
+          break;
+        } else {
+          check = false;
+        }
+      }
+
+      if (check == true) {
+        //수입검사완료된 리스트 생성
+        detailDataString = await SqlConn.readData(
+            "exec SP_MOBILE_SCM_REGIST_R_D '1001', '${scanData[0]}'");
+        String detailData = detailDataString.replaceAll('tsst', '');
+
+        List<dynamic> decodedData = jsonDecode(detailData);
+        if (decodedData.isNotEmpty) {
+          selectData1 = List<Map<String, dynamic>>.from(decodedData);
+          rsData.value = selectData1;
+          await setTitleData(rsData[0]);
+        } else {
+          // 수입검사가 이루어진게 없을때
+          isuQtCheckDialog(context, '수입검사가 이루어지지않았습니다.');
+        }
+      }
     }
   }
 

@@ -37,6 +37,13 @@ class ScmCheckModel {
     return trNm;
   }
 
+  int sqindex() {
+    for (int i = 0; i < detailData.length; i++) {
+      detailData[i]["PSU_SQ"];
+    }
+    return 0;
+  }
+
   Future<void> cleardata(String detailNumber) async {
     for (int i = 0; i < datavalue.length; i++) {
       datavalue[i] = false;
@@ -53,9 +60,9 @@ class ScmCheckModel {
   }
 
   //Y로 변경
-  Future<void> updatedata(String detailNumber) async {
+  Future<void> updatedata(String detailNumber, int index) async {
     await SqlConn.writeData(
-        "UPDATE TSIMPORTINSPEC SET IMPORTSPEC = CASE WHEN (SELECT COUNT(IMPORTSPEC) FROM TSPODELIVER_D_BOX WHERE PSU_NB = '$detailNumber') > 0 THEN 'Y' ELSE NULL END WHERE PSU_NB = '$detailNumber'");
+        "UPDATE TSIMPORTINSPEC SET IMPORTSPEC = CASE WHEN (SELECT COUNT(IMPORTSPEC) FROM TSPODELIVER_D_BOX WHERE PSU_NB = '$detailNumber' AND PSU_SQ ='$index' ) > 0 THEN 'Y' ELSE NULL END WHERE PSU_NB = '$detailNumber' AND PSU_SQ ='$index'");
   }
 
   //SPEC =Y인지 체크
