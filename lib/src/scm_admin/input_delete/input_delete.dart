@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hnde_pda/src/scm_admin/input_delete/input_delete_controller.dart';
 import 'package:hnde_pda/src/scm_admin/scm_check/scm_check_controller.dart';
 import 'package:get/get.dart';
 
@@ -24,7 +25,7 @@ class _InputDeleteState extends State<InputDelete> {
 
 // });
 
-  final ScmCheckController _controller = ScmCheckController();
+  final ScmDeleteController _controller = ScmDeleteController();
 
   var focusNodes = FocusNode();
   var focusNodes2 = FocusNode();
@@ -253,8 +254,9 @@ class _InputDeleteState extends State<InputDelete> {
                   ),
                 ),
                 Expanded(
-                    flex: 7,
-                    child: Row(children: [
+                  flex: 7,
+                  child: Row(
+                    children: [
                       const Expanded(
                         flex: 5,
                         child: Text(
@@ -265,7 +267,68 @@ class _InputDeleteState extends State<InputDelete> {
                         ),
                       ),
                       Expanded(flex: 1, child: Container())
-                    ])),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.withOpacity(0.3),
+                      borderRadius: const BorderRadius.all(Radius.circular(8)),
+                    ),
+                    child: const Text(
+                      '출고일자',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+                Expanded(
+                  flex: 6,
+                  child: Column(
+                    children: [
+                      Obx(() => Text(
+                            "${_controller.model.selectedDateRange.start.toLocal().toString().split(' ')[0]} ~ ${_controller.model.selectedDateRange.end.toLocal().toString().split(' ')[0]}",
+                            style: const TextStyle(fontSize: 17),
+                            textAlign: TextAlign.center,
+                          )),
+                    ],
+                  ),
+                ),
+                Expanded(
+                    flex: 1,
+                    child: IconButton(
+                        onPressed: () async {
+                          await _controller.selectDate(context);
+                          _controller.outputdata();
+                          setState(() {});
+                        },
+                        icon: const Icon(
+                          Icons.calendar_month,
+                          size: 28,
+                        ))
+                    // ElevatedButton(
+                    //   onPressed: () async {
+                    //     await _viewModel
+                    //         .selectDateRange(context);
+                    //   },
+                    //   child: const Icon(
+                    //     Icons.calendar_today_rounded,
+                    //     size: 27,
+                    //   ),
+                    // ),
+                    ),
               ],
             ),
             const SizedBox(
@@ -290,14 +353,11 @@ class _InputDeleteState extends State<InputDelete> {
                   ),
                 ),
                 child: ListView.builder(
-                  itemCount: 5,
+                  itemCount: _controller.model.deletedata.length,
                   itemBuilder: (context, index) {
                     //final selectedItem = _controller.outputlist[index];
                     return GestureDetector(
-                      onTap: () {
-                        // Get.to(() => OutputStatusDetail(
-                        //     detailNumber: selectedItem["ISU_NB"],));
-                      },
+                      onTap: () {},
                       child: Container(
                         margin: const EdgeInsets.all(3),
                         height: 120, // 아이템 높이 지정
@@ -342,10 +402,11 @@ class _InputDeleteState extends State<InputDelete> {
                                       flex: 5,
                                       child: Container(
                                         //color: Colors.grey.withOpacity(0.3),
-                                        child: const Center(
+                                        child: Center(
                                           child: Text(
-                                            'ISU_NB',
-                                            style: TextStyle(fontSize: 14),
+                                            '${_controller.model.deletedata[index]["RCV_NB"]}',
+                                            style:
+                                                const TextStyle(fontSize: 14),
                                           ),
                                         ),
                                       ),
@@ -378,10 +439,11 @@ class _InputDeleteState extends State<InputDelete> {
                                       flex: 2,
                                       child: Container(
                                         //color: Colors.grey.withOpacity(0.3),
-                                        child: const Center(
+                                        child: Center(
                                           child: Text(
-                                            'ITEM_CD',
-                                            style: TextStyle(fontSize: 14),
+                                            '${_controller.model.deletedata[index]["ITEM_CD"]}',
+                                            style:
+                                                const TextStyle(fontSize: 14),
                                           ),
                                         ),
                                       ),
@@ -404,10 +466,11 @@ class _InputDeleteState extends State<InputDelete> {
                                       flex: 2,
                                       child: Container(
                                         //color: Colors.grey.withOpacity(0.3),
-                                        child: const Center(
+                                        child: Center(
                                           child: Text(
-                                            'ITEM_NM',
-                                            style: TextStyle(fontSize: 14),
+                                            '${_controller.model.deletedata[index]["ITEM_NM"]}',
+                                            style:
+                                                const TextStyle(fontSize: 14),
                                           ),
                                         ),
                                       ),
@@ -443,10 +506,11 @@ class _InputDeleteState extends State<InputDelete> {
                                       flex: 2,
                                       child: Container(
                                         //color: Colors.grey.withOpacity(0.3),
-                                        child: const Center(
+                                        child: Center(
                                           child: Text(
-                                            'ISU_QT',
-                                            style: TextStyle(fontSize: 14),
+                                            '${_controller.model.deletedata[index]["PSU_QT"]}',
+                                            style:
+                                                const TextStyle(fontSize: 14),
                                           ),
                                         ),
                                       ),
@@ -469,10 +533,11 @@ class _InputDeleteState extends State<InputDelete> {
                                       flex: 2,
                                       child: Container(
                                         //color: Colors.grey.withOpacity(0.3),
-                                        child: const Center(
+                                        child: Center(
                                           child: Text(
-                                            'ISU_QT',
-                                            style: TextStyle(fontSize: 14),
+                                            '${_controller.model.deletedata[index]["RCV_QT"]}',
+                                            style:
+                                                const TextStyle(fontSize: 14),
                                           ),
                                         ),
                                       ),
