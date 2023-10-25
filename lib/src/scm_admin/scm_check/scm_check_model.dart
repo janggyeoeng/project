@@ -13,7 +13,7 @@ class ScmCheckModel {
   RxList<Map<String, dynamic>> detailData = RxList<Map<String, dynamic>>([]);
   List<bool> datavalue = [];
   List<String> sum = [];
-  List<String> barcodedata = [];
+
   bool specTF = false; //IMPORTSPEC 체크
 
   Map<String, List<String>> selectCheckDataList = {};
@@ -193,7 +193,7 @@ class ScmCheckModel {
 
           String checkData = detailDataString.replaceAll('tsst', '');
           List<dynamic> decodedData = jsonDecode(checkData);
-          print("asdadsa : $checkData");
+
           if (decodedData.isNotEmpty) {
             selectData = List<Map<String, dynamic>>.from(decodedData);
             detailData.value = selectData;

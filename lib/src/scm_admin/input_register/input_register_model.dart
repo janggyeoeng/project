@@ -2,14 +2,17 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hnde_pda/src/scm_admin/scm_check/scm_check_controller.dart';
 import 'package:sql_conn/sql_conn.dart';
 
 class ScmRegisterModel {
+  ScmCheckController controller1 = ScmCheckController();
   var barcodeFocusNodes = FocusNode();
   var textFocusNodes = FocusNode();
   RxList<Map<String, dynamic>> rsData = RxList<Map<String, dynamic>>([]);
   List<Map<String, dynamic>> selectData1 = [];
   List<Map<String, dynamic>> selectData = [];
+  List<String> barcodedata = [];
   String psuNb = '';
   String trNm = '';
   bool check = false;
@@ -80,9 +83,9 @@ class ScmRegisterModel {
   }
 
   Future<void> clearcolor(String detailNumber, String superIndex) async {
-    bool updata = await SqlConn.writeData(
+    bool updatecolor = await SqlConn.writeData(
         "UPDATE TSPODELIVER_D_BOX SET BARCODE = null WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='$superIndex '");
-    print('a:$updata');
+    print('a:$updatecolor');
   }
 
   // 바코드 스캔 영역
@@ -126,6 +129,18 @@ class ScmRegisterModel {
           // 수입검사가 이루어진게 없을때
           isuQtCheckDialog(context, '수입검사가 이루어지지않았습니다.');
         }
+      }
+    }
+  }
+
+  Future<void> regist() async {
+    for (int i = 0; i < barcodedata.length; i++) {
+      var regist = await SqlConn.writeData(
+          "exec  SP_MOBILE_DZSTOCK_C2 '1001', '${barcodedata[i]}'");
+      if (regist) {
+        print('됨');
+      } else {
+        print('안됨');
       }
     }
   }

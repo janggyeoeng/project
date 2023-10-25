@@ -44,6 +44,7 @@ class _InputDeleteState extends State<InputDelete> {
           ? FocusScope.of(context).requestFocus(focusNodes)
           : '';
     });
+
     super.initState();
   }
 
@@ -272,13 +273,17 @@ class _InputDeleteState extends State<InputDelete> {
                 ),
               ],
             ),
+            const SizedBox(
+              height: 10,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Expanded(
                   flex: 2,
                   child: Container(
-                    padding: const EdgeInsets.all(4),
+                    padding: const EdgeInsets.all(7),
+                    margin: const EdgeInsets.all(5.0),
                     decoration: BoxDecoration(
                       color: Colors.grey.withOpacity(0.3),
                       borderRadius: const BorderRadius.all(Radius.circular(8)),
@@ -286,7 +291,7 @@ class _InputDeleteState extends State<InputDelete> {
                     child: const Text(
                       '출고일자',
                       style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -345,214 +350,225 @@ class _InputDeleteState extends State<InputDelete> {
             Expanded(
               flex: 2,
               child: Container(
-                padding: const EdgeInsets.all(7),
-                decoration: const BoxDecoration(
-                  //color: Colors.white,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(15),
+                  padding: const EdgeInsets.all(7),
+                  decoration: const BoxDecoration(
+                    //color: Colors.white,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(15),
+                    ),
                   ),
-                ),
-                child: ListView.builder(
-                  itemCount: _controller.model.deletedata.length,
-                  itemBuilder: (context, index) {
-                    //final selectedItem = _controller.outputlist[index];
-                    return GestureDetector(
-                      onTap: () {},
-                      child: Container(
-                        margin: const EdgeInsets.all(3),
-                        height: 120, // 아이템 높이 지정
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(15),
-                          ),
-                          border: Border.all(
-                            color: Colors.black.withOpacity(0.5),
-                          ),
-                        ),
-                        child: Container(
-                          child: Column(
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 1,
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
+                  child: Obx(
+                    () => ListView.builder(
+                      itemCount: _controller.model.deletedata.length,
+                      itemBuilder: (context, index) {
+                        //final selectedItem = _controller.outputlist[index];
+                        return GestureDetector(
+                          onTap: () {},
+                          child: Container(
+                            margin: const EdgeInsets.all(3),
+                            height: 120, // 아이템 높이 지정
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(15),
+                              ),
+                              border: Border.all(
+                                color: Colors.black.withOpacity(0.5),
+                              ),
+                            ),
+                            child: Container(
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          flex: 1,
+                                          child: Container(
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                                color: Colors.grey
+                                                    .withOpacity(0.3),
+                                                borderRadius:
+                                                    const BorderRadius.only(
+                                                        topLeft:
+                                                            Radius.circular(
+                                                                15))),
+                                            child: const Center(
+                                              child: Text(
+                                                '입고번호',
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 5,
+                                          child: Container(
+                                            //color: Colors.grey.withOpacity(0.3),
+                                            child: Center(
+                                              child: Text(
+                                                '${_controller.model.deletedata[index]["RCV_NB"]}',
+                                                style: const TextStyle(
+                                                    fontSize: 14),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          flex: 1,
+                                          child: Container(
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Colors.grey.withOpacity(0.3),
+                                            ),
+                                            child: const Center(
+                                              child: Text(
+                                                '품번',
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 2,
+                                          child: Container(
+                                            //color: Colors.grey.withOpacity(0.3),
+                                            child: Center(
+                                              child: Text(
+                                                '${_controller.model.deletedata[index]["ITEM_CD"]}',
+                                                style: const TextStyle(
+                                                    fontSize: 14),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 1,
+                                          child: Container(
                                             color: Colors.grey.withOpacity(0.3),
-                                            borderRadius:
-                                                const BorderRadius.only(
-                                                    topLeft:
-                                                        Radius.circular(15))),
-                                        child: const Center(
-                                          child: Text(
-                                            '입고번호',
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold),
+                                            child: const Center(
+                                              child: Text(
+                                                '품명',
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
+                                        Expanded(
+                                          flex: 2,
+                                          child: Container(
+                                            //color: Colors.grey.withOpacity(0.3),
+                                            child: Center(
+                                              child: Text(
+                                                '${_controller.model.deletedata[index]["ITEM_NM"]}',
+                                                style: const TextStyle(
+                                                    fontSize: 14),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                    Expanded(
-                                      flex: 5,
-                                      child: Container(
-                                        //color: Colors.grey.withOpacity(0.3),
-                                        child: Center(
-                                          child: Text(
-                                            '${_controller.model.deletedata[index]["RCV_NB"]}',
-                                            style:
-                                                const TextStyle(fontSize: 14),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          flex: 1,
+                                          child: Container(
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                                color: Colors.grey
+                                                    .withOpacity(0.3),
+                                                borderRadius:
+                                                    const BorderRadius.only(
+                                                        bottomLeft:
+                                                            Radius.circular(
+                                                                15))),
+                                            child: const Center(
+                                              child: Text(
+                                                '출고수량',
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 1,
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey.withOpacity(0.3),
-                                        ),
-                                        child: const Center(
-                                          child: Text(
-                                            '품번',
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold),
+                                        Expanded(
+                                          flex: 2,
+                                          child: Container(
+                                            //color: Colors.grey.withOpacity(0.3),
+                                            child: Center(
+                                              child: Text(
+                                                '${_controller.model.deletedata[index]["PSU_QT"]}',
+                                                style: const TextStyle(
+                                                    fontSize: 14),
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Container(
-                                        //color: Colors.grey.withOpacity(0.3),
-                                        child: Center(
-                                          child: Text(
-                                            '${_controller.model.deletedata[index]["ITEM_CD"]}',
-                                            style:
-                                                const TextStyle(fontSize: 14),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Container(
-                                        color: Colors.grey.withOpacity(0.3),
-                                        child: const Center(
-                                          child: Text(
-                                            '품명',
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Container(
-                                        //color: Colors.grey.withOpacity(0.3),
-                                        child: Center(
-                                          child: Text(
-                                            '${_controller.model.deletedata[index]["ITEM_NM"]}',
-                                            style:
-                                                const TextStyle(fontSize: 14),
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 1,
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
+                                        Expanded(
+                                          flex: 1,
+                                          child: Container(
                                             color: Colors.grey.withOpacity(0.3),
-                                            borderRadius:
-                                                const BorderRadius.only(
-                                                    bottomLeft:
-                                                        Radius.circular(15))),
-                                        child: const Center(
-                                          child: Text(
-                                            '출고수량',
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold),
+                                            child: const Center(
+                                              child: Text(
+                                                '입고수량',
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
+                                        Expanded(
+                                          flex: 2,
+                                          child: Container(
+                                            //color: Colors.grey.withOpacity(0.3),
+                                            child: Center(
+                                              child: Text(
+                                                '${_controller.model.deletedata[index]["RCV_QT"]}',
+                                                style: const TextStyle(
+                                                    fontSize: 14),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Container(
-                                        //color: Colors.grey.withOpacity(0.3),
-                                        child: Center(
-                                          child: Text(
-                                            '${_controller.model.deletedata[index]["PSU_QT"]}',
-                                            style:
-                                                const TextStyle(fontSize: 14),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Container(
-                                        color: Colors.grey.withOpacity(0.3),
-                                        child: const Center(
-                                          child: Text(
-                                            '입고수량',
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Container(
-                                        //color: Colors.grey.withOpacity(0.3),
-                                        child: Center(
-                                          child: Text(
-                                            '${_controller.model.deletedata[index]["RCV_QT"]}',
-                                            style:
-                                                const TextStyle(fontSize: 14),
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
+                        );
+                      },
+                    ),
+                  )),
             ),
           ],
         ),

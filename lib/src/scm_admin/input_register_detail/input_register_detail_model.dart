@@ -17,6 +17,7 @@ class ScmRegisterDetailModel {
   bool keyboardClick = false;
   List<String> scanData = [];
   bool psunb = false; //출고번호
+
   bool bccheck = false; //바코드 체크
   bool hdcheck = false; //헤더체크
   bool select = false; //datavalue 변경
@@ -32,7 +33,7 @@ class ScmRegisterDetailModel {
       ScmRegisterController scmRegisterController, String superIndex) async {
     // scanData = barcode.split('/');
     String detailDataString = await SqlConn.readData(
-        "SELECT ('TSST_'+A.PSU_NB)AS PSU_NB,('TSST_'+CONVERT(NVARCHAR,A.PSU_SQ))AS PSU_SQ,('TSST_'+A.BOX_NO)AS BOX_NO,('TSST_'+A.ITEM_CD)AS ITEM_CD,('TSST_'+CONVERT(NVARCHAR,A.PACK_QT))AS PACK_QT,('TSST_'+A.BARCODE)AS BARCODE,('TSST_'+A.IMPORTSPEC)AS IMPORTSPEC FROM TSPODELIVER_D_BOX A  LEFT JOIN TSPODELIVER_D B ON A.PSU_NB = B.PSU_NB  AND A.PSU_SQ = B.PSU_SQ WHERE A.PSU_NB = '$detailNumber' AND A.PSU_SQ = '$superIndex' AND A.IMPORTSPEC = 'Y'");
+        "SELECT ('TSST_'+A.PSU_NB)AS PSU_NB,('TSST_'+CONVERT(NVARCHAR,A.PSU_SQ))AS PSU_SQ,('TSST_'+A.BOX_NO)AS BOX_NO,('TSST_'+A.ITEM_CD)AS ITEM_CD,('TSST_'+CONVERT(NVARCHAR,A.PACK_QT))AS PACK_QT,('TSST_'+A.BARCODE)AS BARCODE,('TSST_'+A.IMPORTSPEC)AS IMPORTSPEC FROM TSPODELIVER_D_BOX A  LEFT JOIN TSPODELIVER_D B ON A.PSU_NB = B.PSU_NB  AND A.PSU_SQ = B.PSU_SQ LEFT JOIN TSITEM        C ON C.CO_CD = A.CO_CD AND C.ITEM_CD  = B.ITEM_CD WHERE A.PSU_NB = '$detailNumber' AND A.PSU_SQ = '$superIndex' AND (A.IMPORTSPEC = CASE WHEN C.PU_FG = 1 THEN 'Y' ELSE NULL END OR C.PU_FG = 0)");
 
     String checkData = detailDataString.replaceAll('TSST_', '');
     List<dynamic> decodedData = jsonDecode(checkData);
@@ -180,10 +181,24 @@ class ScmRegisterDetailModel {
     for (int i = 0; i < detailData.value.length; i++) {
       if (boxdata[i]['BARCODE'] == '1') {
         sum = sum + int.parse(boxdata[i]['PACK_QT']);
-        print(int.parse(boxdata[i]['BARCODE']));
-        print(sum);
       } else {}
     }
+  }
+
+  Future<void> checkcount(String psu, String psusq,
+      ScmRegisterController scmRegisterController) async {
+    for (int i = 0; i < detailData.value.length; i++) {
+      if (boxdata[i]['BARCODE'] == '1') {
+        scmRegisterController.model.barcodedata
+            .addNonNull("$psu${psusq.toString().padLeft(4, '0')}|$sum");
+        break;
+      } else {}
+    }
+  }
+
+  Future<void> clearSpec(String detailNumber, int superIndex) async {
+    var clearSp = await SqlConn.writeData(
+        "UPDATE TSPODELIVER_D_BOX SET IMPORTSPEC = null WHERE PSU_NB = '$detailNumber' AND PSU_SQ = '${superIndex + 1}' AND BARCODE is NULL");
   }
 
   Color getColor(int index) {

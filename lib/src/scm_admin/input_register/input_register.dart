@@ -567,9 +567,11 @@ class _InputRegisterState extends State<InputRegister> {
                 ),
               ],
             ),
-            onTap: () {
-              _controller.checkList(context);
-              print('${_controller.model.selectCheckDataList}');
+            onTap: () async {
+              await _controller.checkList(context);
+              _controller.regist();
+
+              Get.back();
             },
           ),
         ),

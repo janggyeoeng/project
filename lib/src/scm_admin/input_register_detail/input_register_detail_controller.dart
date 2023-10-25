@@ -42,6 +42,11 @@ class ScmRegisterDetailController extends GetxController {
         context, scmRegisterController, detailNumber, superIndex);
   }
 
+  Future<void> checkcount(String psu, String psusq,
+      ScmRegisterController scmRegisterController) async {
+    return model.checkcount(psu, psusq, scmRegisterController);
+  }
+
   Future<void> updatedata(
       String detailNumber, int superIndex, String box) async {
     return model.updatedata(detailNumber, superIndex, box);
@@ -62,6 +67,10 @@ class ScmRegisterDetailController extends GetxController {
 
   Future<void> plus() async {
     return model.plus();
+  }
+
+  Future<void> clearSpec(String detailNumber, int superIndex) async {
+    return model.clearSpec(detailNumber, superIndex);
   }
 
   bool getselect() {

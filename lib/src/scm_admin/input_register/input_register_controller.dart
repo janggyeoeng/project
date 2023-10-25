@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:hnde_pda/src/scm_admin/input_register/input_register_model.dart';
 
 class ScmRegisterController {
@@ -26,6 +27,10 @@ class ScmRegisterController {
 
   Future<void> clearcolor(String detailNumber, String superIndex) async {
     return model.clearcolor(detailNumber, superIndex);
+  }
+
+  Future<void> regist() async {
+    return model.regist();
   }
 
   Color getColor(int index) {
