@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter/services.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hnde_pda/src/scm_admin/input_delete/input_delete_controller.dart';
-import 'package:hnde_pda/src/scm_admin/input_delete_detail(X)/input_delete_detail.dart';
 
 import 'package:get/get.dart';
+import 'package:hnde_pda/src/scm_admin/input_delete_detail(X)/input_delete_detail_controller.dart';
 
-class ScmDelete extends StatefulWidget {
-  const ScmDelete({Key? key}) : super(key: key);
-
+class ScmDeleteDetail extends StatefulWidget {
+  ScmDeleteDetail({
+    super.key,
+    required this.trNm,
+  });
+  String trNm = '';
   @override
-  State<ScmDelete> createState() => _ScmDeleteState();
+  State<ScmDeleteDetail> createState() => _ScmDeleteDetailState();
 }
 
-class _ScmDeleteState extends State<ScmDelete> {
+class _ScmDeleteDetailState extends State<ScmDeleteDetail> {
 //   var focusNode = FocusNode(onKey: (node, event) {
 //     if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
 //         // Do something
@@ -25,8 +28,10 @@ class _ScmDeleteState extends State<ScmDelete> {
 
 // });
 
-  final ScmDeleteController _controller = ScmDeleteController();
+  final ScmDeleteDetailController _controller = ScmDeleteDetailController();
 
+  var focusNodes = FocusNode();
+  var focusNodes2 = FocusNode();
   String testStd = '';
 
   bool outTap = false;
@@ -35,13 +40,37 @@ class _ScmDeleteState extends State<ScmDelete> {
 
   @override
   void initState() {
-    _controller.pageLoad();
+    setInputType(false);
+    focusNodes2.addListener(() {
+      print(focusNodes2.hasFocus);
+      focusNodes2.hasFocus == false
+          ? FocusScope.of(context).requestFocus(focusNodes)
+          : '';
+    });
+
     super.initState();
+  }
+
+  TextInputType getInputType() {
+    print(inputType);
+    return inputType;
+  }
+
+  Future<void> setInputType(bool bo) async {
+    inputType = bo == true ? TextInputType.text : TextInputType.none;
+    print(inputType);
+  }
+
+  Future<void> setFocus() async {
+    FocusScope.of(context).requestFocus(focusNodes);
   }
 
   Future<void> pageUpdate() async {
     setState(() {});
   }
+
+  TextEditingController txtCon = TextEditingController();
+  TextEditingController txtCon2 = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -85,19 +114,21 @@ class _ScmDeleteState extends State<ScmDelete> {
                   ),
                 ),
                 Expanded(
-                  flex: 6,
-                  child: TextField(
-                    controller: _controller.model.cscontroller,
+                  flex: 7,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 5,
+                        child: Text(
+                          widget.trNm,
+                          style: const TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      Expanded(flex: 1, child: Container())
+                    ],
                   ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: IconButton(
-                      onPressed: () async {
-                        _controller.inputdata();
-                        setState(() {});
-                      },
-                      icon: const Icon(Icons.search)),
                 ),
               ],
             ),
@@ -144,7 +175,7 @@ class _ScmDeleteState extends State<ScmDelete> {
                     child: IconButton(
                         onPressed: () async {
                           await _controller.selectDate(context);
-                          _controller.inputdata();
+                          _controller.outputdata();
                           setState(() {});
                         },
                         icon: const Icon(
@@ -190,14 +221,7 @@ class _ScmDeleteState extends State<ScmDelete> {
                       itemBuilder: (context, index) {
                         //final selectedItem = _controller.outputlist[index];
                         return GestureDetector(
-                          onTap: () {
-                            _controller.colorck(index);
-
-                            setState(() {});
-                            // Get.to(() => ScmDeleteDetail(
-                            //   trNm: _controller.model.deletedata[index]
-                            //    ["TR_NM"]));
-                          },
+                          onTap: () {},
                           child: Container(
                             margin: const EdgeInsets.all(3),
                             height: 120, // 아이템 높이 지정
@@ -223,8 +247,8 @@ class _ScmDeleteState extends State<ScmDelete> {
                                           child: Container(
                                             alignment: Alignment.center,
                                             decoration: BoxDecoration(
-                                                color: _controller
-                                                    .selectColor(index),
+                                                color: Colors.grey
+                                                    .withOpacity(0.3),
                                                 borderRadius:
                                                     const BorderRadius.only(
                                                         topLeft:
@@ -264,11 +288,14 @@ class _ScmDeleteState extends State<ScmDelete> {
                                         Expanded(
                                           flex: 1,
                                           child: Container(
-                                            color:
-                                                _controller.selectColor(index),
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Colors.grey.withOpacity(0.3),
+                                            ),
                                             child: const Center(
                                               child: Text(
-                                                '입고일자',
+                                                '품번',
                                                 style: TextStyle(
                                                     fontSize: 15,
                                                     fontWeight:
@@ -283,7 +310,7 @@ class _ScmDeleteState extends State<ScmDelete> {
                                             //color: Colors.grey.withOpacity(0.3),
                                             child: Center(
                                               child: Text(
-                                                '${_controller.model.deletedata[index]["RCV_DT"]}',
+                                                '${_controller.model.deletedata[index]["ITEM_CD"]}',
                                                 style: const TextStyle(
                                                     fontSize: 14),
                                               ),
@@ -293,14 +320,10 @@ class _ScmDeleteState extends State<ScmDelete> {
                                         Expanded(
                                           flex: 1,
                                           child: Container(
-                                            alignment: Alignment.center,
-                                            decoration: BoxDecoration(
-                                              color: _controller
-                                                  .selectColor(index),
-                                            ),
+                                            color: Colors.grey.withOpacity(0.3),
                                             child: const Center(
                                               child: Text(
-                                                '거래처',
+                                                '품명',
                                                 style: TextStyle(
                                                     fontSize: 15,
                                                     fontWeight:
@@ -315,13 +338,13 @@ class _ScmDeleteState extends State<ScmDelete> {
                                             //color: Colors.grey.withOpacity(0.3),
                                             child: Center(
                                               child: Text(
-                                                '${_controller.model.deletedata[index]["TR_NM"]}',
+                                                '${_controller.model.deletedata[index]["ITEM_NM"]}',
                                                 style: const TextStyle(
                                                     fontSize: 14),
                                               ),
                                             ),
                                           ),
-                                        ),
+                                        )
                                       ],
                                     ),
                                   ),
@@ -334,8 +357,8 @@ class _ScmDeleteState extends State<ScmDelete> {
                                           child: Container(
                                             alignment: Alignment.center,
                                             decoration: BoxDecoration(
-                                                color: _controller
-                                                    .selectColor(index),
+                                                color: Colors.grey
+                                                    .withOpacity(0.3),
                                                 borderRadius:
                                                     const BorderRadius.only(
                                                         bottomLeft:
@@ -368,8 +391,7 @@ class _ScmDeleteState extends State<ScmDelete> {
                                         Expanded(
                                           flex: 1,
                                           child: Container(
-                                            color:
-                                                _controller.selectColor(index),
+                                            color: Colors.grey.withOpacity(0.3),
                                             child: const Center(
                                               child: Text(
                                                 '입고수량',

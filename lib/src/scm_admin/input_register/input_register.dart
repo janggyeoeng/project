@@ -172,8 +172,12 @@ class _InputRegisterState extends State<InputRegister> {
                                     border: InputBorder.none),
                                 onFieldSubmitted: (value) async {
                                   outTap = false;
+
                                   await _controller.barcodeScan(value, context);
+
                                   await _controller.setController();
+                                  await _controller.rcvCk(context);
+
                                   print('${_controller.model.datavalue}');
                                   setFocus();
                                   setState(() {});
@@ -569,9 +573,9 @@ class _InputRegisterState extends State<InputRegister> {
             ),
             onTap: () async {
               await _controller.checkList(context);
-              _controller.regist();
-
-              Get.back();
+              _controller.updatespec(
+                  _controller.getPsuNb(), _controller.getPsuSq());
+              _controller.regist(context);
             },
           ),
         ),

@@ -21,6 +21,10 @@ class ScmRegisterController {
     return model.psuQt(index);
   }
 
+  Future<void> updatespec(String detailNumber, int superIndex) async {
+    return model.updatespec(detailNumber, superIndex);
+  }
+
   Future<void> checkList(BuildContext context) async {
     return model.checkList(context);
   }
@@ -29,8 +33,12 @@ class ScmRegisterController {
     return model.clearcolor(detailNumber, superIndex);
   }
 
-  Future<void> regist() async {
-    return model.regist();
+  Future<void> regist(BuildContext context) async {
+    return model.regist(context);
+  }
+
+  Future<void> rcvCk(BuildContext context) async {
+    return model.rcvCk(context);
   }
 
   Color getColor(int index) {
@@ -39,6 +47,10 @@ class ScmRegisterController {
 
   String getPsuNb() {
     return model.getPsuNb();
+  }
+
+  int getPsuSq() {
+    return model.getPsuSq();
   }
 
   String getTrNm() {

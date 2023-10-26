@@ -4,32 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sql_conn/sql_conn.dart';
 
-class ScmDeleteModel {
+class ScmDeleteDetailModel {
   Rx<DateTime> selectedStartDate = Rx<DateTime>(DateTime.now());
   Rx<DateTime> selectedEndDate = Rx<DateTime>(DateTime.now());
   RxList<Map<String, dynamic>> deletedata = RxList<Map<String, dynamic>>([]);
   TextEditingController cscontroller = TextEditingController();
-  List<bool> setColor = [];
-
-  Future<void> pageLoad() async {
-    await inputdata();
-    await setController();
-  }
-
-  Future<void> colorck(int index) async {
-    if (setColor[index] == false) {
-      setColor[index] = true;
-    } else if (setColor[index] == true) {
-      setColor[index] = false;
-    }
-  }
-
-  Future<void> setController() async {
-    for (int i = 0; i < deletedata.length; i++) {
-      setColor.add(false);
-    }
-  }
-
   Future<DateTimeRange?> selectDateRange(
       BuildContext context, DateTimeRange selectedDateRange) async {
     return await showDateRangePicker(
@@ -56,7 +35,7 @@ class ScmDeleteModel {
     }
   }
 
-  Future<void> inputdata() async {
+  Future<void> outputdata() async {
     String customerKeyword = cscontroller.text;
     await deleteData(
       customerKeyword,
@@ -73,12 +52,5 @@ class ScmDeleteModel {
     List<Map<String, dynamic>> decodedData =
         List<Map<String, dynamic>>.from(jsonDecode(detailData));
     deletedata.assignAll(decodedData);
-  }
-
-  Color selectColor(int index) {
-    if (setColor[index] == true) {
-      return Colors.blue.shade300;
-    }
-    return Colors.grey.shade300;
   }
 }

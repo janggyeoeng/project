@@ -143,7 +143,7 @@ class ScmRegisterDetailModel {
         scmRegisterController.model.selectCheckDataList[superKey]![i] =
             '1'; //체크리스트에 1넣기
         updatedata(detailNumber, superIndex, bcData["BOX_NO"]);
-        updatespec(detailNumber, superIndex);
+        // updatespec(detailNumber, superIndex);
         bccheck = true;
       } else if (boxdata[i]["BARCODE"] == '1') {
         scmRegisterController.model.selectCheckDataList[superKey]![i] = '1';

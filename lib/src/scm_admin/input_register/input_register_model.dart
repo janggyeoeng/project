@@ -14,6 +14,7 @@ class ScmRegisterModel {
   List<Map<String, dynamic>> selectData = [];
   List<String> barcodedata = [];
   String psuNb = '';
+  int psuSq = 0;
   String trNm = '';
   bool check = false;
   List<bool> datavalue = [];
@@ -35,6 +36,10 @@ class ScmRegisterModel {
     return psuNb;
   }
 
+  int getPsuSq() {
+    return psuSq;
+  }
+
   String getTrNm() {
     return trNm;
   }
@@ -49,6 +54,7 @@ class ScmRegisterModel {
 
   Future<void> setTitleData(Map<String, dynamic> map) async {
     psuNb = map['PSU_NB'];
+    psuSq = map['PSU_SQ'];
     trNm = map['TR_NM'];
   }
 
@@ -82,10 +88,32 @@ class ScmRegisterModel {
     });
   }
 
+  Future<void> updatespec(String detailNumber, int superIndex) async {
+    bool updata = await SqlConn.writeData(
+        "UPDATE TSPODELIVER_D_BOX SET IMPORTSPEC = 'Y' WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='${superIndex + 1}' AND BARCODE = '1'");
+    print('a:$updata');
+  }
+
   Future<void> clearcolor(String detailNumber, String superIndex) async {
     bool updatecolor = await SqlConn.writeData(
         "UPDATE TSPODELIVER_D_BOX SET BARCODE = null WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='$superIndex '");
     print('a:$updatecolor');
+  }
+
+  Future<void> rcvCk(BuildContext context) async {
+    String rcv =
+        await SqlConn.readData("SELECT RCV_NB FROM DZICUBE.dbo.LSTOCK");
+    List<dynamic> rcvdata = jsonDecode(rcv);
+    print(rcvdata);
+
+    for (var rsItem in rsData) {
+      for (var rcvItem in rcvdata) {
+        if (rcvItem["RCV_NB"] == rsItem["RCV_NB"]) {
+          isuQtCheckDialog(context, '이미 처리된 입고입니다.');
+          break;
+        }
+      }
+    }
   }
 
   // 바코드 스캔 영역
@@ -133,15 +161,13 @@ class ScmRegisterModel {
     }
   }
 
-  Future<void> regist() async {
+  Future<void> regist(BuildContext context) async {
     for (int i = 0; i < barcodedata.length; i++) {
       var regist = await SqlConn.writeData(
           "exec  SP_MOBILE_DZSTOCK_C2 '1001', '${barcodedata[i]}'");
       if (regist) {
-        print('됨');
-      } else {
-        print('안됨');
-      }
+        isuQtCheckDialog(context, '수입검사가 완료되었습니다.');
+      } else {}
     }
   }
 
@@ -170,6 +196,31 @@ class ScmRegisterModel {
               TextButton(
                   onPressed: () {
                     Navigator.pop(context);
+                  },
+                  child: const Text('확인'))
+            ],
+          );
+        });
+  }
+
+  void isuQtCheckDialog2(BuildContext context, String errorMessage) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(errorMessage),
+              ],
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Get.back();
                   },
                   child: const Text('확인'))
             ],
