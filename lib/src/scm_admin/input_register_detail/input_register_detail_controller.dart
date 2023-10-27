@@ -8,7 +8,7 @@ class ScmRegisterDetailController extends GetxController {
   ScmRegisterDetailModel model = ScmRegisterDetailModel();
 
   Future<void> boxData(String detailNumber,
-      ScmRegisterController scmRegisterController, int superIndex) async {
+      ScmRegisterController scmRegisterController, String superIndex) async {
     return model.boxData(detailNumber, scmRegisterController, superIndex);
   }
 
@@ -42,6 +42,11 @@ class ScmRegisterDetailController extends GetxController {
         context, scmRegisterController, detailNumber, superIndex);
   }
 
+  Future<void> checkcount(String psu, String psusq,
+      ScmRegisterController scmRegisterController) async {
+    return model.checkcount(psu, psusq, scmRegisterController);
+  }
+
   Future<void> updatedata(
       String detailNumber, int superIndex, String box) async {
     return model.updatedata(detailNumber, superIndex, box);
@@ -58,6 +63,14 @@ class ScmRegisterDetailController extends GetxController {
   Future<void> setSelectChk() async {
     update();
     return model.setSelectChk();
+  }
+
+  Future<void> plus() async {
+    return model.plus();
+  }
+
+  Future<void> clearSpec(String detailNumber, int superIndex) async {
+    return model.clearSpec(detailNumber, superIndex);
   }
 
   bool getselect() {

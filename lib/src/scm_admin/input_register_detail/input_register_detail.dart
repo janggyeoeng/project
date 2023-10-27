@@ -35,7 +35,8 @@ class _ScmRegisterDetailState extends State<ScmRegisterDetail> {
 
   @override
   void initState() {
-    _controller.boxData(widget.detailNumber, widget.controller1, widget.index);
+    _controller.boxData(widget.detailNumber, widget.controller1,
+        widget.controller1.model.selectData1[widget.index]["PSU_SQ"]);
     // print("a:${widget.controller1.model.datavalue}");
     super.initState();
     _controller.textFocusListner(context, pageUpdate);
@@ -400,15 +401,21 @@ class _ScmRegisterDetailState extends State<ScmRegisterDetail> {
             ),
           ),
           onTap: () async {
-            //widget.controller1.model.datavalue[widget.index] = true;
+            await _controller.clearSpec(widget.detailNumber, widget.index);
+            _controller.plus();
+            widget.controller1.model.sum[widget.index] =
+                _controller.model.sum.toString();
             _controller.setSelectChk();
             widget.controller1.model.datavalue[widget.index] =
                 _controller.getselect();
-            // print('AAAA:${_controller.model.boxdata}');
-            //widget.controller1.setKeyboardClick(false);
+
+            _controller.checkcount(
+                widget.controller1.model.rsData[widget.index]["PSU_NB"],
+                widget.controller1.model.rsData[widget.index]["PSU_SQ"],
+                widget.controller1);
+
             Get.back();
-            //_controller.updatedata(widget.detailNumber, widget.index);
-            // _controller.saveEnd(widget.detailNumber);
+
             setState(() {});
           },
         ),

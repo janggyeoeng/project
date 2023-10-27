@@ -15,7 +15,6 @@ class ScmCheckDetailModel {
   var textFocusNodes = FocusNode();
   bool keyboardClick = false;
   List<String> scanData = []; //바코드 스캔
-  List<String> barcodedata = []; // 선택 바코드(PSU_NB + PSU_SQ)
   bool psunb = false; //출고번호
   bool bccheck = false; //바코드 체크
   bool hdcheck = false; //헤더체크
@@ -94,16 +93,16 @@ class ScmCheckDetailModel {
 //맞는 인덱스의 박스 바코드 변경
   Future<void> updatedata(
       String detailNumber, int superIndex, String box) async {
-    bool updata = await SqlConn.writeData(
+    bool update = await SqlConn.writeData(
         "UPDATE TSPODELIVER_D_BOX SET BARCODE = '1' WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='${superIndex + 1}'AND BOX_NO =$box");
-    print('a:$updata');
+    print('a:$update');
   }
 
 //바코드가 1인값들에 IMPORTSPEC에 Y 넣기
   Future<void> updatespec(String detailNumber, int superIndex) async {
-    bool updata = await SqlConn.writeData(
+    bool update2 = await SqlConn.writeData(
         "UPDATE TSPODELIVER_D_BOX SET IMPORTSPEC = 'Y' WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='${superIndex + 1}' AND BARCODE = '1'");
-    print('a:$updata');
+    print('a1:$update2');
   }
 
 // 출고번호 체크
@@ -206,22 +205,11 @@ class ScmCheckDetailModel {
   //   await boxData(detailNumber);
   // }
 
-  //선택된 PSU_SQ나타내기
-  Future<void> checkcount(String psu, String psusq) async {
-    for (int i = 0; i < detailData.value.length; i++) {
-      if (boxdata[i]['BARCODE'] == '1') {
-        barcodedata.addNonNull(psu + psusq.toString().padLeft(4, '0'));
-      } else {}
-    }
-  }
-
   //선택된 수량 더하기
   Future<void> plus() async {
     for (int i = 0; i < detailData.value.length; i++) {
       if (boxdata[i]['BARCODE'] == '1') {
         sum = sum + int.parse(boxdata[i]['PACK_QT']);
-        print(int.parse(boxdata[i]['BARCODE']));
-        print(sum);
       } else {}
     }
   }

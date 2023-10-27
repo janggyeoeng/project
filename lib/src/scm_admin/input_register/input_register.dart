@@ -172,8 +172,12 @@ class _InputRegisterState extends State<InputRegister> {
                                     border: InputBorder.none),
                                 onFieldSubmitted: (value) async {
                                   outTap = false;
+
                                   await _controller.barcodeScan(value, context);
+
                                   await _controller.setController();
+                                  await _controller.rcvCk(context);
+
                                   print('${_controller.model.datavalue}');
                                   setFocus();
                                   setState(() {});
@@ -371,7 +375,8 @@ class _InputRegisterState extends State<InputRegister> {
                       final selectedItem = _controller.model.rsData[index];
                       return GestureDetector(
                         onTap: () {
-                          _controller.clearcolor(selectedItem["PSU_NB"], index);
+                          _controller.clearcolor(selectedItem["PSU_NB"],
+                              _controller.model.selectData1[index]["PSU_SQ"]);
                           Get.to(() => ScmRegisterDetail(
                               detailNumber: selectedItem["PSU_NB"],
                               trNm: selectedItem["TR_NM"],
@@ -527,7 +532,7 @@ class _InputRegisterState extends State<InputRegister> {
                                           //color: Colors.grey.withOpacity(0.3),
                                           child: Center(
                                             child: Text(
-                                              '${_controller.model.rsData[index]["PSU_QT"]}',
+                                              _controller.psuQt(index),
                                               style:
                                                   const TextStyle(fontSize: 14),
                                             ),
@@ -566,9 +571,11 @@ class _InputRegisterState extends State<InputRegister> {
                 ),
               ],
             ),
-            onTap: () {
-              _controller.checkList(context);
-              print('${_controller.model.selectCheckDataList}');
+            onTap: () async {
+              await _controller.checkList(context);
+              _controller.updatespec(
+                  _controller.getPsuNb(), _controller.getPsuSq());
+              _controller.regist(context);
             },
           ),
         ),

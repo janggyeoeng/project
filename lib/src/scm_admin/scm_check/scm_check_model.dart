@@ -13,7 +13,7 @@ class ScmCheckModel {
   RxList<Map<String, dynamic>> detailData = RxList<Map<String, dynamic>>([]);
   List<bool> datavalue = [];
   List<String> sum = [];
-  List<String> barcodedata = [];
+
   bool specTF = false; //IMPORTSPEC 체크
 
   Map<String, List<String>> selectCheckDataList = {};
@@ -37,6 +37,13 @@ class ScmCheckModel {
     return trNm;
   }
 
+  int sqindex() {
+    for (int i = 0; i < detailData.length; i++) {
+      detailData[i]["PSU_SQ"];
+    }
+    return 0;
+  }
+
   Future<void> cleardata(String detailNumber) async {
     for (int i = 0; i < datavalue.length; i++) {
       datavalue[i] = false;
@@ -53,9 +60,9 @@ class ScmCheckModel {
   }
 
   //Y로 변경
-  Future<void> updatedata(String detailNumber) async {
+  Future<void> updatedata(String detailNumber, int index) async {
     await SqlConn.writeData(
-        "UPDATE TSIMPORTINSPEC SET IMPORTSPEC = CASE WHEN (SELECT COUNT(IMPORTSPEC) FROM TSPODELIVER_D_BOX WHERE PSU_NB = '$detailNumber') > 0 THEN 'Y' ELSE NULL END WHERE PSU_NB = '$detailNumber'");
+        "UPDATE TSIMPORTINSPEC SET IMPORTSPEC = CASE WHEN (SELECT COUNT(IMPORTSPEC) FROM TSPODELIVER_D_BOX WHERE PSU_NB = '$detailNumber' AND PSU_SQ ='$index' ) > 0 THEN 'Y' ELSE NULL END WHERE PSU_NB = '$detailNumber' AND PSU_SQ ='$index'");
   }
 
   //SPEC =Y인지 체크
@@ -89,7 +96,6 @@ class ScmCheckModel {
 
   dynamic textFocusListner(BuildContext context, void Function()? state) {
     return textFocusNodes.addListener(() {
-      print(textFocusNodes.hasFocus);
       if (textFocusNodes.hasFocus == false) {
         keyboardClick = false;
 
@@ -157,60 +163,61 @@ class ScmCheckModel {
     if (barcode.isEmpty) {
       return isuQtCheckDialog(context, '바코드가 입력되지 않았습니다.');
     }
+    if (barcode.length != 12 || !barcode.startsWith('PD')) {
+      isuQtCheckDialog(context, '바코드가 올바르지 않습니다.');
+    } else {
+      // if (detailData[0]["PSU_NB"] != scanData[0]) {
+      //   isuQtCheckDialog(context, '출고번호가 올바르지 않습니다.');
+      // }
 
-    // if (detailData[0]["PSU_NB"] != scanData[0]) {
-    //   isuQtCheckDialog(context, '출고번호가 올바르지 않습니다.');
-    // }
-
-    for (int i = 0; i < speccheckData.length; i++) {
-      if (speccheckData[i]["IMPORTSPEC"] == 'Y') {
-        specTF = true;
-        break;
-      } else {
-        specTF = false;
-      }
-    }
-    if (specTF == true) {
-      isuQtCheckDialog(context, '수입검사가 완료되었습니다.');
-    }
-    if (specTF == false) {
-      //수입체크가 안됐을때 실행
-      var dzRes = await SqlConn.writeData("exec SP_DZIF_PO_C '1001'");
-      //print('바코드 :$barcode');
-      //print('더존 결과 : $dzRes');
-      if (dzRes) {
-        detailDataString = await SqlConn.readData(
-            "SP_MOBILE_SCM_CHKECK_R '1001', '${scanData[0]}'");
-        //print('mes 결과 : $detailDataString');
-
-        print("asdadsa : $detailDataString");
-
-        String checkData = detailDataString.replaceAll('tsst', '');
-        List<dynamic> decodedData = jsonDecode(checkData);
-
-        if (decodedData.isNotEmpty) {
-          selectData = List<Map<String, dynamic>>.from(decodedData);
-          detailData.value = selectData;
-
-          datavalue.add(false); // 색깔변하기위한 조건 false = 회색 , true = 파랑
-
-          // List<Map<String, dynamic>> modifiedData = decodedData.map((item) {
-          //   Map<String, dynamic> modifiedItem = {};
-          //   item.forEach((key, value) {
-          //     if (value is String) {
-          //       modifiedItem[key] = value.replaceAll('tsst', '');
-          //     } else {
-          //       modifiedItem[key] = value;
-          //     }
-          //   });
-          //   return modifiedItem;
-          // }).toList();
-
-          // detailData.value = modifiedData;
-
-          await setTitleData(detailData[0]);
+      for (int i = 0; i < speccheckData.length; i++) {
+        if (speccheckData[i]["IMPORTSPEC"] == 'Y') {
+          specTF = true;
+          break;
         } else {
-          isuQtCheckDialog(context, '바코드가 올바르지 않습니다.');
+          specTF = false;
+        }
+      }
+      if (specTF == true) {
+        isuQtCheckDialog(context, '수입검사가 완료되었습니다.');
+      }
+      if (specTF == false) {
+        //수입체크가 안됐을때 실행
+        var dzRes = await SqlConn.writeData("exec SP_DZIF_PO_C '1001'");
+        //print('바코드 :$barcode');
+        //print('더존 결과 : $dzRes');
+        if (dzRes) {
+          detailDataString = await SqlConn.readData(
+              "SP_MOBILE_SCM_CHKECK_R_BAK '1001', '${scanData[0]}'");
+          //print('mes 결과 : $detailDataString');
+
+          String checkData = detailDataString.replaceAll('tsst', '');
+          List<dynamic> decodedData = jsonDecode(checkData);
+
+          if (decodedData.isNotEmpty) {
+            selectData = List<Map<String, dynamic>>.from(decodedData);
+            detailData.value = selectData;
+
+            datavalue.add(false); // 색깔변하기위한 조건 false = 회색 , true = 파랑
+
+            // List<Map<String, dynamic>> modifiedData = decodedData.map((item) {
+            //   Map<String, dynamic> modifiedItem = {};
+            //   item.forEach((key, value) {
+            //     if (value is String) {
+            //       modifiedItem[key] = value.replaceAll('tsst', '');
+            //     } else {
+            //       modifiedItem[key] = value;
+            //     }
+            //   });
+            //   return modifiedItem;
+            // }).toList();
+
+            // detailData.value = modifiedData;
+
+            await setTitleData(detailData[0]);
+          } else {
+            isuQtCheckDialog(context, '수입검사 목록이 없습니다.');
+          }
         }
       }
     }

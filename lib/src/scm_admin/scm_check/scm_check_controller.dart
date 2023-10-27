@@ -65,12 +65,16 @@ class ScmCheckController extends GetxController {
     return model.cleardata(detailNumber);
   }
 
-  Future<void> updatedata(String detailNumber) async {
-    return model.updatedata(detailNumber);
+  Future<void> updatedata(String detailNumber, int index) async {
+    return model.updatedata(detailNumber, index);
   }
 
   String psuQt(int index) {
     return model.psuQt(index);
+  }
+
+  int sqindex() {
+    return model.sqindex();
   }
 
   String getPsuNb() {
