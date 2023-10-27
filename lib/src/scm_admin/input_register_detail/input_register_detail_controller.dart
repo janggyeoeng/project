@@ -93,7 +93,7 @@ class ScmRegisterDetailController extends GetxController {
     return model.detailcontainar(text, style, color);
   }
 
-  Color getColor(int index) {
-    return model.getColor(index);
+  Color getColor(int index, ScmRegisterController scmRegisterController) {
+    return model.getColor(index, scmRegisterController);
   }
 }

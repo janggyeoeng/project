@@ -33,7 +33,7 @@ class ScmRegisterDetailModel {
       ScmRegisterController scmRegisterController, String superIndex) async {
     // scanData = barcode.split('/');
     String detailDataString = await SqlConn.readData(
-        "SELECT ('TSST_'+A.PSU_NB)AS PSU_NB,('TSST_'+CONVERT(NVARCHAR,A.PSU_SQ))AS PSU_SQ,('TSST_'+A.BOX_NO)AS BOX_NO,('TSST_'+A.ITEM_CD)AS ITEM_CD,('TSST_'+CONVERT(NVARCHAR,A.PACK_QT))AS PACK_QT,('TSST_'+A.BARCODE)AS BARCODE,('TSST_'+A.IMPORTSPEC)AS IMPORTSPEC FROM TSPODELIVER_D_BOX A  LEFT JOIN TSPODELIVER_D B ON A.PSU_NB = B.PSU_NB  AND A.PSU_SQ = B.PSU_SQ LEFT JOIN TSITEM        C ON C.CO_CD = A.CO_CD AND C.ITEM_CD  = B.ITEM_CD WHERE A.PSU_NB = '$detailNumber' AND A.PSU_SQ = '$superIndex' AND (A.IMPORTSPEC = CASE WHEN C.PU_FG = 1 THEN 'Y' ELSE NULL END OR C.PU_FG = 0)");
+        "SELECT ('TSST_'+A.PSU_NB)AS PSU_NB,('TSST_'+CONVERT(NVARCHAR,A.PSU_SQ))AS PSU_SQ,('TSST_'+A.BOX_NO)AS BOX_NO,('TSST_'+A.ITEM_CD)AS ITEM_CD,('TSST_'+CONVERT(NVARCHAR,A.PACK_QT))AS PACK_QT,('TSST_'+A.BARCODE)AS BARCODE,('TSST_'+A.IMPORTSPEC)AS IMPORTSPEC FROM TSPODELIVER_D_BOX A  LEFT JOIN TSPODELIVER_D B ON A.PSU_NB = B.PSU_NB  AND A.PSU_SQ = B.PSU_SQ LEFT JOIN TSITEM        C ON C.CO_CD = A.CO_CD AND C.ITEM_CD  = B.ITEM_CD WHERE A.PSU_NB = '$detailNumber' AND A.PSU_SQ = '$superIndex' AND (A.BARCODE = CASE WHEN C.PU_FG = 1 THEN '1' ELSE NULL END OR C.PU_FG = 0)");
 
     String checkData = detailDataString.replaceAll('TSST_', '');
     List<dynamic> decodedData = jsonDecode(checkData);
@@ -95,7 +95,7 @@ class ScmRegisterDetailModel {
   Future<void> updatedata(
       String detailNumber, int superIndex, String box) async {
     bool updata = await SqlConn.writeData(
-        "UPDATE TSPODELIVER_D_BOX SET BARCODE = '1' WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='${superIndex + 1}'AND BOX_NO =$box");
+        "UPDATE TSPODELIVER_D_BOX SET IMPORTSPEC = 'Y' WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='${superIndex + 1}'AND BOX_NO =$box");
     print('a:$updata');
   }
 
@@ -139,17 +139,17 @@ class ScmRegisterDetailModel {
           bcData["BOX_NO"] == boxdata[i]["BOX_NO"]) {
         //출고번호와 박스번호 비교
         // 1 : TURE , 0 : FALSE
-        boxdata[i]["BARCODE"] = '1';
+        boxdata[i]["IMPORTSPEC"] = 'Y';
         scmRegisterController.model.selectCheckDataList[superKey]![i] =
             '1'; //체크리스트에 1넣기
         updatedata(detailNumber, superIndex, bcData["BOX_NO"]);
-        // updatespec(detailNumber, superIndex);
+        //updatespec(detailNumber, superIndex);
         bccheck = true;
-      } else if (boxdata[i]["BARCODE"] == '1') {
+      } else if (boxdata[i]["IMPORTSPEC"] == 'Y') {
         scmRegisterController.model.selectCheckDataList[superKey]![i] = '1';
         continue;
       } else {
-        boxdata[i]["BARCODE"] = '0';
+        boxdata[i]["IMPORTSPEC"] = null;
         scmRegisterController.model.selectCheckDataList[superKey]![i] = '0';
       }
     }
@@ -165,7 +165,7 @@ class ScmRegisterDetailModel {
   Future<void> setSelectChk() async {
     //헤더박스 색깔변경위한 체크
     for (int i = 0; i < detailData.value.length; i++) {
-      if (boxdata[i]["BARCODE"] == '1') {
+      if (boxdata[i]["IMPORTSPEC"] == 'Y') {
         hdcheck = true;
         break;
       } else {
@@ -179,7 +179,7 @@ class ScmRegisterDetailModel {
 
   Future<void> plus() async {
     for (int i = 0; i < detailData.value.length; i++) {
-      if (boxdata[i]['BARCODE'] == '1') {
+      if (boxdata[i]['IMPORTSPEC'] == 'Y') {
         sum = sum + int.parse(boxdata[i]['PACK_QT']);
       } else {}
     }
@@ -188,7 +188,8 @@ class ScmRegisterDetailModel {
   Future<void> checkcount(String psu, String psusq,
       ScmRegisterController scmRegisterController) async {
     for (int i = 0; i < detailData.value.length; i++) {
-      if (boxdata[i]['BARCODE'] == '1') {
+      if (scmRegisterController.model.selectCheckDataList[superKey]![i] ==
+          '1') {
         scmRegisterController.model.barcodedata
             .addNonNull("$psu${psusq.toString().padLeft(4, '0')}|$sum");
         break;
@@ -198,11 +199,15 @@ class ScmRegisterDetailModel {
 
   Future<void> clearSpec(String detailNumber, int superIndex) async {
     var clearSp = await SqlConn.writeData(
-        "UPDATE TSPODELIVER_D_BOX SET IMPORTSPEC = null WHERE PSU_NB = '$detailNumber' AND PSU_SQ = '${superIndex + 1}' AND BARCODE is NULL");
+        "UPDATE TSPODELIVER_D_BOX SET BARCODE = null WHERE PSU_NB = '$detailNumber' AND PSU_SQ = '${superIndex + 1}' AND IMPORTSPEC is NULL");
+
+    var clear = await SqlConn.writeData(
+        "UPDATE TSPODELIVER_D_BOX SET IMPORTSPEC = null WHERE PSU_NB = '$detailNumber' AND PSU_SQ = '${superIndex + 1}'");
   }
 
-  Color getColor(int index) {
-    if (boxdata[index]["BARCODE"] == '1') {
+  Color getColor(int index, ScmRegisterController scmRegisterController) {
+    if (scmRegisterController.model.selectCheckDataList[superKey]![index] ==
+        '1') {
       return Colors.blue.shade300;
     } else {
       return Colors.grey.shade300;

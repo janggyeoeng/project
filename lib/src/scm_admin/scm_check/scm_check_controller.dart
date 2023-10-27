@@ -81,6 +81,10 @@ class ScmCheckController extends GetxController {
     return model.getPsuNb();
   }
 
+  int getPsuSq() {
+    return model.getPsuSq();
+  }
+
   String getTrNm() {
     return model.getTrNm();
   }
