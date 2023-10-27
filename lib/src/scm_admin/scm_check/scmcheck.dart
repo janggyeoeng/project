@@ -126,7 +126,9 @@ class _ScmCheckState extends State<ScmCheck> {
                           },
                           onChanged: (value) async {
                             //print(txtCon.text);
+                            await _controller.specCheck(value);
                             await _controller.scanBarcode(context, value);
+                            await _controller.setController();
 
                             txtCon.text = '';
                             txtCon.clear();
@@ -354,8 +356,10 @@ class _ScmCheckState extends State<ScmCheck> {
                                 trNm: _controller.model.detailData[index]
                                     ["TR_NM"],
                                 controller1: _controller,
-                                index: index,
+                                index: index
+                               // updateState: pageUpdate,
                               ));
+                          //await _controller.setKeyboardClick(false); 
                           setState(() {});
 
                           //     ));

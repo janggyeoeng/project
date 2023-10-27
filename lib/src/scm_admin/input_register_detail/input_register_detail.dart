@@ -73,7 +73,7 @@ class _ScmRegisterDetailState extends State<ScmRegisterDetail> {
                         //width: 50,
                         child: TextField(
                           focusNode: _controller.getBcNode(),
-                          controller: txtCon,
+                          controller: _controller.model.txtCon,
                           autofocus: true,
                           cursorColor: Colors.transparent,
                           cursorWidth: 0,
@@ -87,9 +87,15 @@ class _ScmRegisterDetailState extends State<ScmRegisterDetail> {
                           onChanged: (value) async {
                             //print(txtCon.text);
                             //await _controller.scanBarcode(value);
+                              await  _controller.checkNb(widget.detailNumber);
+                             await _controller.barcodecheck(
+                                      context,
+                                      widget.controller1,
+                                      widget.detailNumber,
+                                      widget.index);
 
-                            txtCon.text = '';
-                            txtCon.clear();
+                            _controller.model.txtCon.text = '';
+                            _controller.model.txtCon.clear();
                             setState(() {});
                           },
                         ),
@@ -418,8 +424,8 @@ class _ScmRegisterDetailState extends State<ScmRegisterDetail> {
                 widget.controller1);
 
             Get.back();
-
-            setState(() {});
+            widget.controller1.updateStates();
+            //setState(() {});
           },
         ),
       ),
