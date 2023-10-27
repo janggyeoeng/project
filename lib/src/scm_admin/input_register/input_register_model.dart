@@ -54,7 +54,7 @@ class ScmRegisterModel {
 
   Future<void> setTitleData(Map<String, dynamic> map) async {
     psuNb = map['PSU_NB'];
-    psuSq = map['PSU_SQ'];
+    psuSq = int.parse(map['PSU_SQ']);
     trNm = map['TR_NM'];
   }
 
@@ -90,7 +90,7 @@ class ScmRegisterModel {
 
   Future<void> updatespec(String detailNumber, int superIndex) async {
     bool updata = await SqlConn.writeData(
-        "UPDATE TSPODELIVER_D_BOX SET IMPORTSPEC = 'Y' WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='${superIndex + 1}' AND BARCODE = '1'");
+        "UPDATE TSPODELIVER_D_BOX SET IMPORTSPEC = 'Y' WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='$superIndex' AND BARCODE = '1'");
     print('a:$updata');
   }
 
@@ -166,7 +166,7 @@ class ScmRegisterModel {
       var regist = await SqlConn.writeData(
           "exec  SP_MOBILE_DZSTOCK_C2 '1001', '${barcodedata[i]}'");
       if (regist) {
-        isuQtCheckDialog(context, '수입검사가 완료되었습니다.');
+        isuQtCheckDialog(context, '입고등록이 완료되었습니다.');
       } else {}
     }
   }
