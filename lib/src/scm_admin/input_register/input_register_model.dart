@@ -120,12 +120,13 @@ class ScmRegisterModel {
   Future<void> barcodeScan(String barcode, BuildContext context) async {
     List scanData = [];
     scanData = barcode.split('/');
+    print("asdad : ${scanData}");
     String detailDataString = '';
 
     if (barcode.isEmpty) {
       return isuQtCheckDialog(context, '바코드가 입력되지 않았습니다.');
     }
-    if (barcode.length != 12 || !barcode.startsWith('PD')) {
+    if (scanData[0].length != 12 || !scanData[0].startsWith('PD')) {
       isuQtCheckDialog(context, '바코드가 올바르지 않습니다.');
     } else {
       // 수입검사가 이루어진 데이터 찾아내기

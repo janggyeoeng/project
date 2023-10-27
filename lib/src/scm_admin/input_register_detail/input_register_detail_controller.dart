@@ -12,6 +12,8 @@ class ScmRegisterDetailController extends GetxController {
     return model.boxData(detailNumber, scmRegisterController, superIndex);
   }
 
+  
+
   dynamic textFocusListner(BuildContext context, void Function()? state) {
     return model.textFocusListner(context, state);
   }

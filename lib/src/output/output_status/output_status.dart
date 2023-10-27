@@ -106,7 +106,7 @@ class OutputStatus extends StatelessWidget {
                             const BorderRadius.all(Radius.circular(8)),
                       ),
                       child: const Text(
-                        '출고번호',
+                        '거래처',
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
@@ -123,7 +123,7 @@ class OutputStatus extends StatelessWidget {
                       child: TextField(
                         controller: _controller.getSearch(),
                         decoration:
-                            const InputDecoration(hintText: ' 출고번호를 입력하세요.'),
+                            const InputDecoration(hintText: ' 거래처를 입력하세요.'),
                         onSubmitted: (value) {
                           _controller.outputdata();
                         },

@@ -13,7 +13,16 @@ class ScmCheckController extends GetxController {
     await model.setKeyboardClick(bo);
   }
 
+  void Function()? sstate;
+
+  Future<void> supdate()async{
+    print("탓나?");
+    sstate;
+  }
+
+
   dynamic textFocusListner(BuildContext context, void Function()? state) {
+    this.sstate = state;
     return model.textFocusListner(context, state);
   }
 
@@ -58,7 +67,7 @@ class ScmCheckController extends GetxController {
   }
 
   Future<void> specCheck(String detailNumber) async {
-    return model.specCheck(detailNumber);
+    return model.specCheck(detailNumber.split('/')[0]);
   }
 
   Future<void> cleardata(String detailNumber) async {

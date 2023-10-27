@@ -108,7 +108,8 @@ class ScmRegisterDetailModel {
 
   // 출고번호 체크
   Future<void> checkNb(String detailNumber) async {
-    List<String> barcode = txtCon2.text.split('/');
+    List<String> barcode = txtCon.text.split('@');
+    print("asdasdd : ${txtCon.text}");
     Map<String, dynamic> bcData = {"PSU_NB": barcode[0]};
     if (bcData["PSU_NB"] != detailNumber) {
       psunb = false;
@@ -124,8 +125,8 @@ class ScmRegisterDetailModel {
       ScmRegisterController scmRegisterController,
       String detailNumber,
       int superIndex) async {
-    List<String> barcode = txtCon2.text.split('/');
-    if (txtCon2.text.isEmpty) {
+    List<String> barcode = txtCon.text.split('@');
+    if (txtCon.text.isEmpty) {
       return isuQtCheckDialog(context, '바코드가 입력되지 않았습니다.');
     }
     Map<String, dynamic> bcData = {
@@ -134,6 +135,7 @@ class ScmRegisterDetailModel {
       "BOX_NO": barcode[2]
     };
     for (int i = 0; i < detailData.value.length; i++) {
+      print("asdada : ${bcData}, ${boxdata}");
       if (psunb == true &&
           bcData["PSU_SQ"] == boxdata[i]["PSU_SQ"] &&
           bcData["BOX_NO"] == boxdata[i]["BOX_NO"]) {
@@ -142,7 +144,7 @@ class ScmRegisterDetailModel {
         boxdata[i]["IMPORTSPEC"] = 'Y';
         scmRegisterController.model.selectCheckDataList[superKey]![i] =
             '1'; //체크리스트에 1넣기
-        updatedata(detailNumber, superIndex, bcData["BOX_NO"]);
+        await updatedata(detailNumber, superIndex, bcData["BOX_NO"]);
         //updatespec(detailNumber, superIndex);
         bccheck = true;
       } else if (boxdata[i]["IMPORTSPEC"] == 'Y') {

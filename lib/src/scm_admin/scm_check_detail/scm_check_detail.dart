@@ -11,13 +11,16 @@ class ScmCheckDetail extends StatefulWidget {
   String trNm = '';
   ScmCheckController controller1;
   int index;
+  //void Function()? updateState;
+  
 
   ScmCheckDetail(
       {super.key,
       required this.detailNumber,
       required this.trNm,
       required this.controller1,
-      required this.index});
+      required this.index //required this.updateState
+      });
 
   @override
   State<ScmCheckDetail> createState() => _ScmCheckDetailState();
@@ -73,7 +76,7 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
                         //width: 50,
                         child: TextField(
                           focusNode: _controller.getBcNode(),
-                          controller: txtCon,
+                          controller: _controller.model.txtCon,
                           autofocus: true,
                           cursorColor: Colors.transparent,
                           cursorWidth: 0,
@@ -86,10 +89,18 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
                           },
                           onChanged: (value) async {
                             //print(txtCon.text);
-                            //await _controller.scanBarcode(value);
+                            await _controller.checkNb(widget.detailNumber);
+                            await _controller.check(
+                                      context,
+                                      widget.controller1,
+                                      widget.detailNumber,
+                                      widget.index);
+                              
 
-                            txtCon.text = '';
-                            txtCon.clear();
+
+
+                            _controller.model.txtCon.text = '';
+                            _controller.model.txtCon.clear();
                             setState(() {});
                           },
                         ),
@@ -407,19 +418,21 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
                 _controller.getselect();
             // print('AAAA:${_controller.model.boxdata}');
             widget.controller1.setKeyboardClick(false);
+            print("asdada : ${widget.controller1.model.sum} : ${widget.index}");
             widget.controller1.model.sum[widget.index] =
                 _controller.model.sum.toString();
             // print('abc:${widget.controller1.model.sum[widget.index]}');
 
             widget.controller1.model
                 .updatedata(widget.detailNumber, widget.index + 1);
-
+            
             // print(_controller.model.barcodedata);
             // print('a:${_controller.model.sum}');
             Get.back();
             //_controller.updatedata(widget.detailNumber, widget.index);
             // _controller.saveEnd(widget.detailNumber);
             //setState(() {});
+            widget.controller1.supdate();
           },
         ),
       ),

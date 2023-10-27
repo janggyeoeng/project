@@ -13,6 +13,16 @@ class ScmRegisterController {
     return model.textFocusListner(context, state);
   }
 
+  void Function()? sstate;
+
+  Future<void> updateStates()async{
+    sstate;
+  }
+
+  void setStates(void Function()? state)async{
+    this.sstate = state;
+  }
+
   Future<void> setController() async {
     return model.setController();
   }

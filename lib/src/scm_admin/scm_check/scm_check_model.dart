@@ -99,6 +99,9 @@ class ScmCheckModel {
     return barcodeFocusNodes;
   }
 
+  
+
+
   dynamic textFocusListner(BuildContext context, void Function()? state) {
     return textFocusNodes.addListener(() {
       if (textFocusNodes.hasFocus == false) {
@@ -168,7 +171,7 @@ class ScmCheckModel {
     if (barcode.isEmpty) {
       return isuQtCheckDialog(context, '바코드가 입력되지 않았습니다.');
     }
-    if (barcode.length != 12 || !barcode.startsWith('PD')) {
+    if (scanData[0].length != 12 || !scanData[0].startsWith('PD')) {
       isuQtCheckDialog(context, '바코드가 올바르지 않습니다.');
     } else {
       // if (detailData[0]["PSU_NB"] != scanData[0]) {

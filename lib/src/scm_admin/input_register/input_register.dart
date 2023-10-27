@@ -39,7 +39,7 @@ class _InputRegisterState extends State<InputRegister> {
   @override
   void initState() {
     pageUpdate();
-
+    _controller.setStates(pageUpdate);
     setInputType(false);
     focusNodes2.addListener(() {
       print(focusNodes2.hasFocus);
@@ -122,7 +122,14 @@ class _InputRegisterState extends State<InputRegister> {
                             txtCon.text = '';
                           },
                           onChanged: (value) async {
-                            await _controller.barcodeScan(value, context);
+
+                              await _controller.barcodeScan(value, context);
+                              print("1");
+                              await _controller.setController();
+                              print("2");
+                              await _controller.rcvCk(context);
+                              print("3");
+                            //await _controller.barcodeScan(value, context);
                             //print('aaa');
 
                             txtCon.text = '';
@@ -174,7 +181,6 @@ class _InputRegisterState extends State<InputRegister> {
                                   outTap = false;
 
                                   await _controller.barcodeScan(value, context);
-
                                   await _controller.setController();
                                   await _controller.rcvCk(context);
 
