@@ -375,8 +375,8 @@ class _InputRegisterState extends State<InputRegister> {
                       final selectedItem = _controller.model.rsData[index];
                       return GestureDetector(
                         onTap: () {
-                          _controller.clearcolor(selectedItem["PSU_NB"],
-                              _controller.model.selectData1[index]["PSU_SQ"]);
+                          //_controller.clearcolor(selectedItem["PSU_NB"],
+                          // _controller.model.selectData1[index]["PSU_SQ"]);
                           Get.to(() => ScmRegisterDetail(
                               detailNumber: selectedItem["PSU_NB"],
                               trNm: selectedItem["TR_NM"],
@@ -573,9 +573,10 @@ class _InputRegisterState extends State<InputRegister> {
             ),
             onTap: () async {
               await _controller.checkList(context);
-              _controller.updatespec(
+              await _controller.updatespec(
                   _controller.getPsuNb(), _controller.getPsuSq());
               _controller.regist(context);
+              txtCon2.clear();
             },
           ),
         ),

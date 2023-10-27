@@ -310,7 +310,8 @@ class _ScmRegisterDetailState extends State<ScmRegisterDetail> {
                                     GoogleFonts.lato(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 15),
-                                    _controller.getColor(index),
+                                    _controller.getColor(
+                                        index, widget.controller1),
                                   ),
                                 ),
                                 Expanded(
@@ -334,7 +335,8 @@ class _ScmRegisterDetailState extends State<ScmRegisterDetail> {
                                     GoogleFonts.lato(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 15),
-                                    _controller.getColor(index),
+                                    _controller.getColor(
+                                        index, widget.controller1),
                                   ),
                                 ),
                                 Expanded(
@@ -354,7 +356,8 @@ class _ScmRegisterDetailState extends State<ScmRegisterDetail> {
                                     GoogleFonts.lato(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 15),
-                                    _controller.getColor(index),
+                                    _controller.getColor(
+                                        index, widget.controller1),
                                   ),
                                 ),
                                 Expanded(

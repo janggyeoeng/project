@@ -141,7 +141,7 @@ class ScmCheckDetailModel {
         // await plus();
         scmCheckController.model.selectCheckDataList[superKey]![i] = '1';
         updatedata(detailNumber, superIndex, bcData["BOX_NO"]);
-        updatespec(detailNumber, superIndex);
+        //updatespec(detailNumber, superIndex);
 
         bccheck = true;
       } else if (boxdata[i]["BARCODE"] == '1') {

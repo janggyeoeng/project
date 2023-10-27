@@ -17,7 +17,7 @@ class ScmCheckModel {
   bool specTF = false; //IMPORTSPEC 체크
 
   Map<String, List<String>> selectCheckDataList = {};
-
+  int psuSq = 0;
   String psuNb = '';
   String trNm = '';
   //String sum = '';
@@ -31,6 +31,10 @@ class ScmCheckModel {
 
   String getPsuNb() {
     return psuNb;
+  }
+
+  int getPsuSq() {
+    return psuSq;
   }
 
   String getTrNm() {
@@ -62,7 +66,7 @@ class ScmCheckModel {
   //Y로 변경
   Future<void> updatedata(String detailNumber, int index) async {
     await SqlConn.writeData(
-        "UPDATE TSIMPORTINSPEC SET IMPORTSPEC = CASE WHEN (SELECT COUNT(IMPORTSPEC) FROM TSPODELIVER_D_BOX WHERE PSU_NB = '$detailNumber' AND PSU_SQ ='$index' ) > 0 THEN 'Y' ELSE NULL END WHERE PSU_NB = '$detailNumber' AND PSU_SQ ='$index'");
+        "UPDATE TSIMPORTINSPEC SET IMPORTSPEC = CASE WHEN (SELECT COUNT(BARCODE) FROM TSPODELIVER_D_BOX WHERE PSU_NB = '$detailNumber' AND PSU_SQ ='$index' ) > 0 THEN 'Y' ELSE NULL END WHERE PSU_NB = '$detailNumber' AND PSU_SQ ='$index'");
   }
 
   //SPEC =Y인지 체크
@@ -78,6 +82,7 @@ class ScmCheckModel {
 
   Future<void> setTitleData(Map<String, dynamic> map) async {
     psuNb = map['PSU_NB'];
+    psuSq = int.parse(map['PSU_SQ']);
     trNm = map['TR_NM'];
   }
 
