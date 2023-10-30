@@ -12,7 +12,6 @@ class ScmCheckDetail extends StatefulWidget {
   ScmCheckController controller1;
   int index;
   //void Function()? updateState;
-  
 
   ScmCheckDetail(
       {super.key,
@@ -90,14 +89,8 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
                           onChanged: (value) async {
                             //print(txtCon.text);
                             await _controller.checkNb(widget.detailNumber);
-                            await _controller.check(
-                                      context,
-                                      widget.controller1,
-                                      widget.detailNumber,
-                                      widget.index);
-                              
-
-
+                            await _controller.check(context, widget.controller1,
+                                widget.detailNumber, widget.index);
 
                             _controller.model.txtCon.text = '';
                             _controller.model.txtCon.clear();
@@ -319,7 +312,8 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
                                     GoogleFonts.lato(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 15),
-                                    _controller.getColor(index),
+                                    _controller.getColor(
+                                        index, widget.controller1),
                                   ),
                                 ),
                                 Expanded(
@@ -343,7 +337,8 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
                                     GoogleFonts.lato(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 15),
-                                    _controller.getColor(index),
+                                    _controller.getColor(
+                                        index, widget.controller1),
                                   ),
                                 ),
                                 Expanded(
@@ -363,7 +358,8 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
                                     GoogleFonts.lato(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 15),
-                                    _controller.getColor(index),
+                                    _controller.getColor(
+                                        index, widget.controller1),
                                   ),
                                 ),
                                 Expanded(
@@ -423,9 +419,9 @@ class _ScmCheckDetailState extends State<ScmCheckDetail> {
                 _controller.model.sum.toString();
             // print('abc:${widget.controller1.model.sum[widget.index]}');
 
-            widget.controller1.model
-                .updatedata(widget.detailNumber, widget.index + 1);
-            
+            //.controller1.model
+            //.updatedata(widget.detailNumber, widget.index + 1);
+
             // print(_controller.model.barcodedata);
             // print('a:${_controller.model.sum}');
             Get.back();

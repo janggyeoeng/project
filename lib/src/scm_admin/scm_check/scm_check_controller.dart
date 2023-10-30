@@ -15,14 +15,13 @@ class ScmCheckController extends GetxController {
 
   void Function()? sstate;
 
-  Future<void> supdate()async{
+  Future<void> supdate() async {
     print("탓나?");
     sstate;
   }
 
-
   dynamic textFocusListner(BuildContext context, void Function()? state) {
-    this.sstate = state;
+    sstate = state;
     return model.textFocusListner(context, state);
   }
 
@@ -60,6 +59,10 @@ class ScmCheckController extends GetxController {
 
   Color getColor(int index) {
     return model.getColor(index);
+  }
+
+  Future<void> updateinfo(String detailNumber, int index) async {
+    return model.updateinfo(detailNumber, index);
   }
 
   Future<void> scanBarcode(BuildContext context, String barcode) async {
