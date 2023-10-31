@@ -351,15 +351,15 @@ class _ScmCheckState extends State<ScmCheck> {
                           //FocusScope.of(context).offset;
 
                           Get.to(() => ScmCheckDetail(
-                                detailNumber: _controller
-                                    .model.detailData[index]["PSU_NB"],
-                                trNm: _controller.model.detailData[index]
-                                    ["TR_NM"],
-                                controller1: _controller,
-                                index: index
-                               // updateState: pageUpdate,
+                              detailNumber: _controller.model.detailData[index]
+                                  ["PSU_NB"],
+                              trNm: _controller.model.detailData[index]
+                                  ["TR_NM"],
+                              controller1: _controller,
+                              index: index
+                              // updateState: pageUpdate,
                               ));
-                          //await _controller.setKeyboardClick(false); 
+                          //await _controller.setKeyboardClick(false);
                           setState(() {});
 
                           //     ));
@@ -554,9 +554,11 @@ class _ScmCheckState extends State<ScmCheck> {
             ),
             onTap: () async {
               await _controller.checkList(context);
-              await _controller.updatedata(
+              _controller.updateinfo(
                   _controller.getPsuNb(), _controller.getPsuSq());
-              Get.back();
+              //await _controller.updatedata(
+              // _controller.getPsuNb(), _controller.getPsuSq());
+              //Get.back();
 
               setState(() {});
             },

@@ -11,6 +11,9 @@ class ScmCheckModel {
   List<Map<String, dynamic>> selectData = []; // 조회데이터 리스트
   List<Map<String, dynamic>> speccheckData = []; //IMPORTSPEC 리스트
   RxList<Map<String, dynamic>> detailData = RxList<Map<String, dynamic>>([]);
+  Map<int, Map<String, dynamic>> fakedata = {};
+
+  List<String>? values = [];
   List<bool> datavalue = [];
   List<String> sum = [];
 
@@ -20,6 +23,7 @@ class ScmCheckModel {
   int psuSq = 0;
   String psuNb = '';
   String trNm = '';
+  String boxnb = '';
   //String sum = '';
   bool check = false;
 
@@ -66,7 +70,15 @@ class ScmCheckModel {
   //Y로 변경
   Future<void> updatedata(String detailNumber, int index) async {
     await SqlConn.writeData(
-        "UPDATE TSIMPORTINSPEC SET IMPORTSPEC = CASE WHEN (SELECT COUNT(BARCODE) FROM TSPODELIVER_D_BOX WHERE PSU_NB = '$detailNumber' AND PSU_SQ ='$index' ) > 0 THEN 'Y' ELSE NULL END WHERE PSU_NB = '$detailNumber' AND PSU_SQ ='$index'");
+        "UPDATE TSIMPORTINSPEC SET IMPORTSPEC = CASE WHEN (SELECT COUNT('$selectCheckDataList' ) FROM TSPODELIVER_D_BOX WHERE PSU_NB = '$detailNumber' AND PSU_SQ ='$index' ) > 0 THEN '1' ELSE NULL END WHERE PSU_NB = '$detailNumber' AND PSU_SQ ='$index'");
+  }
+
+  //맞는 인덱스의 박스 바코드 변경
+  Future<void> updatabox(
+      String detailNumber, int superIndex, String box) async {
+    bool update = await SqlConn.writeData(
+        "UPDATE TSPODELIVER_D_BOX SET BARCODE = '1' WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='${superIndex + 1}'AND BOX_NO =$box ");
+    print('a:$update');
   }
 
   //SPEC =Y인지 체크
@@ -84,6 +96,7 @@ class ScmCheckModel {
     psuNb = map['PSU_NB'];
     psuSq = int.parse(map['PSU_SQ']);
     trNm = map['TR_NM'];
+    //boxnb =int.parse( map["BOX_NO"]);
   }
 
   Future<void> setKeyboardClick(bool bo) async {
@@ -98,9 +111,6 @@ class ScmCheckModel {
   FocusNode getBarcodeNode() {
     return barcodeFocusNodes;
   }
-
-  
-
 
   dynamic textFocusListner(BuildContext context, void Function()? state) {
     return textFocusNodes.addListener(() {
@@ -130,8 +140,8 @@ class ScmCheckModel {
   //선택한 박스가 하나라도 있으면 수입검사로 넘어감
   Future<void> checkList(BuildContext context) async {
     for (var key in selectCheckDataList.keys) {
-      List<String>? values = selectCheckDataList[key];
-      if (values != null && values.contains('1')) {
+      values = selectCheckDataList[key];
+      if (values != null && values!.contains('1')) {
         check = true;
         break;
       } else {
@@ -139,9 +149,10 @@ class ScmCheckModel {
       }
     }
     if (check == true) {
-      print('검사완료');
+      print("a:${selectCheckDataList.values}");
     } else {
       isuQtCheckDialog(context, '검사 목록이 없습니다.');
+      print("bb:${selectCheckDataList.values}");
     }
 
     // if (selectCheckDataList.values.toList()[i][i] == '1' &&
@@ -171,7 +182,7 @@ class ScmCheckModel {
     if (barcode.isEmpty) {
       return isuQtCheckDialog(context, '바코드가 입력되지 않았습니다.');
     }
-    if (scanData[0].length != 12 || !scanData[0].startsWith('PD')) {
+    if (barcode.length != 12 || !barcode.startsWith('PD')) {
       isuQtCheckDialog(context, '바코드가 올바르지 않습니다.');
     } else {
       // if (detailData[0]["PSU_NB"] != scanData[0]) {
@@ -227,6 +238,17 @@ class ScmCheckModel {
             isuQtCheckDialog(context, '수입검사 목록이 없습니다.');
           }
         }
+      }
+    }
+  }
+
+  Future<void> updateinfo(String detailNumber, int index) async {
+    for (var key in selectCheckDataList.keys) {
+      values = selectCheckDataList[key];
+      if (values == '1') {
+        updatedata(detailNumber, index);
+      } else {
+        print("abcde:$values");
       }
     }
   }

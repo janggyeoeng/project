@@ -82,7 +82,7 @@ class ScmCheckDetailController extends GetxController {
     return model.detailcontainar(text, style, color);
   }
 
-  Color getColor(int index) {
-    return model.getColor(index);
+  Color getColor(int index, ScmCheckController scmCheckController) {
+    return model.getColor(index, scmCheckController);
   }
 }
