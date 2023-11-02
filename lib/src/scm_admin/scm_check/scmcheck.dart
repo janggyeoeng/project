@@ -176,6 +176,10 @@ class _ScmCheckState extends State<ScmCheck> {
                                   await _controller.specCheck(value);
                                   await _controller.scanBarcode(context, value);
                                   await _controller.setController();
+                                  await _controller.boxData(
+                                      _controller.getPsuNb(),
+                                      _controller.getPsuSq());
+
                                   outTap = false;
                                   // _controller.setFocus(context);
                                   setState(() {});
@@ -553,7 +557,9 @@ class _ScmCheckState extends State<ScmCheck> {
               ],
             ),
             onTap: () async {
-              await _controller.checkList(context);
+              await _controller.checkList(
+                  context, _controller.getPsuNb(), _controller.getPsuSq());
+              //print(_controller.model.boxdata);
               _controller.updateinfo(
                   _controller.getPsuNb(), _controller.getPsuSq());
               //await _controller.updatedata(

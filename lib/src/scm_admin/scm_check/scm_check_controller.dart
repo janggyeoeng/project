@@ -9,6 +9,10 @@ class ScmCheckController extends GetxController {
     update();
   }
 
+  Future<void> boxData(String detailNumber, int superIndex) async {
+    return model.boxData(detailNumber, superIndex);
+  }
+
   Future<void> setKeyboardClick(bool bo) async {
     await model.setKeyboardClick(bo);
   }
@@ -53,8 +57,9 @@ class ScmCheckController extends GetxController {
     return model.backKey(context);
   }
 
-  Future<void> checkList(BuildContext context) async {
-    return model.checkList(context);
+  Future<void> checkList(
+      BuildContext context, String detailNumber, int index) async {
+    return model.checkList(context, detailNumber, index);
   }
 
   Color getColor(int index) {
