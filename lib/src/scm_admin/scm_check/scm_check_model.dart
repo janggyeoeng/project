@@ -11,10 +11,9 @@ class ScmCheckModel {
   List<Map<String, dynamic>> selectData = []; // 조회데이터 리스트
   List<Map<String, dynamic>> speccheckData = []; //IMPORTSPEC 리스트
   RxList<Map<String, dynamic>> detailData = RxList<Map<String, dynamic>>([]);
-  Map<int, Map<String, dynamic>> fakedata = {};
+
   List<Map<String, dynamic>> boxdata = [];
 
-  List<String>? values = [];
   List<bool> datavalue = [];
   List<String> sum = [];
 
@@ -68,7 +67,7 @@ class ScmCheckModel {
   Future<void> boxData(String detailNumber, int superIndex) async {
     // scanData = barcode.split('/');
     String detailDataString = await SqlConn.readData(
-        "SELECT ('TSST_'+A.PSU_NB)AS PSU_NB,('TSST_'+CONVERT(NVARCHAR,A.PSU_SQ))AS PSU_SQ,('TSST_'+A.BOX_NO)AS BOX_NO,('TSST_'+A.ITEM_CD)AS ITEM_CD,('TSST_'+CONVERT(NVARCHAR,A.PACK_QT))AS PACK_QT,('TSST_'+A.BARCODE)AS BARCODE,('TSST_'+A.IMPORTSPEC)AS IMPORTSPEC FROM TSPODELIVER_D_BOX A  LEFT JOIN TSPODELIVER_D B ON A.PSU_NB = B.PSU_NB  AND A.PSU_SQ = B.PSU_SQ WHERE A.PSU_NB = '$detailNumber' AND A.PSU_SQ = '${superIndex + 1}'");
+        "SELECT ('TSST_'+A.PSU_NB)AS PSU_NB,('TSST_'+CONVERT(NVARCHAR,A.PSU_SQ))AS PSU_SQ,('TSST_'+A.BOX_NO)AS BOX_NO,('TSST_'+A.ITEM_CD)AS ITEM_CD,('TSST_'+CONVERT(NVARCHAR,A.PACK_QT))AS PACK_QT,('TSST_'+A.BARCODE)AS BARCODE,('TSST_'+A.IMPORTSPEC)AS IMPORTSPEC FROM TSPODELIVER_D_BOX A  LEFT JOIN TSPODELIVER_D B ON A.PSU_NB = B.PSU_NB  AND A.PSU_SQ = B.PSU_SQ WHERE A.PSU_NB = '$detailNumber' ");
 
     String checkData = detailDataString.replaceAll('TSST_', '');
     List<dynamic> decodedData = jsonDecode(checkData);
@@ -85,7 +84,7 @@ class ScmCheckModel {
   //Y로 변경
   Future<void> updatedata(String detailNumber, int index) async {
     await SqlConn.writeData(
-        "UPDATE TSIMPORTINSPEC SET IMPORTSPEC = CASE WHEN (SELECT COUNT('$selectCheckDataList' ) FROM TSPODELIVER_D_BOX WHERE PSU_NB = '$detailNumber' AND PSU_SQ ='$index' ) > 0 THEN 'Y' ELSE NULL END , INSERT_DT = GETDATE() WHERE PSU_NB = '$detailNumber' AND PSU_SQ ='$index'");
+        "UPDATE TSIMPORTINSPEC SET IMPORTSPEC = CASE WHEN (SELECT COUNT('$selectCheckDataList' ) FROM TSPODELIVER_D_BOX WHERE PSU_NB = '$detailNumber' AND PSU_SQ ='$index' ) > 0 THEN 'Y' ELSE NULL END , INSERT_DT = GETDATE(),INSERT_BY=(SELECT USER_ID FROM TSUSER) WHERE PSU_NB = '$detailNumber' AND PSU_SQ ='$index'");
   }
 
   //맞는 인덱스의 박스 바코드 변경
@@ -155,8 +154,8 @@ class ScmCheckModel {
   Future<void> checkList(
       BuildContext context, String detailNumber, int index) async {
     for (var key in selectCheckDataList.keys) {
-      values = selectCheckDataList[key];
-      if (values != null && values!.contains('1')) {
+      List<String>? values = selectCheckDataList[key];
+      if (values != null && values.contains('1')) {
         check = true;
         break;
       } else {
@@ -259,17 +258,33 @@ class ScmCheckModel {
   }
 
   Future<void> updateinfo(String detailNumber, int index) async {
-    for (var key in selectCheckDataList.keys) {
-      values = selectCheckDataList[key];
-      for (int i = 0; i < detailData.length; i++) {
-        if (values?[i] == '1') {
-          await updatabox(
-              detailNumber, index, int.parse(boxdata[i]["BOX_NO"]) + 1);
-          print("abc:${boxdata[i]["BOX_NO"]}");
-          break;
-        } else {}
+    List<String> keys = selectCheckDataList.keys.toList();
+    List<List<String>> values = selectCheckDataList.values.toList();
+
+    for (int i = 0; i < keys.length; i++) {
+      for (int j = 0; j < values[i].length; j++) {
+        if (values[i][j] == '1') {
+          await updatabox(detailNumber, int.parse(keys[i]) + 1,
+              int.parse(boxdata[j]["BOX_NO"]));
+
+          // index i에서 values[i]의 j번째 요소가 '1'인 경우에 업데이트를 수행
+        }
       }
     }
+
+    // for (int i = 0; i < values.length; i++) {
+    //   if (values[i].contains('1')) {
+    //     await updatabox(detailNumber, int.parse(boxdata[i]["PSU_SQ"]),
+    //         int.parse(boxdata[i]["BOX_NO"]));
+    //     print("abcdefg:${values[i][i]}");
+    //     print("abc:${boxdata[i]["BOX_NO"]}");
+    //     print("dddddddddddddddddaaaa:${values[i][i]}");
+    //   } else {
+    //     print("ccccccccccccccc:${keys[i]}");
+    //     print("dddddddddddddddddaaaa:${values[i][i]}");
+    //     //print("bbbbbbbbb:${keys[i]}:${values[i]}");
+    //   }
+    // }
   }
 
   Future<void> setFocus(BuildContext context) async {

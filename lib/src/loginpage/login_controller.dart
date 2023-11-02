@@ -11,11 +11,7 @@ class LoginManager {
     String? pw = pwController.text;
 
     String loginsql = await SqlConn.readData(
-        "EXEC dbo.SP_PDA_LOGIN @UserId ='" +
-            id.toString() +
-            "', @Password = '" +
-            pw.toString() +
-            "'");
+        "EXEC dbo.SP_PDA_LOGIN @UserId ='$id', @Password = '$pw'");
 
     // String outputdata = await SqlConn.readData(
     //     "exec SP_MOBILE_DROPBOX 'SO_FG'");
@@ -23,15 +19,16 @@ class LoginManager {
     // List<dynamic> decodedData = jsonDecode(outputdata);
     // print(decodedData);
 
-
-    Rx<List<Map<String, dynamic>>> dropdownData = Rx<List<Map<String, dynamic>>>([]);
-    String detailDataString = await SqlConn.readData(
-      "exec SP_MOBILE_DROPBOX 'SO_FG'");
+    Rx<List<Map<String, dynamic>>> dropdownData =
+        Rx<List<Map<String, dynamic>>>([]);
+    String detailDataString =
+        await SqlConn.readData("exec SP_MOBILE_DROPBOX 'SO_FG'");
     List<dynamic> decodedData = jsonDecode(detailDataString);
     dropdownData.value = List<Map<String, dynamic>>.from(decodedData);
-    print(dropdownData);
+    //print(dropdownData);
 
     List<dynamic> logindecode = jsonDecode(loginsql);
+    print(logindecode);
     int login = (logindecode[0]["Result"]);
 
     // id입력 초기화
@@ -49,7 +46,10 @@ class LoginManager {
     } else if (login == 0) {
       Get.dialog(
         AlertDialog(
-          title: const Text('아이디, 비밀번호를\n다시 확인해주세요.', style: TextStyle(fontSize: 18),),
+          title: const Text(
+            '아이디, 비밀번호를\n다시 확인해주세요.',
+            style: TextStyle(fontSize: 18),
+          ),
           actions: <Widget>[
             TextButton(
               child: const Text('OK'),
@@ -57,7 +57,7 @@ class LoginManager {
                 Get.back();
                 clearId();
                 clearPw();
-              }, //주문번호 거래처, 주문일자 
+              }, //주문번호 거래처, 주문일자
             ),
           ],
         ),
