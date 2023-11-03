@@ -560,8 +560,12 @@ class _ScmCheckState extends State<ScmCheck> {
               await _controller.checkList(
                   context, _controller.getPsuNb(), _controller.getPsuSq());
               //print(_controller.model.boxdata);
-              _controller.updateinfo(
+              await _controller.updateinfo(
                   _controller.getPsuNb(), _controller.getPsuSq());
+              await _controller.checkspec(
+                _controller.getPsuNb(),
+                _controller.getPsuSq(),
+              );
               //await _controller.updatedata(
               // _controller.getPsuNb(), _controller.getPsuSq());
               //Get.back();

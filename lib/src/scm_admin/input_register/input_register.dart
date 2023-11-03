@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hnde_pda/src/scm_admin/input_register/input_register_controller.dart';
 
@@ -122,13 +120,12 @@ class _InputRegisterState extends State<InputRegister> {
                             txtCon.text = '';
                           },
                           onChanged: (value) async {
-
-                              await _controller.barcodeScan(value, context);
-                              print("1");
-                              await _controller.setController();
-                              print("2");
-                              await _controller.rcvCk(context);
-                              print("3");
+                            await _controller.barcodeScan(value, context);
+                            print("1");
+                            await _controller.setController();
+                            print("2");
+                            await _controller.rcvCk(context);
+                            print("3");
                             //await _controller.barcodeScan(value, context);
                             //print('aaa');
 

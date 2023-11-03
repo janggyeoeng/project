@@ -67,7 +67,7 @@ class ScmCheckModel {
   Future<void> boxData(String detailNumber, int superIndex) async {
     // scanData = barcode.split('/');
     String detailDataString = await SqlConn.readData(
-        "SELECT ('TSST_'+A.PSU_NB)AS PSU_NB,('TSST_'+CONVERT(NVARCHAR,A.PSU_SQ))AS PSU_SQ,('TSST_'+A.BOX_NO)AS BOX_NO,('TSST_'+A.ITEM_CD)AS ITEM_CD,('TSST_'+CONVERT(NVARCHAR,A.PACK_QT))AS PACK_QT,('TSST_'+A.BARCODE)AS BARCODE,('TSST_'+A.IMPORTSPEC)AS IMPORTSPEC FROM TSPODELIVER_D_BOX A  LEFT JOIN TSPODELIVER_D B ON A.PSU_NB = B.PSU_NB  AND A.PSU_SQ = B.PSU_SQ WHERE A.PSU_NB = '$detailNumber' ");
+        "SELECT ('TSST_'+A.PSU_NB)AS PSU_NB,('TSST_'+CONVERT(NVARCHAR,A.PSU_SQ))AS PSU_SQ,('TSST_'+CONVERT(NVARCHAR,A.BOX_SQ))AS BOX_SQ,('TSST_'+A.BOX_NO)AS BOX_NO,('TSST_'+A.ITEM_CD)AS ITEM_CD,('TSST_'+CONVERT(NVARCHAR,A.PACK_QT))AS PACK_QT,('TSST_'+A.BARCODE)AS BARCODE,('TSST_'+A.IMPORTSPEC)AS IMPORTSPEC FROM TSPODELIVER_D_BOX A  LEFT JOIN TSPODELIVER_D B ON A.PSU_NB = B.PSU_NB  AND A.PSU_SQ = B.PSU_SQ WHERE A.PSU_NB = '$detailNumber' ");
 
     String checkData = detailDataString.replaceAll('TSST_', '');
     List<dynamic> decodedData = jsonDecode(checkData);
@@ -81,17 +81,28 @@ class ScmCheckModel {
     }
   }
 
+  Future<void> checkspec(String detailNumber, int index) async {
+    List<List<String>> values = selectCheckDataList.values.toList();
+    for (int i = 0; i < values.length; i++) {
+      if (values[i].contains('1')) {
+        await updatedata(detailNumber, i);
+      }
+    }
+  }
+
   //Y로 변경
   Future<void> updatedata(String detailNumber, int index) async {
     await SqlConn.writeData(
-        "UPDATE TSIMPORTINSPEC SET IMPORTSPEC = CASE WHEN (SELECT COUNT('$selectCheckDataList' ) FROM TSPODELIVER_D_BOX WHERE PSU_NB = '$detailNumber' AND PSU_SQ ='$index' ) > 0 THEN 'Y' ELSE NULL END , INSERT_DT = GETDATE(),INSERT_BY=(SELECT USER_ID FROM TSUSER) WHERE PSU_NB = '$detailNumber' AND PSU_SQ ='$index'");
+        "UPDATE TSIMPORTINSPEC SET IMPORTSPEC = CASE WHEN (SELECT COUNT(BARCODE) FROM TSPODELIVER_D_BOX WHERE PSU_NB = '$detailNumber' AND PSU_SQ ='${index + 1} ' ) > 0 THEN 'Y' ELSE NULL END , INSERT_DT = GETDATE(),INSERT_BY=(SELECT USER_ID FROM TSUSER WHERE ISUSER_POWER = 'P') WHERE PSU_NB = '$detailNumber' AND PSU_SQ ='${index + 1} '");
+    print(index);
   }
 
   //맞는 인덱스의 박스 바코드 변경
   Future<void> updatabox(String detailNumber, int superIndex, int box) async {
     bool update = await SqlConn.writeData(
-        "UPDATE TSPODELIVER_D_BOX SET BARCODE = '1' WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='$superIndex 'AND BOX_NO =$box ");
-    print('a:$update');
+        "UPDATE TSPODELIVER_D_BOX SET BARCODE = '1' WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='$superIndex  'AND BOX_SQ ='$box' ");
+    print('abcde:$update');
+    // print('index:$superIndex');
   }
 
   //SPEC =Y인지 체크
@@ -162,8 +173,8 @@ class ScmCheckModel {
         check = false;
       }
     }
+
     if (check == true) {
-      await updatedata(detailNumber, index);
       print("a:${selectCheckDataList.values}");
     } else {
       isuQtCheckDialog(context, '검사 목록이 없습니다.');
@@ -265,8 +276,7 @@ class ScmCheckModel {
       for (int j = 0; j < values[i].length; j++) {
         if (values[i][j] == '1') {
           await updatabox(detailNumber, int.parse(keys[i]) + 1,
-              int.parse(boxdata[j]["BOX_NO"]));
-
+              int.parse(boxdata[j]["BOX_SQ"]));
           // index i에서 values[i]의 j번째 요소가 '1'인 경우에 업데이트를 수행
         }
       }
