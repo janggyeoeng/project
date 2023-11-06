@@ -40,10 +40,10 @@ class ScmCheckDetailController extends GetxController {
     return model.check(context, scmCheckController, detailNumber, superIndex);
   }
 
-  Future<void> updatedata(
-      String detailNumber, int superIndex, String box) async {
-    return model.updatedata(detailNumber, superIndex, box);
-  }
+  // Future<void> updatedata(
+  //     String detailNumber, int superIndex, String box) async {
+  //   return model.updatedata(detailNumber, superIndex, box);
+  // }
 
   Future<void> checkNb(String detailNumber) async {
     return model.checkNb(detailNumber);

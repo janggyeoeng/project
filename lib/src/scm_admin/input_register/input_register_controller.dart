@@ -15,12 +15,12 @@ class ScmRegisterController {
 
   void Function()? sstate;
 
-  Future<void> updateStates()async{
+  Future<void> updateStates() async {
     sstate;
   }
 
-  void setStates(void Function()? state)async{
-    this.sstate = state;
+  void setStates(void Function()? state) async {
+    sstate = state;
   }
 
   Future<void> setController() async {
@@ -37,10 +37,6 @@ class ScmRegisterController {
 
   Future<void> checkList(BuildContext context) async {
     return model.checkList(context);
-  }
-
-  Future<void> clearcolor(String detailNumber, String superIndex) async {
-    return model.clearcolor(detailNumber, superIndex);
   }
 
   Future<void> regist(BuildContext context) async {

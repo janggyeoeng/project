@@ -13,6 +13,7 @@ class ScmRegisterModel {
   List<Map<String, dynamic>> selectData1 = [];
   List<Map<String, dynamic>> selectData = [];
   List<String> barcodedata = [];
+  List<Map<String, dynamic>> boxdata = [];
   String psuNb = '';
   int psuSq = 0;
   String trNm = '';
@@ -58,6 +59,16 @@ class ScmRegisterModel {
     trNm = map['TR_NM'];
   }
 
+  Future<void> boxData(String detailNumber, String superIndex) async {
+    // scanData = barcode.split('/');
+    String detailDataString = await SqlConn.readData(
+        "SELECT ('TSST_'+A.PSU_NB)AS PSU_NB,('TSST_'+CONVERT(NVARCHAR,A.PSU_SQ))AS PSU_SQ,('TSST_'+A.BOX_NO)AS BOX_NO,('TSST_'+A.ITEM_CD)AS ITEM_CD,('TSST_'+CONVERT(NVARCHAR,A.PACK_QT))AS PACK_QT,('TSST_'+A.BARCODE)AS BARCODE,('TSST_'+A.IMPORTSPEC)AS IMPORTSPEC FROM TSPODELIVER_D_BOX A  LEFT JOIN TSPODELIVER_D B ON A.PSU_NB = B.PSU_NB  AND A.PSU_SQ = B.PSU_SQ LEFT JOIN TSITEM        C ON C.CO_CD = A.CO_CD AND C.ITEM_CD  = B.ITEM_CD WHERE A.PSU_NB = '$detailNumber' AND A.PSU_SQ = '$superIndex' AND (A.BARCODE = CASE WHEN C.PU_FG = 1 THEN '1' ELSE NULL END OR C.PU_FG = 0)");
+
+    String checkData = detailDataString.replaceAll('TSST_', '');
+    List<dynamic> decodedData = jsonDecode(checkData);
+    boxdata = List<Map<String, dynamic>>.from(decodedData);
+  }
+
   //각 인덱스마다 체크된 항목이 있는지 검사하는 리스트  1있으면 검사완료 아니면 팝업창 출력
   Future<void> checkList(BuildContext context) async {
     for (var key in selectCheckDataList.keys) {
@@ -88,16 +99,17 @@ class ScmRegisterModel {
     });
   }
 
+  Future<void> updatabox(String detailNumber, int superIndex, int box) async {
+    bool update = await SqlConn.writeData(
+        "UPDATE TSPODELIVER_D_BOX SET IMPORTSPEC = 'Y' WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='$superIndex  'AND BOX_SQ ='$box' ");
+    print('abcde:$update');
+    // print('index:$superIndex');
+  }
+
   Future<void> updatespec(String detailNumber, int superIndex) async {
     bool updata = await SqlConn.writeData(
         "UPDATE TSPODELIVER_D_BOX SET IMPORTSPEC = 'Y' WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='$superIndex' AND BARCODE = '1'");
     print('a:$updata');
-  }
-
-  Future<void> clearcolor(String detailNumber, String superIndex) async {
-    bool updatecolor = await SqlConn.writeData(
-        "UPDATE TSPODELIVER_D_BOX SET BARCODE = null WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='$superIndex '");
-    print('a:$updatecolor');
   }
 
   Future<void> rcvCk(BuildContext context) async {
@@ -120,7 +132,7 @@ class ScmRegisterModel {
   Future<void> barcodeScan(String barcode, BuildContext context) async {
     List scanData = [];
     scanData = barcode.split('/');
-    print("asdad : ${scanData}");
+    print("asdad : $scanData");
     String detailDataString = '';
 
     if (barcode.isEmpty) {
@@ -157,6 +169,21 @@ class ScmRegisterModel {
         } else {
           // 수입검사가 이루어진게 없을때
           isuQtCheckDialog(context, '수입검사가 이루어지지않았습니다.');
+        }
+      }
+    }
+  }
+
+  Future<void> updateinfo(String detailNumber, int index) async {
+    List<String> keys = selectCheckDataList.keys.toList();
+    List<List<String>> values = selectCheckDataList.values.toList();
+
+    for (int i = 0; i < keys.length; i++) {
+      for (int j = 0; j < values[i].length; j++) {
+        if (values[i][j] == '1') {
+          await updatabox(detailNumber, int.parse(keys[i]) + 1,
+              int.parse(boxdata[j]["BOX_SQ"]));
+          // index i에서 values[i]의 j번째 요소가 '1'인 경우에 업데이트를 수행
         }
       }
     }

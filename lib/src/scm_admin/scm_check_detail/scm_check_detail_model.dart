@@ -90,20 +90,20 @@ class ScmCheckDetailModel {
     });
   }
 
-//맞는 인덱스의 박스 바코드 변경
-  Future<void> updatedata(
-      String detailNumber, int superIndex, String box) async {
-    bool update = await SqlConn.writeData(
-        "UPDATE TSPODELIVER_D_BOX SET BARCODE = '1' WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='${superIndex + 1}'AND BOX_NO =$box");
-    print('a:$update');
-  }
+// //맞는 인덱스의 박스 바코드 변경
+//   Future<void> updatedata(
+//       String detailNumber, int superIndex, String box) async {
+//     bool update = await SqlConn.writeData(
+//         "UPDATE TSPODELIVER_D_BOX SET BARCODE = '1' WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='${superIndex + 1}'AND BOX_NO =$box");
+//     print('a:$update');
+//   }
 
-//바코드가 1인값들에 IMPORTSPEC에 Y 넣기
-  Future<void> updatespec(String detailNumber, int superIndex) async {
-    bool update2 = await SqlConn.writeData(
-        "UPDATE TSPODELIVER_D_BOX SET IMPORTSPEC = 'Y' WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='${superIndex + 1}' AND BARCODE = '1'");
-    print('a1:$update2');
-  }
+// //바코드가 1인값들에 IMPORTSPEC에 Y 넣기
+//   Future<void> updatespec(String detailNumber, int superIndex) async {
+//     bool update2 = await SqlConn.writeData(
+//         "UPDATE TSPODELIVER_D_BOX SET IMPORTSPEC = 'Y' WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='${superIndex + 1}' AND BARCODE = '1'");
+//     print('a1:$update2');
+//   }
 
 // 출고번호 체크
   Future<void> checkNb(String detailNumber) async {
