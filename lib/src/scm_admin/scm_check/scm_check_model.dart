@@ -175,6 +175,7 @@ class ScmCheckModel {
     }
 
     if (check == true) {
+      isuQtCheckDialog(context, '검사가 완료되었습니다.');
       print("a:${selectCheckDataList.values}");
     } else {
       isuQtCheckDialog(context, '검사 목록이 없습니다.');

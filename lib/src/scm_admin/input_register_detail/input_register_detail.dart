@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hnde_pda/src/scm_admin/input_register/input_register_controller.dart';
@@ -87,12 +86,12 @@ class _ScmRegisterDetailState extends State<ScmRegisterDetail> {
                           onChanged: (value) async {
                             //print(txtCon.text);
                             //await _controller.scanBarcode(value);
-                              await  _controller.checkNb(widget.detailNumber);
-                             await _controller.barcodecheck(
-                                      context,
-                                      widget.controller1,
-                                      widget.detailNumber,
-                                      widget.index);
+                            await _controller.checkNb(widget.detailNumber);
+                            await _controller.barcodecheck(
+                                context,
+                                widget.controller1,
+                                widget.detailNumber,
+                                widget.index);
 
                             _controller.model.txtCon.text = '';
                             _controller.model.txtCon.clear();
@@ -410,7 +409,8 @@ class _ScmRegisterDetailState extends State<ScmRegisterDetail> {
             ),
           ),
           onTap: () async {
-            await _controller.clearSpec(widget.detailNumber, widget.index);
+            await _controller.clearSpec(widget.detailNumber, widget.index,
+                widget.controller1, _controller.getboxNo());
             _controller.plus();
             widget.controller1.model.sum[widget.index] =
                 _controller.model.sum.toString();

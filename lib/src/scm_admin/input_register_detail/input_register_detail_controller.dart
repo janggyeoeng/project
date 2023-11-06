@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hnde_pda/src/scm_admin/input_register/input_register_controller.dart';
 import 'package:hnde_pda/src/scm_admin/input_register_detail/input_register_detail_model.dart';
-import 'package:hnde_pda/src/scm_admin/scm_check/scm_check_controller.dart';
 
 class ScmRegisterDetailController extends GetxController {
   ScmRegisterDetailModel model = ScmRegisterDetailModel();
@@ -11,8 +10,6 @@ class ScmRegisterDetailController extends GetxController {
       ScmRegisterController scmRegisterController, String superIndex) async {
     return model.boxData(detailNumber, scmRegisterController, superIndex);
   }
-
-  
 
   dynamic textFocusListner(BuildContext context, void Function()? state) {
     return model.textFocusListner(context, state);
@@ -71,8 +68,14 @@ class ScmRegisterDetailController extends GetxController {
     return model.plus();
   }
 
-  Future<void> clearSpec(String detailNumber, int superIndex) async {
-    return model.clearSpec(detailNumber, superIndex);
+  String getboxNo() {
+    return model.getboxNo();
+  }
+
+  Future<void> clearSpec(String detailNumber, int superIndex,
+      ScmRegisterController scmRegisterController, String index) async {
+    return model.clearSpec(
+        detailNumber, superIndex, scmRegisterController, index);
   }
 
   bool getselect() {

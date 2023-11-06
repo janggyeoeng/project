@@ -30,11 +30,31 @@ class ScmDeleteController {
     return model.deleteData(customerKeyword, startDate, endDate);
   }
 
+  Future<void> checkdelete(String psunb, int psusq, String rcvnb, int rcvsq) {
+    return model.checkdelete(psunb, psusq, rcvnb, rcvsq);
+  }
+
   Future<void> inputdata() async {
     return model.inputdata();
   }
 
   Color selectColor(int index) {
     return model.selectColor(index);
+  }
+
+  String getPsuNb() {
+    return model.getPsuNb();
+  }
+
+  int getPsuSq() {
+    return model.getPsuSq();
+  }
+
+  String getRcvNb() {
+    return model.getRcvNb();
+  }
+
+  int getRcvSq() {
+    return model.getRcvSq();
   }
 }

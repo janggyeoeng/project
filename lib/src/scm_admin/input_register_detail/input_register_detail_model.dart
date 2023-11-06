@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hnde_pda/src/scm_admin/input_register/input_register_controller.dart';
-import 'package:hnde_pda/src/scm_admin/scm_check/scm_check_controller.dart';
 
 import 'package:sql_conn/sql_conn.dart';
 
@@ -22,11 +21,24 @@ class ScmRegisterDetailModel {
   bool hdcheck = false; //헤더체크
   bool select = false; //datavalue 변경
   int sum = 0;
+  String boxNo = '';
 
   String superKey = "";
 
   TextEditingController txtCon = TextEditingController();
   TextEditingController txtCon2 = TextEditingController();
+
+  Future<Map<String, dynamic>> getBindMapData(int index) async {
+    return boxdata[index];
+  }
+
+  Future<void> setTitleData(Map<String, dynamic> map) async {
+    boxNo = map["BOX_NO"];
+  }
+
+  String getboxNo() {
+    return boxNo;
+  }
 
   // 디테일박스 조회
   Future<void> boxData(String detailNumber,
@@ -50,6 +62,7 @@ class ScmRegisterDetailModel {
 
     boxdata = List<Map<String, dynamic>>.from(decodedData);
     detailData.value = boxdata;
+    await setTitleData(boxdata[0]);
   }
 
   TextEditingController gettxtCon() {
@@ -135,7 +148,7 @@ class ScmRegisterDetailModel {
       "BOX_NO": barcode[2]
     };
     for (int i = 0; i < detailData.value.length; i++) {
-      print("asdada : $bcData, $boxdata");
+      // print("asdada : $bcData, $boxdata");
       if (psunb == true &&
           bcData["PSU_SQ"] == boxdata[i]["PSU_SQ"] &&
           bcData["BOX_NO"] == boxdata[i]["BOX_NO"]) {
@@ -144,15 +157,21 @@ class ScmRegisterDetailModel {
         boxdata[i]["IMPORTSPEC"] = 'Y';
         scmRegisterController.model.selectCheckDataList[superKey]![i] =
             '1'; //체크리스트에 1넣기
-        await updatedata(detailNumber, superIndex, bcData["BOX_NO"]);
+        //await updatedata(detailNumber, superIndex, bcData["BOX_NO"]);
         //updatespec(detailNumber, superIndex);
+        print(
+            'aaaaa:${scmRegisterController.model.selectCheckDataList[superKey]![i]}');
         bccheck = true;
       } else if (boxdata[i]["IMPORTSPEC"] == 'Y') {
         scmRegisterController.model.selectCheckDataList[superKey]![i] = '1';
+        print(
+            'bbbbb:${scmRegisterController.model.selectCheckDataList[superKey]![i]}');
         continue;
       } else {
         boxdata[i]["IMPORTSPEC"] = null;
         scmRegisterController.model.selectCheckDataList[superKey]![i] = '0';
+        print(
+            'ccccc:${scmRegisterController.model.selectCheckDataList[superKey]![i]}');
       }
     }
     if (psunb == false) {
@@ -199,12 +218,19 @@ class ScmRegisterDetailModel {
     }
   }
 
-  Future<void> clearSpec(String detailNumber, int superIndex) async {
+  Future<void> clearSpec(String detailNumber, int superIndex,
+      ScmRegisterController scmRegisterController, String index) async {
     var clearSp = await SqlConn.writeData(
-        "UPDATE TSPODELIVER_D_BOX SET BARCODE = null WHERE PSU_NB = '$detailNumber' AND PSU_SQ = '${superIndex + 1}' AND IMPORTSPEC is NULL");
-
-    var clear = await SqlConn.writeData(
-        "UPDATE TSPODELIVER_D_BOX SET IMPORTSPEC = null WHERE PSU_NB = '$detailNumber' AND PSU_SQ = '${superIndex + 1}'");
+        "UPDATE TSPODELIVER_D_BOX SET BARCODE = null WHERE PSU_NB = '$detailNumber' AND PSU_SQ = '$index'='0'");
+    print(clearSp);
+    print(
+        'abc:${scmRegisterController.model.selectCheckDataList[superKey]![0]}');
+    print(
+        'bbb:${scmRegisterController.model.selectCheckDataList[superKey]![1]}');
+    print(
+        'ccc:${scmRegisterController.model.selectCheckDataList[superKey]![2]}');
+    print(
+        'ddd:${scmRegisterController.model.selectCheckDataList[superKey]![3]}');
   }
 
   Color getColor(int index, ScmRegisterController scmRegisterController) {
