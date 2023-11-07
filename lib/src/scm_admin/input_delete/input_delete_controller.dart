@@ -4,8 +4,8 @@ import 'package:hnde_pda/src/scm_admin/input_delete/input_delete_model.dart';
 class ScmDeleteController {
   ScmDeleteModel model = ScmDeleteModel();
 
-  Future<void> pageLoad() async {
-    return model.pageLoad();
+  Future<void> pageLoad(BuildContext context) async {
+    return model.pageLoad(context);
   }
 
   Future<void> colorck(int index) async {
@@ -25,17 +25,18 @@ class ScmDeleteController {
     return model.setController();
   }
 
-  Future<void> deleteData(
-      String customerKeyword, DateTime startDate, DateTime endDate) async {
-    return model.deleteData(customerKeyword, startDate, endDate);
+  Future<void> deleteData(BuildContext context, String customerKeyword,
+      DateTime startDate, DateTime endDate) async {
+    return model.deleteData(context, customerKeyword, startDate, endDate);
   }
 
-  Future<void> checkdelete(String psunb, int psusq, String rcvnb, int rcvsq) {
-    return model.checkdelete(psunb, psusq, rcvnb, rcvsq);
+  Future<void> checkdelete(
+      BuildContext context, String psunb, int psusq, String rcvnb, int rcvsq) {
+    return model.checkdelete(context, psunb, psusq, rcvnb, rcvsq);
   }
 
-  Future<void> inputdata() async {
-    return model.inputdata();
+  Future<void> inputdata(BuildContext context) async {
+    return model.inputdata(context);
   }
 
   Color selectColor(int index) {

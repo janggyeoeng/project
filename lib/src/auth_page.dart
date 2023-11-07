@@ -3,12 +3,11 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hnde_pda/src/output/output_regitser/output_register.dart';
 
-import 'package:hnde_pda/src/scm_admin/return_item_register.dart';
+import 'package:hnde_pda/src/scm_admin/return_item/return_item_register.dart';
 import 'package:hnde_pda/src/scm_admin/scm_check/scmcheck.dart';
 import 'package:hnde_pda/src/home.dart';
 import 'package:hnde_pda/src/scm_admin/input_register/input_register.dart';
 import 'package:hnde_pda/src/scm_admin/input_delete/input_delete.dart';
-import 'package:hnde_pda/src/output/output_regitser(back)/output_register_back.dart';
 import 'package:hnde_pda/src/output/output_status/output_status.dart';
 
 class AuthPage extends StatelessWidget {

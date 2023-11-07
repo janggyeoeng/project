@@ -14,10 +14,10 @@ class ScmDeleteModel {
   int psuSq = 0;
   String rcvNb = '';
   int rcvSq = 0;
-  bool abc = false;
+  bool deleteck = false;
 
-  Future<void> pageLoad() async {
-    await inputdata();
+  Future<void> pageLoad(BuildContext context) async {
+    await inputdata(context);
     await setController();
   }
 
@@ -88,45 +88,83 @@ class ScmDeleteModel {
     }
   }
 
-  Future<void> inputdata() async {
+  Future<void> inputdata(BuildContext context) async {
     String customerKeyword = cscontroller.text;
     await deleteData(
+      context,
       customerKeyword,
       selectedDateRange.start,
       selectedDateRange.end,
     );
   }
 
-  Future<void> deleteData(
-      String customerKeyword, DateTime startDate, DateTime endDate) async {
+  Future<void> deleteData(BuildContext context, String customerKeyword,
+      DateTime startDate, DateTime endDate) async {
+    print("test005 : $customerKeyword, $startDate, $endDate");
     String data = await SqlConn.readData(
         "exec SP_SCM_TS1JA0008A_R1_BAK '1001','$customerKeyword', 'B', '$startDate', '$endDate'");
+
     String detailData = data.replaceAll('tsst', '');
     List<Map<String, dynamic>> decodedData =
         List<Map<String, dynamic>>.from(jsonDecode(detailData));
-    deletedata.assignAll(decodedData);
-    await setTitleData(deletedata[0]);
+    if (decodedData.isEmpty) {
+      isuQtCheckDialog(context, '목록이 없습니다.');
+    } else {
+      deletedata.assignAll(decodedData);
+      await setTitleData(deletedata[0]);
+    }
   }
 
   Future<void> delete(String psunb, int psusq, String rcvnb, int rcvsq) async {
     bool deleteinfo = await SqlConn.writeData(
-        "UPDATE TSPODELIVER_D SET RCV_NB = null ,RCV_SQ = 0,  RCV_QT = 0   WHERE CO_CD  = '1001'AND PSU_NB = '$psunb'AND PSU_SQ = '$psusq' UPDATE TSPODELIVER_D_BOX SET IMPORTSPEC = null,BARCODE = null WHERE PSU_NB='$psunb'AND PSU_SQ='$psusq'  DELETE FROM DZICUBE.dbo.LSTOCK_D WHERE CO_CD  = '1001'AND RCV_NB ='$rcvnb'AND RCV_SQ = $rcvsq");
+        "UPDATE TSPODELIVER_D SET RCV_NB = null ,RCV_SQ = 0,  RCV_QT = 0   WHERE CO_CD  = '1001'AND PSU_NB = '$psunb'AND PSU_SQ = '$psusq' UPDATE TSPODELIVER_D_BOX SET IMPORTSPEC = null WHERE PSU_NB='$psunb'AND PSU_SQ='$psusq'  DELETE FROM DZICUBE.dbo.LSTOCK_D WHERE CO_CD  = '1001'AND RCV_NB ='$rcvnb'AND RCV_SQ = $rcvsq");
   }
 
-  Future<void> checkdelete(
-      String psunb, int psusq, String rcvnb, int rcvsq) async {
-    if (abc == true) {
-      delete(psunb, psusq, rcvnb, rcvsq);
-      print('돼따.');
+  Future<void> checkdelete(BuildContext context, String psunb, int psusq,
+      String rcvnb, int rcvsq) async {
+    if (deleteck == true) {
+      delete(
+        psunb,
+        psusq,
+        rcvnb,
+        rcvsq,
+      );
+      isuQtCheckDialog(context, '삭제가 완료되었습니다.');
+    } else {
+      isuQtCheckDialog(context, '선택된 항목이 없습니다.');
     }
   }
 
   Color selectColor(int index) {
     if (setColor[index] == true) {
-      abc = true;
+      deleteck = true;
       return Colors.blue.shade300;
     }
-    abc = false;
+    deleteck = false;
     return Colors.grey.shade300;
+  }
+
+  void isuQtCheckDialog(BuildContext context, String errorMessage) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(errorMessage),
+              ],
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('확인'))
+            ],
+          );
+        });
   }
 }

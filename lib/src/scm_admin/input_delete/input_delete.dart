@@ -34,7 +34,7 @@ class _ScmDeleteState extends State<ScmDelete> {
 
   @override
   void initState() {
-    //_controller.pageLoad();
+    _controller.pageLoad(context);
     super.initState();
   }
 
@@ -94,7 +94,7 @@ class _ScmDeleteState extends State<ScmDelete> {
                     flex: 1,
                     child: IconButton(
                         onPressed: () async {
-                          _controller.inputdata();
+                          _controller.inputdata(context);
                           setState(() {});
                         },
                         icon: const Icon(Icons.search)),
@@ -144,8 +144,13 @@ class _ScmDeleteState extends State<ScmDelete> {
                       flex: 1,
                       child: IconButton(
                           onPressed: () async {
+                            print("test001");
                             await _controller.selectDate(context);
-                            _controller.inputdata();
+                            print("test002");
+                            await _controller.inputdata(context);
+                            print("test003");
+                            await _controller.setController();
+                            print("test004");
                             setState(() {});
                           },
                           icon: const Icon(
@@ -414,15 +419,22 @@ class _ScmDeleteState extends State<ScmDelete> {
             height: 60,
             child: GestureDetector(
               onTap: () async {
-                _controller.checkdelete(
-                    _controller.model.psuNb,
-                    _controller.model.psuSq,
-                    _controller.model.rcvNb,
-                    _controller.model.rcvSq);
-                print(_controller.getPsuNb());
-                print(_controller.getPsuSq());
-                print(_controller.getRcvNb());
-                print(_controller.getRcvSq());
+                await Get.defaultDialog(
+                    title: '삭제',
+                    middleText: '삭제 하시겠습니까?\n',
+                    onConfirm: () async {
+                      await _controller.checkdelete(
+                          context,
+                          _controller.model.psuNb,
+                          _controller.model.psuSq,
+                          _controller.model.rcvNb,
+                          _controller.model.rcvSq);
+                      setState(() {});
+                    },
+                    onCancel: () {},
+                    textConfirm: '예',
+                    textCancel: '취소',
+                    barrierDismissible: true);
               },
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,

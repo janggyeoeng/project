@@ -108,7 +108,7 @@ class ScmRegisterModel {
 
   Future<void> updatespec(String detailNumber, int superIndex) async {
     bool updata = await SqlConn.writeData(
-        "UPDATE TSPODELIVER_D_BOX SET IMPORTSPEC = 'Y' WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='$superIndex' AND BARCODE = '1'");
+        "UPDATE TSPODELIVER_D_BOX SET BARCODE = null WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='$superIndex' AND IMPORTSPEC is NULL");
     print('a:$updata');
   }
 
@@ -181,12 +181,11 @@ class ScmRegisterModel {
     for (int i = 0; i < keys.length; i++) {
       for (int j = 0; j < values[i].length; j++) {
         if (values[i][j] == '1') {
-          await updatabox(detailNumber, int.parse(keys[i]) + 1,
+          await updatabox(detailNumber, int.parse(keys[i]),
               int.parse(boxdata[j]["BOX_SQ"]));
-          print('돼따');
+
           // index i에서 values[i]의 j번째 요소가 '1'인 경우에 업데이트를 수행
         }
-        print('안됨');
       }
     }
   }
@@ -197,7 +196,6 @@ class ScmRegisterModel {
           "exec  SP_MOBILE_DZSTOCK_C2 '1001', '${barcodedata[i]}'");
       if (regist) {
         isuQtCheckDialog(context, '입고등록이 완료되었습니다.');
-        print(barcodedata[i]);
       } else {}
     }
   }
@@ -227,31 +225,7 @@ class ScmRegisterModel {
               TextButton(
                   onPressed: () {
                     Navigator.pop(context);
-                  },
-                  child: const Text('확인'))
-            ],
-          );
-        });
-  }
-
-  void isuQtCheckDialog2(BuildContext context, String errorMessage) {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(errorMessage),
-              ],
-            ),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    Get.back();
+                    Get.back;
                   },
                   child: const Text('확인'))
             ],

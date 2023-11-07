@@ -68,12 +68,12 @@ class ScmRegisterDetailController extends GetxController {
     return model.plus();
   }
 
-  String getboxNo() {
-    return model.getboxNo();
+  int getboxSq() {
+    return model.getboxSq();
   }
 
   Future<void> clearSpec(String detailNumber, int superIndex,
-      ScmRegisterController scmRegisterController, String index) async {
+      ScmRegisterController scmRegisterController, int index) async {
     return model.clearSpec(
         detailNumber, superIndex, scmRegisterController, index);
   }

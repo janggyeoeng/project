@@ -409,8 +409,8 @@ class _ScmRegisterDetailState extends State<ScmRegisterDetail> {
             ),
           ),
           onTap: () async {
-            await _controller.clearSpec(widget.detailNumber, widget.index,
-                widget.controller1, _controller.getboxNo());
+            //await _controller.clearSpec(widget.detailNumber, widget.index,
+            //  widget.controller1, _controller.getboxSq());
             _controller.plus();
             widget.controller1.model.sum[widget.index] =
                 _controller.model.sum.toString();

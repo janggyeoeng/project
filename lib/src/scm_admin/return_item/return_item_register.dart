@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hnde_pda/src/scm_admin/scm_check/scm_check_controller.dart';
-import 'package:get/get.dart';
+import 'package:hnde_pda/src/scm_admin/return_item/return_item_register_controller.dart';
 
 class ReturnItemRegister extends StatefulWidget {
   const ReturnItemRegister({Key? key}) : super(key: key);
@@ -24,7 +21,7 @@ class _ReturnItemRegisterState extends State<ReturnItemRegister> {
 
 // });
 
-  final ScmCheckController _controller = ScmCheckController();
+  final ReturnRegisterController _controller = ReturnRegisterController();
 
   var focusNodes = FocusNode();
   var focusNodes2 = FocusNode();
@@ -165,6 +162,7 @@ class _ReturnItemRegisterState extends State<ReturnItemRegister> {
                                     border: InputBorder.none),
                                 onFieldSubmitted: (value) {
                                   outTap = false;
+                                  _controller.returnItem();
                                   setFocus();
                                 },
                               ),
@@ -332,7 +330,7 @@ class _ReturnItemRegisterState extends State<ReturnItemRegister> {
                   ),
                 ),
                 child: ListView.builder(
-                  itemCount: 5,
+                  itemCount: _controller.model.returnData.length,
                   itemBuilder: (context, index) {
                     //final selectedItem = _controller.outputlist[index];
                     return GestureDetector(
