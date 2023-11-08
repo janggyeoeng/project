@@ -578,24 +578,15 @@ class _InputRegisterState extends State<InputRegister> {
               ],
             ),
             onTap: () async {
-              Get.defaultDialog(
-                  title: '입고등록',
-                  middleText: '등록 하시겠습니까?\n',
-                  onConfirm: () async {
-                    await _controller.checkList(context);
-                    await _controller.updateinfo(
-                        _controller.getPsuNb(), _controller.getPsuSq());
-                    await _controller.updatespec(
-                        _controller.getPsuNb(), _controller.getPsuSq());
+              await _controller.checkList(context);
+              await _controller.updateinfo(
+                  _controller.getPsuNb(), _controller.getPsuSq());
+              await _controller.updatespec(
+                  _controller.getPsuNb(), _controller.getPsuSq());
 
-                    await _controller.regist(context);
-                    txtCon2.clear();
-                    setState(() {});
-                  },
-                  onCancel: () => (),
-                  textConfirm: '예',
-                  textCancel: '취소',
-                  barrierDismissible: true);
+              await _controller.regist(context);
+              txtCon2.clear();
+              setState(() {});
             },
           ),
         ),

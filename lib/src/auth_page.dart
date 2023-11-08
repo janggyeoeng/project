@@ -108,7 +108,7 @@ class AuthPage extends StatelessWidget {
                     Get.to(() => const ScmDelete());
                   }),
                   gridRouter("SCM반품등록", Icons.library_add_check, () {
-                    Get.to(() => const ReturnItemRegister());
+                    Get.to(() => const ReturnRegister());
                   }),
                   gridRouter("출고등록", Icons.open_in_browser_rounded, () {
                     Get.to(() => const OutputRegister2());

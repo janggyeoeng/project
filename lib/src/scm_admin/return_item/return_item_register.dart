@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hnde_pda/src/scm_admin/return_item/return_item_register_controller.dart';
+import 'package:hnde_pda/src/scm_admin/return_item_detail/return_item_register_detail.dart';
 
-class ReturnItemRegister extends StatefulWidget {
-  const ReturnItemRegister({Key? key}) : super(key: key);
+class ReturnRegister extends StatefulWidget {
+  const ReturnRegister({Key? key}) : super(key: key);
 
   @override
-  State<ReturnItemRegister> createState() => _ReturnItemRegisterState();
+  State<ReturnRegister> createState() => _ReturnRegisterState();
 }
 
-class _ReturnItemRegisterState extends State<ReturnItemRegister> {
+class _ReturnRegisterState extends State<ReturnRegister> {
 //   var focusNode = FocusNode(onKey: (node, event) {
 //     if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
 //         // Do something
@@ -33,6 +35,8 @@ class _ReturnItemRegisterState extends State<ReturnItemRegister> {
 
   @override
   void initState() {
+    pageUpdate();
+    _controller.setStates(pageUpdate);
     setInputType(false);
     focusNodes2.addListener(() {
       print(focusNodes2.hasFocus);
@@ -160,10 +164,12 @@ class _ReturnItemRegisterState extends State<ReturnItemRegister> {
                                 cursorWidth: 0,
                                 decoration: const InputDecoration(
                                     border: InputBorder.none),
-                                onFieldSubmitted: (value) {
+                                onFieldSubmitted: (value) async {
                                   outTap = false;
-                                  _controller.returnItem();
+                                  await _controller.returnItem(context, value);
+                                  await _controller.setController();
                                   setFocus();
+                                  setState(() {});
                                 },
                               ),
                               TextFormField(
@@ -253,11 +259,11 @@ class _ReturnItemRegisterState extends State<ReturnItemRegister> {
                 Expanded(
                     flex: 7,
                     child: Row(children: [
-                      const Expanded(
+                      Expanded(
                         flex: 5,
                         child: Text(
-                          '출고번호',
-                          style: TextStyle(
+                          _controller.getPsuNb(),
+                          style: const TextStyle(
                               fontSize: 15, fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),
@@ -295,11 +301,11 @@ class _ReturnItemRegisterState extends State<ReturnItemRegister> {
                 Expanded(
                     flex: 7,
                     child: Row(children: [
-                      const Expanded(
+                      Expanded(
                         flex: 5,
                         child: Text(
-                          '화신',
-                          style: TextStyle(
+                          _controller.getTrNm(),
+                          style: const TextStyle(
                               fontSize: 15, fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),
@@ -335,8 +341,12 @@ class _ReturnItemRegisterState extends State<ReturnItemRegister> {
                     //final selectedItem = _controller.outputlist[index];
                     return GestureDetector(
                       onTap: () {
-                        // Get.to(() => OutputStatusDetail(
-                        //     detailNumber: selectedItem["ISU_NB"],));
+                        Get.to(() => ReturnRegisterDetail(
+                            detailNumber: _controller.model.returnData[index]
+                                ["PSU_NB"],
+                            trNm: _controller.model.returnData[index]["TR_NM"],
+                            controller1: _controller,
+                            index: index));
                       },
                       child: Container(
                         margin: const EdgeInsets.all(3),
@@ -363,7 +373,7 @@ class _ReturnItemRegisterState extends State<ReturnItemRegister> {
                                       child: Container(
                                         alignment: Alignment.center,
                                         decoration: BoxDecoration(
-                                            color: Colors.grey.withOpacity(0.3),
+                                            color: _controller.getColor(index),
                                             borderRadius:
                                                 const BorderRadius.only(
                                                     topLeft:
@@ -382,10 +392,11 @@ class _ReturnItemRegisterState extends State<ReturnItemRegister> {
                                       flex: 2,
                                       child: Container(
                                         //color: Colors.grey.withOpacity(0.3),
-                                        child: const Center(
+                                        child: Center(
                                           child: Text(
-                                            'ITEM_CD',
-                                            style: TextStyle(fontSize: 14),
+                                            '${_controller.model.returnData[index]["ITEM_CD"]}',
+                                            style:
+                                                const TextStyle(fontSize: 14),
                                           ),
                                         ),
                                       ),
@@ -393,7 +404,7 @@ class _ReturnItemRegisterState extends State<ReturnItemRegister> {
                                     Expanded(
                                       flex: 1,
                                       child: Container(
-                                        color: Colors.grey.withOpacity(0.3),
+                                        color: _controller.getColor(index),
                                         child: const Center(
                                           child: Text(
                                             '품명',
@@ -408,10 +419,11 @@ class _ReturnItemRegisterState extends State<ReturnItemRegister> {
                                       flex: 2,
                                       child: Container(
                                         //color: Colors.grey.withOpacity(0.3),
-                                        child: const Center(
+                                        child: Center(
                                           child: Text(
-                                            'ITEM_NM',
-                                            style: TextStyle(fontSize: 14),
+                                            '${_controller.model.returnData[index]["ITEM_NM"]}',
+                                            style:
+                                                const TextStyle(fontSize: 14),
                                           ),
                                         ),
                                       ),
@@ -428,10 +440,10 @@ class _ReturnItemRegisterState extends State<ReturnItemRegister> {
                                       child: Container(
                                         alignment: Alignment.center,
                                         decoration: BoxDecoration(
-                                            color: Colors.grey.withOpacity(0.3),
+                                            color: _controller.getColor(index),
                                             borderRadius:
                                                 const BorderRadius.only(
-                                                    topLeft:
+                                                    bottomLeft:
                                                         Radius.circular(15))),
                                         child: const Center(
                                           child: Text(
@@ -447,10 +459,11 @@ class _ReturnItemRegisterState extends State<ReturnItemRegister> {
                                       flex: 2,
                                       child: Container(
                                         //color: Colors.grey.withOpacity(0.3),
-                                        child: const Center(
+                                        child: Center(
                                           child: Text(
-                                            'UNIT_DC',
-                                            style: TextStyle(fontSize: 14),
+                                            '${_controller.model.returnData[index]["UNIT_DC"]}',
+                                            style:
+                                                const TextStyle(fontSize: 14),
                                           ),
                                         ),
                                       ),
@@ -458,7 +471,7 @@ class _ReturnItemRegisterState extends State<ReturnItemRegister> {
                                     Expanded(
                                       flex: 1,
                                       child: Container(
-                                        color: Colors.grey.withOpacity(0.3),
+                                        color: _controller.getColor(index),
                                         child: const Center(
                                           child: Text(
                                             '반품수량',
@@ -473,10 +486,11 @@ class _ReturnItemRegisterState extends State<ReturnItemRegister> {
                                       flex: 2,
                                       child: Container(
                                         //color: Colors.grey.withOpacity(0.3),
-                                        child: const Center(
+                                        child: Center(
                                           child: Text(
-                                            'ISU_QT',
-                                            style: TextStyle(fontSize: 14),
+                                            _controller.psuQt(index),
+                                            style:
+                                                const TextStyle(fontSize: 14),
                                           ),
                                         ),
                                       ),

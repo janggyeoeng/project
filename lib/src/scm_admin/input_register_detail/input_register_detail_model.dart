@@ -219,24 +219,7 @@ class ScmRegisterDetailModel {
     for (int i = 0; i < detailData.value.length; i++) {
       var clearSp = await SqlConn.writeData(
           "UPDATE TSPODELIVER_D_BOX SET BARCODE = null WHERE PSU_NB = '$detailNumber' AND PSU_SQ = '$superIndex'AND '${scmRegisterController.model.selectCheckDataList[superIndex]?[index]}'='1'");
-
-      print(
-          'aaaaaaa:${scmRegisterController.model.selectCheckDataList[superKey]![i]}');
-      print(
-          'bbbbbb:${scmRegisterController.model.selectCheckDataList[superKey]?[i]}');
     }
-    // print(clearSp);
-    // print(
-    //     'abc:${scmRegisterController.model.selectCheckDataList[superKey]![0].runtimeType}');
-
-    // print(
-    //     'bbb:${scmRegisterController.model.selectCheckDataList[superKey]![1]}');
-
-    // print(
-    //     'ccc:${scmRegisterController.model.selectCheckDataList[superKey]![2]}');
-
-    // print(
-    //     'ddd:${scmRegisterController.model.selectCheckDataList[superKey]![3]}');
   }
 
   Color getColor(int index, ScmRegisterController scmRegisterController) {
