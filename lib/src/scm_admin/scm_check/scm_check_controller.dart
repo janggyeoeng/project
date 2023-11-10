@@ -78,10 +78,6 @@ class ScmCheckController extends GetxController {
     return model.specCheck(detailNumber.split('/')[0]);
   }
 
-  Future<void> cleardata(String detailNumber) async {
-    return model.cleardata(detailNumber);
-  }
-
   Future<void> updatedata(String detailNumber, int index) async {
     return model.updatedata(detailNumber, index);
   }

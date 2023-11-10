@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hnde_pda/src/scm_admin/input_register/input_register_controller.dart';
 import 'package:hnde_pda/src/scm_admin/input_register_detail/input_register_detail_model.dart';
-import 'package:hnde_pda/src/scm_admin/scm_check/scm_check_controller.dart';
 
 class ScmRegisterDetailController extends GetxController {
   ScmRegisterDetailModel model = ScmRegisterDetailModel();
@@ -11,8 +10,6 @@ class ScmRegisterDetailController extends GetxController {
       ScmRegisterController scmRegisterController, String superIndex) async {
     return model.boxData(detailNumber, scmRegisterController, superIndex);
   }
-
-  
 
   dynamic textFocusListner(BuildContext context, void Function()? state) {
     return model.textFocusListner(context, state);
@@ -49,10 +46,10 @@ class ScmRegisterDetailController extends GetxController {
     return model.checkcount(psu, psusq, scmRegisterController);
   }
 
-  Future<void> updatedata(
-      String detailNumber, int superIndex, String box) async {
-    return model.updatedata(detailNumber, superIndex, box);
-  }
+  // Future<void> updatedata(
+  //     String detailNumber, int superIndex, String box) async {
+  //   return model.updatedata(detailNumber, superIndex, box);
+  // }
 
   Future<void> checkNb(String detailNumber) async {
     return model.checkNb(detailNumber);
@@ -71,9 +68,15 @@ class ScmRegisterDetailController extends GetxController {
     return model.plus();
   }
 
-  Future<void> clearSpec(String detailNumber, int superIndex) async {
-    return model.clearSpec(detailNumber, superIndex);
+  int getboxSq() {
+    return model.getboxSq();
   }
+
+  // Future<void> clearSpec(String detailNumber, int superIndex,
+  //     ScmRegisterController scmRegisterController, int index) async {
+  //   return model.clearSpec(
+  //       detailNumber, superIndex, scmRegisterController, index);
+  // }
 
   bool getselect() {
     return model.getselect();

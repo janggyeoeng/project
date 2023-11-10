@@ -1,30 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hnde_pda/src/scm_admin/input_register/input_register_controller.dart';
-import 'package:hnde_pda/src/scm_admin/input_register_detail/input_register_detail_controller.dart';
+import 'package:hnde_pda/src/scm_admin/return_item/return_item_register_controller.dart';
+import 'package:hnde_pda/src/scm_admin/return_item_detail/return_item_register_detail_controller.dart';
 
-class ScmRegisterDetail extends StatefulWidget {
-  String detailNumber = '';
+class ReturnRegisterDetail extends StatefulWidget {
+  String detailNumber;
   String trNm = '';
-  ScmRegisterController controller1;
+  ReturnRegisterController controller1;
   int index;
+  //void Function()? updateState;
 
-  ScmRegisterDetail(
+  ReturnRegisterDetail(
       {super.key,
       required this.detailNumber,
       required this.trNm,
       required this.controller1,
-      required this.index});
+      required this.index //required this.updateState
+      });
 
   @override
-  State<ScmRegisterDetail> createState() => _ScmRegisterDetailState();
+  State<ReturnRegisterDetail> createState() => _ReturnRegisterState();
 }
 
-class _ScmRegisterDetailState extends State<ScmRegisterDetail> {
-  final ScmRegisterDetailController _controller = ScmRegisterDetailController();
-
-  TextEditingController txtCon = TextEditingController();
+class _ReturnRegisterState extends State<ReturnRegisterDetail> {
+  final ReturnRegisterDetailController _controller =
+      ReturnRegisterDetailController();
 
   bool outTap = false;
 
@@ -35,16 +36,8 @@ class _ScmRegisterDetailState extends State<ScmRegisterDetail> {
   @override
   void initState() {
     _controller.boxData(widget.detailNumber, widget.controller1,
-        widget.controller1.model.selectData1[widget.index]["PSU_SQ"]);
-    // print("a:${widget.controller1.model.datavalue}");
+        widget.controller1.model.returnData[widget.index]["PSU_SQ"], context);
     super.initState();
-    _controller.textFocusListner(context, pageUpdate);
-    _controller.barcodeFocusListner(context);
-    // _controller.getTextNode().addListener(() {
-    //   if (_controller.getTextNode().hasFocus == false) {
-    //     FocusScope.of(context).requestFocus(_controller.getBarcodeNode());
-    //   }
-    // });
   }
 
   FocusNode aafocus = FocusNode();
@@ -53,7 +46,7 @@ class _ScmRegisterDetailState extends State<ScmRegisterDetail> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          '발행수량 정보',
+          '반품 수량 정보',
           style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -82,17 +75,20 @@ class _ScmRegisterDetailState extends State<ScmRegisterDetail> {
                               ),
                           onSubmitted: (value) {
                             print('saas $value');
-                          },
-                          onChanged: (value) async {
-                            //print(txtCon.text);
-                            //await _controller.scanBarcode(value);
-                            await _controller.checkNb(widget.detailNumber);
-                            await _controller.barcodecheck(
+                            _controller.model.barcodecheck(
                                 context,
                                 widget.controller1,
                                 widget.detailNumber,
                                 widget.index);
-
+                          },
+                          onChanged: (value) async {
+                            //print(txtCon.text);
+                            print('saas $value');
+                            _controller.model.barcodecheck(
+                                context,
+                                widget.controller1,
+                                widget.detailNumber,
+                                widget.index);
                             _controller.model.txtCon.text = '';
                             _controller.model.txtCon.clear();
                             setState(() {});
@@ -137,11 +133,6 @@ class _ScmRegisterDetailState extends State<ScmRegisterDetail> {
                                 onFieldSubmitted: (value) async {
                                   print(value);
                                   //await _controller.scanBarcode(value);
-                                  _controller.barcodecheck(
-                                      context,
-                                      widget.controller1,
-                                      widget.detailNumber,
-                                      widget.index);
 
                                   outTap = false;
                                   _controller.setFocus(context);
@@ -149,7 +140,7 @@ class _ScmRegisterDetailState extends State<ScmRegisterDetail> {
                                 },
                               ),
                               TextFormField(
-                                controller: _controller.gettxtCon(),
+                                controller: _controller.model.txtCon,
                                 focusNode: _controller.getTxtNode(),
                                 // readOnly: true,
                                 // cursorColor: Colors.transparent,
@@ -160,12 +151,14 @@ class _ScmRegisterDetailState extends State<ScmRegisterDetail> {
                                         borderSide:
                                             BorderSide(color: Colors.grey))),
                                 onFieldSubmitted: (value) async {
-                                  _controller.checkNb(widget.detailNumber);
-                                  _controller.barcodecheck(
+                                  await _controller
+                                      .checkNb(widget.detailNumber);
+                                  await _controller.model.barcodecheck(
                                       context,
                                       widget.controller1,
                                       widget.detailNumber,
                                       widget.index);
+
                                   outTap = false;
                                   _controller.setFocus(context);
                                   setState(() {});
@@ -409,23 +402,18 @@ class _ScmRegisterDetailState extends State<ScmRegisterDetail> {
             ),
           ),
           onTap: () async {
-            //await _controller.clearSpec(widget.detailNumber, widget.index,
-            //  widget.controller1, _controller.getboxSq());
             _controller.plus();
             widget.controller1.model.sum[widget.index] =
                 _controller.model.sum.toString();
             _controller.setSelectChk();
             widget.controller1.model.datavalue[widget.index] =
-                _controller.getselect();
-
+                _controller.model.select;
             _controller.checkcount(
-                widget.controller1.model.rsData[widget.index]["PSU_NB"],
-                widget.controller1.model.rsData[widget.index]["PSU_SQ"],
+                widget.controller1.model.returnData[widget.index]["PSU_NB"],
+                widget.controller1.model.returnData[widget.index]["PSU_SQ"],
                 widget.controller1);
-
-            Get.back();
             widget.controller1.updateStates();
-            //setState(() {});
+            Get.back();
           },
         ),
       ),

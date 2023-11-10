@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hnde_pda/src/scm_admin/input_register/input_register_controller.dart';
-import 'package:hnde_pda/src/scm_admin/scm_check/scm_check_controller.dart';
 
 import 'package:sql_conn/sql_conn.dart';
 
@@ -22,18 +21,31 @@ class ScmRegisterDetailModel {
   bool hdcheck = false; //헤더체크
   bool select = false; //datavalue 변경
   int sum = 0;
+  int boxSq = 0;
 
   String superKey = "";
 
   TextEditingController txtCon = TextEditingController();
   TextEditingController txtCon2 = TextEditingController();
 
+  Future<Map<String, dynamic>> getBindMapData(int index) async {
+    return detailData.value[index];
+  }
+
+  Future<void> setTitleData(Map<String, dynamic> map) async {
+    boxSq = int.parse(map["BOX_SQ"]);
+  }
+
+  int getboxSq() {
+    return boxSq;
+  }
+
   // 디테일박스 조회
   Future<void> boxData(String detailNumber,
       ScmRegisterController scmRegisterController, String superIndex) async {
     // scanData = barcode.split('/');
     String detailDataString = await SqlConn.readData(
-        "SELECT ('TSST_'+A.PSU_NB)AS PSU_NB,('TSST_'+CONVERT(NVARCHAR,A.PSU_SQ))AS PSU_SQ,('TSST_'+A.BOX_NO)AS BOX_NO,('TSST_'+A.ITEM_CD)AS ITEM_CD,('TSST_'+CONVERT(NVARCHAR,A.PACK_QT))AS PACK_QT,('TSST_'+A.BARCODE)AS BARCODE,('TSST_'+A.IMPORTSPEC)AS IMPORTSPEC FROM TSPODELIVER_D_BOX A  LEFT JOIN TSPODELIVER_D B ON A.PSU_NB = B.PSU_NB  AND A.PSU_SQ = B.PSU_SQ LEFT JOIN TSITEM        C ON C.CO_CD = A.CO_CD AND C.ITEM_CD  = B.ITEM_CD WHERE A.PSU_NB = '$detailNumber' AND A.PSU_SQ = '$superIndex' AND (A.BARCODE = CASE WHEN C.PU_FG = 1 THEN '1' ELSE NULL END OR C.PU_FG = 0)");
+        "SELECT ('TSST_'+A.PSU_NB)AS PSU_NB,('TSST_'+CONVERT(NVARCHAR,A.PSU_SQ))AS PSU_SQ,('TSST_'+CONVERT(NVARCHAR,A.BOX_SQ))AS BOX_SQ,('TSST_'+A.BOX_NO)AS BOX_NO,('TSST_'+A.BOX_NO)AS BOX_NO,('TSST_'+A.ITEM_CD)AS ITEM_CD,('TSST_'+CONVERT(NVARCHAR,A.PACK_QT))AS PACK_QT,('TSST_'+A.BARCODE)AS BARCODE,('TSST_'+A.IMPORTSPEC)AS IMPORTSPEC FROM TSPODELIVER_D_BOX A  LEFT JOIN TSPODELIVER_D B ON A.PSU_NB = B.PSU_NB  AND A.PSU_SQ = B.PSU_SQ LEFT JOIN TSITEM        C ON C.CO_CD = A.CO_CD AND C.ITEM_CD  = B.ITEM_CD WHERE A.PSU_NB = '$detailNumber' AND A.PSU_SQ = '$superIndex' AND (A.BARCODE = CASE WHEN C.PU_FG = 1 THEN '1' ELSE NULL END OR C.PU_FG = 0)");
 
     String checkData = detailDataString.replaceAll('TSST_', '');
     List<dynamic> decodedData = jsonDecode(checkData);
@@ -50,6 +62,8 @@ class ScmRegisterDetailModel {
 
     boxdata = List<Map<String, dynamic>>.from(decodedData);
     detailData.value = boxdata;
+    await setTitleData(boxdata[0]);
+    print('annnnnn::$boxSq');
   }
 
   TextEditingController gettxtCon() {
@@ -91,21 +105,6 @@ class ScmRegisterDetailModel {
     });
   }
 
-  //맞는 인덱스의 박스 바코드 변경
-  Future<void> updatedata(
-      String detailNumber, int superIndex, String box) async {
-    bool updata = await SqlConn.writeData(
-        "UPDATE TSPODELIVER_D_BOX SET IMPORTSPEC = 'Y' WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='${superIndex + 1}'AND BOX_NO =$box");
-    print('a:$updata');
-  }
-
-  //바코드가 1인값들에 IMPORTSPEC에 Y 넣기
-  Future<void> updatespec(String detailNumber, int superIndex) async {
-    bool updata = await SqlConn.writeData(
-        "UPDATE TSPODELIVER_D_BOX SET IMPORTSPEC = 'Y' WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='${superIndex + 1}' AND BARCODE = '1'");
-    print('a:$updata');
-  }
-
   // 출고번호 체크
   Future<void> checkNb(String detailNumber) async {
     List<String> barcode = txtCon2.text.split('@');
@@ -135,7 +134,7 @@ class ScmRegisterDetailModel {
       "BOX_NO": barcode[2]
     };
     for (int i = 0; i < detailData.value.length; i++) {
-      print("asdada : $bcData, $boxdata");
+      // print("asdada : $bcData, $boxdata");
       if (psunb == true &&
           bcData["PSU_SQ"] == boxdata[i]["PSU_SQ"] &&
           bcData["BOX_NO"] == boxdata[i]["BOX_NO"]) {
@@ -144,11 +143,12 @@ class ScmRegisterDetailModel {
         boxdata[i]["IMPORTSPEC"] = 'Y';
         scmRegisterController.model.selectCheckDataList[superKey]![i] =
             '1'; //체크리스트에 1넣기
-        await updatedata(detailNumber, superIndex, bcData["BOX_NO"]);
+        //await updatedata(detailNumber, superIndex, bcData["BOX_NO"]);
         //updatespec(detailNumber, superIndex);
         bccheck = true;
       } else if (boxdata[i]["IMPORTSPEC"] == 'Y') {
         scmRegisterController.model.selectCheckDataList[superKey]![i] = '1';
+
         continue;
       } else {
         boxdata[i]["IMPORTSPEC"] = null;
@@ -179,6 +179,7 @@ class ScmRegisterDetailModel {
     }
   }
 
+//선택한 박스 수량 더하기
   Future<void> plus() async {
     for (int i = 0; i < detailData.value.length; i++) {
       if (boxdata[i]['IMPORTSPEC'] == 'Y') {
@@ -187,6 +188,7 @@ class ScmRegisterDetailModel {
     }
   }
 
+//양식에 맞는 바코드 출력
   Future<void> checkcount(String psu, String psusq,
       ScmRegisterController scmRegisterController) async {
     for (int i = 0; i < detailData.value.length; i++) {
@@ -199,13 +201,13 @@ class ScmRegisterDetailModel {
     }
   }
 
-  Future<void> clearSpec(String detailNumber, int superIndex) async {
-    var clearSp = await SqlConn.writeData(
-        "UPDATE TSPODELIVER_D_BOX SET BARCODE = null WHERE PSU_NB = '$detailNumber' AND PSU_SQ = '${superIndex + 1}' AND IMPORTSPEC is NULL");
-
-    var clear = await SqlConn.writeData(
-        "UPDATE TSPODELIVER_D_BOX SET IMPORTSPEC = null WHERE PSU_NB = '$detailNumber' AND PSU_SQ = '${superIndex + 1}'");
-  }
+  // Future<void> clearSpec(String detailNumber, int superIndex,
+  //     ScmRegisterController scmRegisterController, int index) async {
+  //   for (int i = 0; i < detailData.value.length; i++) {
+  //     var clearSp = await SqlConn.writeData(
+  //         "UPDATE TSPODELIVER_D_BOX SET BARCODE = null WHERE PSU_NB = '$detailNumber' AND PSU_SQ = '$superIndex'AND '${scmRegisterController.model.selectCheckDataList[superIndex]?[index]}'='1'");
+  //   }
+  // }
 
   Color getColor(int index, ScmRegisterController scmRegisterController) {
     if (scmRegisterController.model.selectCheckDataList[superKey]![index] ==
@@ -282,4 +284,19 @@ class ScmRegisterDetailModel {
       )),
     );
   }
+
+  //맞는 인덱스의 박스 바코드 변경
+  // Future<void> updatedata(
+  //     String detailNumber, int superIndex, String box) async {
+  //   bool updata = await SqlConn.writeData(
+  //       "UPDATE TSPODELIVER_D_BOX SET IMPORTSPEC = 'Y' WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='${superIndex + 1}'AND BOX_NO =$box");
+  //   print('a:$updata');
+  // }
+
+  //바코드가 1인값들에 IMPORTSPEC에 Y 넣기
+  // Future<void> updatespec(String detailNumber, int superIndex) async {
+  //   bool updata = await SqlConn.writeData(
+  //       "UPDATE TSPODELIVER_D_BOX SET IMPORTSPEC = 'Y' WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='${superIndex + 1}' AND BARCODE = '1'");
+  //   print('a:$updata');
+  // }
 }

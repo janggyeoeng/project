@@ -167,6 +167,7 @@ class ScmCheckDetailModel {
     print(scmCheckController.model.selectCheckDataList);
   }
 
+// 헤더 박스 색깔바꾸기 위해서 체크
   Future<void> setSelectChk() async {
     for (int i = 0; i < detailData.value.length; i++) {
       if (boxdata[i]["BARCODE"] == '1') {

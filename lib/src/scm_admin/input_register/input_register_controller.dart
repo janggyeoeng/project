@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:hnde_pda/src/scm_admin/input_register/input_register_model.dart';
 
 class ScmRegisterController {
@@ -31,6 +30,10 @@ class ScmRegisterController {
     return model.psuQt(index);
   }
 
+  Future<void> boxData(String detailNumber, int superIndex) async {
+    return model.boxData(detailNumber, superIndex);
+  }
+
   Future<void> updatespec(String detailNumber, int superIndex) async {
     return model.updatespec(detailNumber, superIndex);
   }
@@ -49,6 +52,10 @@ class ScmRegisterController {
 
   Color getColor(int index) {
     return model.getColor(index);
+  }
+
+  Future<void> updateinfo(String detailNumber, int index) async {
+    return model.updateinfo(detailNumber, index);
   }
 
   String getPsuNb() {

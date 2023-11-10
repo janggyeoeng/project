@@ -59,10 +59,11 @@ class ScmRegisterModel {
     trNm = map['TR_NM'];
   }
 
-  Future<void> boxData(String detailNumber, String superIndex) async {
+//디테일박스 조회
+  Future<void> boxData(String detailNumber, int superIndex) async {
     // scanData = barcode.split('/');
     String detailDataString = await SqlConn.readData(
-        "SELECT ('TSST_'+A.PSU_NB)AS PSU_NB,('TSST_'+CONVERT(NVARCHAR,A.PSU_SQ))AS PSU_SQ,('TSST_'+A.BOX_NO)AS BOX_NO,('TSST_'+A.ITEM_CD)AS ITEM_CD,('TSST_'+CONVERT(NVARCHAR,A.PACK_QT))AS PACK_QT,('TSST_'+A.BARCODE)AS BARCODE,('TSST_'+A.IMPORTSPEC)AS IMPORTSPEC FROM TSPODELIVER_D_BOX A  LEFT JOIN TSPODELIVER_D B ON A.PSU_NB = B.PSU_NB  AND A.PSU_SQ = B.PSU_SQ LEFT JOIN TSITEM        C ON C.CO_CD = A.CO_CD AND C.ITEM_CD  = B.ITEM_CD WHERE A.PSU_NB = '$detailNumber' AND A.PSU_SQ = '$superIndex' AND (A.BARCODE = CASE WHEN C.PU_FG = 1 THEN '1' ELSE NULL END OR C.PU_FG = 0)");
+        "SELECT ('TSST_'+A.PSU_NB)AS PSU_NB,('TSST_'+CONVERT(NVARCHAR,A.PSU_SQ))AS PSU_SQ,('TSST_'+CONVERT(NVARCHAR,A.BOX_SQ))AS BOX_SQ,('TSST_'+A.BOX_NO)AS BOX_NO,('TSST_'+A.ITEM_CD)AS ITEM_CD,('TSST_'+CONVERT(NVARCHAR,A.PACK_QT))AS PACK_QT,('TSST_'+A.BARCODE)AS BARCODE,('TSST_'+A.IMPORTSPEC)AS IMPORTSPEC FROM TSPODELIVER_D_BOX A  LEFT JOIN TSPODELIVER_D B ON A.PSU_NB = B.PSU_NB  AND A.PSU_SQ = B.PSU_SQ LEFT JOIN TSITEM        C ON C.CO_CD = A.CO_CD AND C.ITEM_CD  = B.ITEM_CD WHERE A.PSU_NB = '$detailNumber' AND A.PSU_SQ = '$superIndex' AND (A.BARCODE = CASE WHEN C.PU_FG = 1 THEN '1' ELSE NULL END OR C.PU_FG = 0)");
 
     String checkData = detailDataString.replaceAll('TSST_', '');
     List<dynamic> decodedData = jsonDecode(checkData);
@@ -99,6 +100,7 @@ class ScmRegisterModel {
     });
   }
 
+//DB 디테일박스 업데이트
   Future<void> updatabox(String detailNumber, int superIndex, int box) async {
     bool update = await SqlConn.writeData(
         "UPDATE TSPODELIVER_D_BOX SET IMPORTSPEC = 'Y' WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='$superIndex  'AND BOX_SQ ='$box' ");
@@ -106,12 +108,14 @@ class ScmRegisterModel {
     // print('index:$superIndex');
   }
 
+//BARCODE정리
   Future<void> updatespec(String detailNumber, int superIndex) async {
     bool updata = await SqlConn.writeData(
-        "UPDATE TSPODELIVER_D_BOX SET IMPORTSPEC = 'Y' WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='$superIndex' AND BARCODE = '1'");
+        "UPDATE TSPODELIVER_D_BOX SET BARCODE = null WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='$superIndex' AND IMPORTSPEC is NULL");
     print('a:$updata');
   }
 
+//입고처리 확인하기
   Future<void> rcvCk(BuildContext context) async {
     String rcv =
         await SqlConn.readData("SELECT RCV_NB FROM DZICUBE.dbo.LSTOCK");
@@ -174,6 +178,7 @@ class ScmRegisterModel {
     }
   }
 
+//인덱스 값이 1 이면 박스 업데이트
   Future<void> updateinfo(String detailNumber, int index) async {
     List<String> keys = selectCheckDataList.keys.toList();
     List<List<String>> values = selectCheckDataList.values.toList();
@@ -181,14 +186,16 @@ class ScmRegisterModel {
     for (int i = 0; i < keys.length; i++) {
       for (int j = 0; j < values[i].length; j++) {
         if (values[i][j] == '1') {
-          await updatabox(detailNumber, int.parse(keys[i]) + 1,
+          await updatabox(detailNumber, int.parse(keys[i]),
               int.parse(boxdata[j]["BOX_SQ"]));
+
           // index i에서 values[i]의 j번째 요소가 '1'인 경우에 업데이트를 수행
         }
       }
     }
   }
 
+//입고등록
   Future<void> regist(BuildContext context) async {
     for (int i = 0; i < barcodedata.length; i++) {
       var regist = await SqlConn.writeData(
@@ -199,6 +206,7 @@ class ScmRegisterModel {
     }
   }
 
+//색깔
   Color getColor(int index) {
     if (datavalue[index] == true) {
       return Colors.blue.shade300;
@@ -224,31 +232,7 @@ class ScmRegisterModel {
               TextButton(
                   onPressed: () {
                     Navigator.pop(context);
-                  },
-                  child: const Text('확인'))
-            ],
-          );
-        });
-  }
-
-  void isuQtCheckDialog2(BuildContext context, String errorMessage) {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(errorMessage),
-              ],
-            ),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    Get.back();
+                    Get.back;
                   },
                   child: const Text('확인'))
             ],
