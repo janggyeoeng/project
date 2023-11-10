@@ -36,7 +36,7 @@ class _ReturnRegisterState extends State<ReturnRegisterDetail> {
   @override
   void initState() {
     _controller.boxData(widget.detailNumber, widget.controller1,
-        widget.controller1.model.returnData[widget.index]["PSU_SQ"]);
+        widget.controller1.model.returnData[widget.index]["PSU_SQ"], context);
     super.initState();
   }
 

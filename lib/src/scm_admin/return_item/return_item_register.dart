@@ -509,21 +509,27 @@ class _ReturnRegisterState extends State<ReturnRegister> {
             ),
           ],
         ),
-        bottomNavigationBar: const BottomAppBar(
+        bottomNavigationBar: BottomAppBar(
           color: Colors.grey,
           height: 60,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.border_color, color: Colors.white),
-              SizedBox(
-                width: 3,
-              ),
-              Text(
-                ' 반품등록',
-                style: TextStyle(fontSize: 30, color: Colors.white),
-              ),
-            ],
+          child: GestureDetector(
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.border_color, color: Colors.white),
+                SizedBox(
+                  width: 3,
+                ),
+                Text(
+                  ' 반품등록',
+                  style: TextStyle(fontSize: 30, color: Colors.white),
+                ),
+              ],
+            ),
+            onTap: () {
+              _controller.returnRegist(context, _controller.getPsuDt());
+              print("a:${_controller.getPsuDt()}");
+            },
           ),
         ),
       ),

@@ -8,8 +8,10 @@ class ReturnRegisterDetailController {
   Future<void> boxData(
       String detailNumber,
       ReturnRegisterController returnRegisterController,
-      String superIndex) async {
-    return model.boxData(detailNumber, returnRegisterController, superIndex);
+      String superIndex,
+      BuildContext context) async {
+    return model.boxData(
+        detailNumber, returnRegisterController, superIndex, context);
   }
 
   Future<void> checkNb(String detailNumber) async {

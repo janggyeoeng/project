@@ -13,6 +13,10 @@ class ReturnRegisterController {
     return model.returnItem(context, barcode);
   }
 
+  Future<void> returnRegist(BuildContext context, String psudt) async {
+    return model.returnRegist(context, psudt);
+  }
+
   Future<void> updateStates() async {
     sstate;
   }
@@ -27,6 +31,10 @@ class ReturnRegisterController {
 
   String getTrNm() {
     return model.getTrNm();
+  }
+
+  String getPsuDt() {
+    return model.getPsuDt();
   }
 
   Color getColor(int index) {

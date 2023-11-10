@@ -56,14 +56,14 @@ class ScmCheckModel {
     return 0;
   }
 
-  Future<void> cleardata(String detailNumber) async {
-    for (int i = 0; i < datavalue.length; i++) {
-      datavalue[i] = false;
-    }
-    await SqlConn.writeData(
-        "UPDATE TSPODELIVER_D_BOX SET BARCODE =null,IMPORTSPEC =null WHERE PSU_NB ='$detailNumber'");
+  Future<void> setTitleData(Map<String, dynamic> map) async {
+    psuNb = map['PSU_NB'];
+    psuSq = int.parse(map['PSU_SQ']);
+    trNm = map['TR_NM'];
+    //boxnb = map["BOX_NO"];
   }
 
+//디테일 박스 조회
   Future<void> boxData(String detailNumber, int superIndex) async {
     // scanData = barcode.split('/');
     String detailDataString = await SqlConn.readData(
@@ -74,6 +74,7 @@ class ScmCheckModel {
     boxdata = List<Map<String, dynamic>>.from(decodedData);
   }
 
+// bool값들 생성
   Future<void> setController() async {
     for (int i = 0; i < detailData.length; i++) {
       datavalue.add(false);
@@ -81,6 +82,7 @@ class ScmCheckModel {
     }
   }
 
+//선택된항목있는지 체크
   Future<void> checkspec(String detailNumber, int index) async {
     List<List<String>> values = selectCheckDataList.values.toList();
     for (int i = 0; i < values.length; i++) {
@@ -90,7 +92,7 @@ class ScmCheckModel {
     }
   }
 
-  //Y로 변경
+  //선택된게 하나라도있으면 TSIMPORTSPEC을 Y로 변경
   Future<void> updatedata(String detailNumber, int index) async {
     await SqlConn.writeData(
         "UPDATE TSIMPORTINSPEC SET IMPORTSPEC = CASE WHEN (SELECT COUNT(BARCODE) FROM TSPODELIVER_D_BOX WHERE PSU_NB = '$detailNumber' AND PSU_SQ ='${index + 1} ' ) > 0 THEN 'Y' ELSE NULL END , INSERT_DT = GETDATE(),INSERT_BY=(SELECT USER_ID FROM TSUSER WHERE ISUSER_POWER = 'P') WHERE PSU_NB = '$detailNumber' AND PSU_SQ ='${index + 1} '");
@@ -105,7 +107,7 @@ class ScmCheckModel {
     // print('index:$superIndex');
   }
 
-  //SPEC =Y인지 체크
+  //SPEC =Y인지 체크(이미 검사된 데이터인지 확인)
   Future<void> specCheck(String detailNumber) async {
     String spec = await SqlConn.readData(
         "SELECT ('tsst'+IMPORTSPEC) AS IMPORTSPEC FROM TSIMPORTINSPEC WHERE PSU_NB = '$detailNumber'");
@@ -114,13 +116,6 @@ class ScmCheckModel {
     speccheckData = List<Map<String, dynamic>>.from(decodedspec);
 
     print(speccheckData);
-  }
-
-  Future<void> setTitleData(Map<String, dynamic> map) async {
-    psuNb = map['PSU_NB'];
-    psuSq = int.parse(map['PSU_SQ']);
-    trNm = map['TR_NM'];
-    //boxnb = map["BOX_NO"];
   }
 
   Future<void> setKeyboardClick(bool bo) async {
@@ -192,6 +187,7 @@ class ScmCheckModel {
     // }
   }
 
+//수량변경
   String psuQt(int index) {
     if (datavalue[index] == false) {
       return detailData[index]["PSU_QT"];
@@ -200,6 +196,7 @@ class ScmCheckModel {
     }
   }
 
+//바코드 스캔
   Future<void> scanBarcode(BuildContext context, String barcode) async {
     List<String> scanData = [];
     scanData = barcode.split('/');
@@ -225,7 +222,7 @@ class ScmCheckModel {
         }
       }
       if (specTF == true) {
-        isuQtCheckDialog(context, '수입검사가 완료되었습니다.');
+        isuQtCheckDialog(context, '이미 검사가 완료된 항목입니다.');
       }
       if (specTF == false) {
         //수입체크가 안됐을때 실행
@@ -269,6 +266,7 @@ class ScmCheckModel {
     }
   }
 
+//인덱스에 맞는 박스 DB업데이트
   Future<void> updateinfo(String detailNumber, int index) async {
     List<String> keys = selectCheckDataList.keys.toList();
     List<List<String>> values = selectCheckDataList.values.toList();

@@ -10,6 +10,7 @@ class ReturnRegisterModel {
   String psuNb = '';
   int psuSq = 0;
   String trNm = '';
+  String psudt = '';
   Map<String, List<String>> selectCheckDataList = {};
   List<String> sum = [];
   List<bool> datavalue = [];
@@ -23,6 +24,7 @@ class ReturnRegisterModel {
     psuNb = map['PSU_NB'];
     psuSq = int.parse(map['PSU_SQ']);
     trNm = map['TR_NM'];
+    psudt = map['PSU_DT'];
   }
 
   String getPsuNb() {
@@ -31,6 +33,10 @@ class ReturnRegisterModel {
 
   String getTrNm() {
     return trNm;
+  }
+
+  String getPsuDt() {
+    return psudt;
   }
 
   Future<void> setController() async {
@@ -58,6 +64,18 @@ class ReturnRegisterModel {
       returnData.value = rtData;
       await setTitleData(returnData[0]);
       print(returnData);
+    }
+  }
+
+  Future<void> returnRegist(BuildContext context, String psudt) async {
+    for (int i = 0; i < barcodedata.length; i++) {
+      var regist = await SqlConn.writeData(
+          "exec  SP_SCM_TS1JA0003A_C1 '1001','$psudt', '${barcodedata[i]}'");
+      if (regist) {
+        isuQtCheckDialog(context, '반품등록이 완료되었습니다.');
+      } else {
+        isuQtCheckDialog(context, '반품등록이 안된다.');
+      }
     }
   }
 

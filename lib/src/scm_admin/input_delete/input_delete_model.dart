@@ -48,6 +48,7 @@ class ScmDeleteModel {
     return rcvSq;
   }
 
+//색깔바꾸기
   Future<void> colorck(int index) async {
     if (setColor[index] == false) {
       setColor[index] = true;
@@ -56,6 +57,7 @@ class ScmDeleteModel {
     }
   }
 
+//컬러 bool 생성
   Future<void> setController() async {
     for (int i = 0; i < deletedata.length; i++) {
       setColor.add(false);
@@ -88,6 +90,7 @@ class ScmDeleteModel {
     }
   }
 
+//날짜랑 키워드에따른 정보가져오기
   Future<void> inputdata(BuildContext context) async {
     String customerKeyword = cscontroller.text;
     await deleteData(
@@ -98,6 +101,7 @@ class ScmDeleteModel {
     );
   }
 
+//제거 데이터 목록 조회
   Future<void> deleteData(BuildContext context, String customerKeyword,
       DateTime startDate, DateTime endDate) async {
     print("test005 : $customerKeyword, $startDate, $endDate");
@@ -115,11 +119,13 @@ class ScmDeleteModel {
     }
   }
 
+//삭제하기
   Future<void> delete(String psunb, int psusq, String rcvnb, int rcvsq) async {
     bool deleteinfo = await SqlConn.writeData(
         "UPDATE TSPODELIVER_D SET RCV_NB = null ,RCV_SQ = 0,  RCV_QT = 0   WHERE CO_CD  = '1001'AND PSU_NB = '$psunb'AND PSU_SQ = '$psusq' UPDATE TSPODELIVER_D_BOX SET IMPORTSPEC = null WHERE PSU_NB='$psunb'AND PSU_SQ='$psusq'  DELETE FROM DZICUBE.dbo.LSTOCK_D WHERE CO_CD  = '1001'AND RCV_NB ='$rcvnb'AND RCV_SQ = $rcvsq");
   }
 
+//선택항목있으면 삭제 없으면 메세지출력
   Future<void> checkdelete(BuildContext context, String psunb, int psusq,
       String rcvnb, int rcvsq) async {
     if (deleteck == true) {
@@ -135,6 +141,7 @@ class ScmDeleteModel {
     }
   }
 
+//색깔
   Color selectColor(int index) {
     if (setColor[index] == true) {
       deleteck = true;

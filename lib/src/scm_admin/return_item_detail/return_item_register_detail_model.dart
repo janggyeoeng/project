@@ -52,7 +52,8 @@ class ReturnRegisterDetailModel {
   Future<void> boxData(
       String detailNumber,
       ReturnRegisterController returnRegisterController,
-      String superIndex) async {
+      String superIndex,
+      BuildContext context) async {
     // scanData = barcode.split('/');
     String detailDataString = await SqlConn.readData(
         "SELECT ('TSST_'+A.PSU_NB)AS PSU_NB,('TSST_'+CONVERT(NVARCHAR,A.PSU_SQ))AS PSU_SQ,('TSST_'+CONVERT(NVARCHAR,A.BOX_SQ))AS BOX_SQ,('TSST_'+A.BOX_NO)AS BOX_NO,('TSST_'+A.BOX_NO)AS BOX_NO,('TSST_'+A.ITEM_CD)AS ITEM_CD,('TSST_'+CONVERT(NVARCHAR,A.PACK_QT))AS PACK_QT,('TSST_'+A.BARCODE)AS BARCODE,('TSST_'+A.IMPORTSPEC)AS IMPORTSPEC FROM TSPODELIVER_D_BOX A  LEFT JOIN TSPODELIVER_D B ON A.PSU_NB = B.PSU_NB  AND A.PSU_SQ = B.PSU_SQ LEFT JOIN TSITEM        C ON C.CO_CD = A.CO_CD AND C.ITEM_CD  = B.ITEM_CD WHERE A.PSU_NB = '$detailNumber' AND A.PSU_SQ = '$superIndex' AND IMPORTSPEC is NULL ");
@@ -68,12 +69,14 @@ class ReturnRegisterDetailModel {
       returnRegisterController.model.selectCheckDataList[superIndex.toString()]!
           .add("0");
     }
-
-    //print('asdqweasd : ${scmRegisterController.model.selectCheckDataList}');
-
     boxdata = List<Map<String, dynamic>>.from(decodedData);
-    detailData.value = boxdata;
-    await setTitleData(boxdata[0]);
+    //print('asdqweasd : ${scmRegisterController.model.selectCheckDataList}');
+    if (boxdata.isEmpty) {
+      isuQtCheckDialog(context, '목록이 없습니다.');
+    } else {
+      detailData.value = boxdata;
+      await setTitleData(boxdata[0]);
+    }
   }
 
   Future<void> checkNb(String detailNumber) async {

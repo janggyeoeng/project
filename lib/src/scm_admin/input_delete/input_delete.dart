@@ -34,8 +34,8 @@ class _ScmDeleteState extends State<ScmDelete> {
 
   @override
   void initState() {
-    _controller.pageLoad(context);
     super.initState();
+    _controller.pageLoad(context);
   }
 
   Future<void> pageUpdate() async {

@@ -59,6 +59,7 @@ class ScmRegisterModel {
     trNm = map['TR_NM'];
   }
 
+//디테일박스 조회
   Future<void> boxData(String detailNumber, int superIndex) async {
     // scanData = barcode.split('/');
     String detailDataString = await SqlConn.readData(
@@ -99,6 +100,7 @@ class ScmRegisterModel {
     });
   }
 
+//DB 디테일박스 업데이트
   Future<void> updatabox(String detailNumber, int superIndex, int box) async {
     bool update = await SqlConn.writeData(
         "UPDATE TSPODELIVER_D_BOX SET IMPORTSPEC = 'Y' WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='$superIndex  'AND BOX_SQ ='$box' ");
@@ -106,12 +108,14 @@ class ScmRegisterModel {
     // print('index:$superIndex');
   }
 
+//BARCODE정리
   Future<void> updatespec(String detailNumber, int superIndex) async {
     bool updata = await SqlConn.writeData(
         "UPDATE TSPODELIVER_D_BOX SET BARCODE = null WHERE PSU_NB ='$detailNumber' AND PSU_SQ ='$superIndex' AND IMPORTSPEC is NULL");
     print('a:$updata');
   }
 
+//입고처리 확인하기
   Future<void> rcvCk(BuildContext context) async {
     String rcv =
         await SqlConn.readData("SELECT RCV_NB FROM DZICUBE.dbo.LSTOCK");
@@ -174,6 +178,7 @@ class ScmRegisterModel {
     }
   }
 
+//인덱스 값이 1 이면 박스 업데이트
   Future<void> updateinfo(String detailNumber, int index) async {
     List<String> keys = selectCheckDataList.keys.toList();
     List<List<String>> values = selectCheckDataList.values.toList();
@@ -190,6 +195,7 @@ class ScmRegisterModel {
     }
   }
 
+//입고등록
   Future<void> regist(BuildContext context) async {
     for (int i = 0; i < barcodedata.length; i++) {
       var regist = await SqlConn.writeData(
@@ -200,6 +206,7 @@ class ScmRegisterModel {
     }
   }
 
+//색깔
   Color getColor(int index) {
     if (datavalue[index] == true) {
       return Colors.blue.shade300;
