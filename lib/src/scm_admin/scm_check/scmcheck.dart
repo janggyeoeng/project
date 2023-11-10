@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hnde_pda/src/scm_admin/scm_check/scm_check_controller.dart';
 import 'package:get/get.dart';
-
 import 'package:hnde_pda/src/scm_admin/scm_check_detail/scm_check_detail.dart';
 
 class ScmCheck extends StatefulWidget {
-  const ScmCheck({Key? key}) : super(key: key);
+  String id = '';
+  ScmCheck({super.key, required this.id});
 
   @override
   State<ScmCheck> createState() => _ScmCheckState();
@@ -25,6 +25,7 @@ class _ScmCheckState extends State<ScmCheck> {
 // });
 
   final ScmCheckController _controller = ScmCheckController();
+
   String detailNumber = '';
   String testStd = '';
   String psuNb = '';
@@ -563,9 +564,8 @@ class _ScmCheckState extends State<ScmCheck> {
               await _controller.updateinfo(
                   _controller.getPsuNb(), _controller.getPsuSq());
               await _controller.checkspec(
-                _controller.getPsuNb(),
-                _controller.getPsuSq(),
-              );
+                  _controller.getPsuNb(), _controller.getPsuSq(), widget.id);
+
               //await _controller.updatedata(
               // _controller.getPsuNb(), _controller.getPsuSq());
               //Get.back();

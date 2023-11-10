@@ -5,11 +5,11 @@ import 'package:hnde_pda/src/auth_page.dart';
 import 'package:sql_conn/sql_conn.dart';
 
 class LoginManager {
+  List<String> logindata = [];
   Future<void> login(TextEditingController idController,
       TextEditingController pwController, BuildContext context) async {
     String? id = idController.text;
     String? pw = pwController.text;
-
     String loginsql = await SqlConn.readData(
         "EXEC dbo.SP_PDA_LOGIN @UserId ='$id', @Password = '$pw'");
 
@@ -28,6 +28,8 @@ class LoginManager {
     //print(dropdownData);
 
     List<dynamic> logindecode = jsonDecode(loginsql);
+    logindata.add(id);
+    print(logindata);
     print(logindecode);
     int login = (logindecode[0]["Result"]);
 
@@ -42,7 +44,7 @@ class LoginManager {
     }
 
     if (login == 1) {
-      Get.to(() => const AuthPage());
+      Get.to(() => AuthPage(id: id));
     } else if (login == 0) {
       Get.dialog(
         AlertDialog(

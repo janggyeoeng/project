@@ -78,12 +78,12 @@ class ScmCheckController extends GetxController {
     return model.specCheck(detailNumber.split('/')[0]);
   }
 
-  Future<void> updatedata(String detailNumber, int index) async {
-    return model.updatedata(detailNumber, index);
+  Future<void> updatedata(String detailNumber, int index, String id) async {
+    return model.updatedata(detailNumber, index, id);
   }
 
-  Future<void> checkspec(String detailNumber, int index) async {
-    return model.checkspec(detailNumber, index);
+  Future<void> checkspec(String detailNumber, int index, String id) async {
+    return model.checkspec(detailNumber, index, id);
   }
 
   String psuQt(int index) {

@@ -11,7 +11,8 @@ import 'package:hnde_pda/src/scm_admin/input_delete/input_delete.dart';
 import 'package:hnde_pda/src/output/output_status/output_status.dart';
 
 class AuthPage extends StatelessWidget {
-  const AuthPage({super.key});
+  String id = '';
+  AuthPage({super.key, required this.id});
 
   Widget gridRouter(String title, IconData icon, VoidCallback onTap) {
     return Card(
@@ -99,7 +100,7 @@ class AuthPage extends StatelessWidget {
                 physics: const NeverScrollableScrollPhysics(), //스크롤 불가하도록 ㅎ마
                 children: [
                   gridRouter("SCM수입검사", Icons.pageview, () {
-                    Get.to(() => const ScmCheck());
+                    Get.to(() => ScmCheck(id: id));
                   }),
                   gridRouter("SCM입고등록", Icons.move_to_inbox, () {
                     Get.to(() => const InputRegister());

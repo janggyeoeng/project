@@ -2,7 +2,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hnde_pda/src/auth_page.dart';
 import 'package:hnde_pda/src/output/output_regitser(back)/output_register_controller_back.dart';
 
 import 'package:hnde_pda/src/output/output_register_detail/output_register_detail.dart';
@@ -24,7 +23,7 @@ class OutputRegister extends StatelessWidget {
         appBar: AppBar(
           leading: IconButton(
               onPressed: () {
-                Get.offAll(const AuthPage());
+                // Get.offAll(AuthPage(id: ' '));
               },
               icon: const Icon(Icons.arrow_back)),
           elevation: 0.7,

@@ -25,9 +25,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       initialRoute: '/',
-      routes: {
-        '/main': (context) => const AuthPage(),
-        '/scmcheck': (context) => const ScmCheck(),
+      routes: const {
+        // '/main': (context) =>  AuthPage(),
+        // '/scmcheck': (context) => const ScmCheck(),
       },
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
