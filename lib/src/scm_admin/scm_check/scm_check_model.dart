@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sql_conn/sql_conn.dart';
@@ -24,10 +23,9 @@ class ScmCheckModel {
   String psuNb = '';
   String trNm = '';
   String boxnb = '';
+  String id = '';
   //String sum = '';
   bool check = false;
-
-  Future<void> pageLoad() async {}
 
   Future<Map<String, dynamic>> getBindMapData(int index) async {
     return detailData[index];
@@ -83,19 +81,19 @@ class ScmCheckModel {
   }
 
 //선택된항목있는지 체크
-  Future<void> checkspec(String detailNumber, int index) async {
+  Future<void> checkspec(String detailNumber, int index, String id) async {
     List<List<String>> values = selectCheckDataList.values.toList();
     for (int i = 0; i < values.length; i++) {
       if (values[i].contains('1')) {
-        await updatedata(detailNumber, i);
+        await updatedata(detailNumber, i, id);
       }
     }
   }
 
   //선택된게 하나라도있으면 TSIMPORTSPEC을 Y로 변경
-  Future<void> updatedata(String detailNumber, int index) async {
+  Future<void> updatedata(String detailNumber, int index, String id) async {
     await SqlConn.writeData(
-        "UPDATE TSIMPORTINSPEC SET IMPORTSPEC = CASE WHEN (SELECT COUNT(BARCODE) FROM TSPODELIVER_D_BOX WHERE PSU_NB = '$detailNumber' AND PSU_SQ ='${index + 1} ' ) > 0 THEN 'Y' ELSE NULL END , INSERT_DT = GETDATE(),INSERT_BY=(SELECT USER_ID FROM TSUSER WHERE ISUSER_POWER = 'P') WHERE PSU_NB = '$detailNumber' AND PSU_SQ ='${index + 1} '");
+        "UPDATE TSIMPORTINSPEC SET IMPORTSPEC = CASE WHEN (SELECT COUNT(BARCODE) FROM TSPODELIVER_D_BOX WHERE PSU_NB = '$detailNumber' AND PSU_SQ ='${index + 1} ' ) > 0 THEN 'Y' ELSE NULL END , INSERT_DT = GETDATE(),INSERT_BY=(SELECT USER_ID FROM TSUSER WHERE USER_ID ='$trNm') WHERE PSU_NB = '$detailNumber' AND PSU_SQ ='${index + 1} '");
     print(index);
   }
 

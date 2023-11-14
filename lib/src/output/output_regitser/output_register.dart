@@ -3,11 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hnde_pda/src/auth_page.dart';
 import 'package:hnde_pda/src/output/output_regitser/output_register_controller.dart';
-import 'package:hnde_pda/src/output/output_regitser(back)/output_register_controller_back.dart';
-
-import 'package:hnde_pda/src/output/output_register_detail/output_register_detail.dart';
 
 class OutputRegister2 extends StatefulWidget {
   const OutputRegister2({Key? key}) : super(key: key);
@@ -31,7 +27,7 @@ class _OutputRegister2State extends State<OutputRegister2> {
         appBar: AppBar(
           leading: IconButton(
               onPressed: () {
-                Get.offAll(const AuthPage());
+                Get.back();
               },
               icon: const Icon(Icons.arrow_back)),
           elevation: 0.7,

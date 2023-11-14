@@ -109,17 +109,20 @@ class _MainLoginState extends State<MainLogin> {
                         topLeft: Radius.circular(20),
                         bottomRight: Radius.circular(20)),
                   ),
-                  child: const Padding(
-                    padding: EdgeInsets.only(top: 6.0),
-                    child: Text(
-                      '로그인',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontFamily: 'Poppins-Medium',
-                          fontWeight: FontWeight.w400),
+                  child: GestureDetector(
+                    child: const Padding(
+                      padding: EdgeInsets.only(top: 6.0),
+                      child: Text(
+                        '로그인',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontFamily: 'Poppins-Medium',
+                            fontWeight: FontWeight.w400),
+                      ),
                     ),
+                    onTap: () {},
                   ),
                 ),
               )),
