@@ -130,6 +130,8 @@ class _ScmCheckState extends State<ScmCheck> {
                             await _controller.specCheck(value);
                             await _controller.scanBarcode(context, value);
                             await _controller.setController();
+                            await _controller.boxData(
+                                _controller.getPsuNb(), _controller.getPsuSq());
 
                             txtCon.text = '';
                             txtCon.clear();

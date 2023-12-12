@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
@@ -117,7 +118,8 @@ class _ScmDeleteState extends State<ScmDelete> {
                         borderRadius:
                             const BorderRadius.all(Radius.circular(8)),
                       ),
-                      child: const Text(
+                      child: const AutoSizeText(
+                        maxLines: 1,
                         '출고일자',
                         style: TextStyle(
                             fontSize: 15, fontWeight: FontWeight.bold),
@@ -423,6 +425,7 @@ class _ScmDeleteState extends State<ScmDelete> {
                     title: '삭제',
                     middleText: '삭제 하시겠습니까?\n',
                     onConfirm: () async {
+                      await _controller.ynck();
                       await _controller.checkdelete(
                           context,
                           _controller.model.psuNb,

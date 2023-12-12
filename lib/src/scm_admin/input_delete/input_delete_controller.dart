@@ -25,9 +25,9 @@ class ScmDeleteController {
     return model.setController();
   }
 
-  Future<void> deleteData(BuildContext context, String customerKeyword,
-      DateTime startDate, DateTime endDate) async {
-    return model.deleteData(context, customerKeyword, startDate, endDate);
+  Future<void> deleteData(String customerKeyword, DateTime startDate,
+      DateTime endDate, BuildContext context) async {
+    return model.deleteData(customerKeyword, startDate, endDate, context);
   }
 
   Future<void> checkdelete(
@@ -37,6 +37,14 @@ class ScmDeleteController {
 
   Future<void> inputdata(BuildContext context) async {
     return model.inputdata(context);
+  }
+
+  Future<bool> ynck() async {
+    return model.ynck();
+  }
+
+  Future<void> boxdata() async {
+    return model.boxdata();
   }
 
   Color selectColor(int index) {

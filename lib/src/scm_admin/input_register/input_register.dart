@@ -66,9 +66,6 @@ class _InputRegisterState extends State<InputRegister> {
     setState(() {});
   }
 
-  TextEditingController txtCon = TextEditingController();
-  TextEditingController txtCon2 = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -107,7 +104,7 @@ class _InputRegisterState extends State<InputRegister> {
                         //width: 50,
                         child: TextField(
                           focusNode: focusNodes,
-                          controller: txtCon,
+                          controller: _controller.model.txtCon,
                           autofocus: true,
                           cursorColor: Colors.transparent,
                           cursorWidth: 0,
@@ -117,19 +114,21 @@ class _InputRegisterState extends State<InputRegister> {
                           onSubmitted: (value) async {
                             //await _controller.printf(value);
                             print(value);
-                            txtCon.text = '';
+                            _controller.model.txtCon.text = '';
                           },
                           onChanged: (value) async {
                             await _controller.barcodeScan(value, context);
                             print("1");
                             await _controller.setController();
                             print("2");
-                            await _controller.rcvCk(context);
+                            // await _controller.rcvCk(value, context);
                             print("3");
+                            await _controller.boxData(
+                                _controller.getPsuNb(), _controller.getPsuSq());
                             //await _controller.barcodeScan(value, context);
                             //print('aaa');
 
-                            txtCon.text = '';
+                            _controller.model.txtCon.text = '';
                             setState(() {});
                           },
                           //  onTapOutside: (value){
@@ -168,7 +167,7 @@ class _InputRegisterState extends State<InputRegister> {
                             flex: 5,
                             child: Stack(children: [
                               TextFormField(
-                                controller: txtCon2,
+                                controller: _controller.model.txtCon2,
                                 focusNode: focusNodes2,
                                 cursorColor: Colors.transparent,
                                 cursorWidth: 0,
@@ -179,12 +178,13 @@ class _InputRegisterState extends State<InputRegister> {
 
                                   await _controller.barcodeScan(value, context);
                                   await _controller.setController();
-                                  await _controller.rcvCk(context);
+                                  //await _controller.rcvCk(value, context);
                                   await _controller.boxData(
                                       _controller.getPsuNb(),
                                       _controller.getPsuSq());
 
                                   print('${_controller.model.boxdata}');
+                                  _controller.model.txtCon2.text = '';
                                   setFocus();
                                   setState(() {});
                                 },
@@ -585,7 +585,11 @@ class _InputRegisterState extends State<InputRegister> {
                   _controller.getPsuNb(), _controller.getPsuSq());
 
               await _controller.regist(context);
-              txtCon2.clear();
+              _controller.model.txtCon2.clear();
+              _controller.model.psuNb = '';
+              _controller.model.trNm = '';
+              _controller.model.rsData.clear();
+
               setState(() {});
             },
           ),

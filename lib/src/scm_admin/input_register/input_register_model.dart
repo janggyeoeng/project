@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hnde_pda/src/scm_admin/scm_check/scm_check_controller.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:sql_conn/sql_conn.dart';
 
 class ScmRegisterModel {
@@ -10,6 +11,7 @@ class ScmRegisterModel {
   var barcodeFocusNodes = FocusNode();
   var textFocusNodes = FocusNode();
   RxList<Map<String, dynamic>> rsData = RxList<Map<String, dynamic>>([]);
+  RxList<Map<String, dynamic>> spdata = RxList<Map<String, dynamic>>([]);
   List<Map<String, dynamic>> selectData1 = [];
   List<Map<String, dynamic>> selectData = [];
   List<String> barcodedata = [];
@@ -18,9 +20,16 @@ class ScmRegisterModel {
   int psuSq = 0;
   String trNm = '';
   bool check = false;
+  bool rcvcheck = false;
   List<bool> datavalue = [];
   List<String> sum = [];
   Map<String, List<String>> selectCheckDataList = {};
+
+  TextEditingController txtCon = TextEditingController();
+  TextEditingController txtCon2 = TextEditingController();
+
+  final RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
 
   Future<void> setController() async {
     for (int i = 0; i < rsData.length; i++) {
@@ -115,21 +124,30 @@ class ScmRegisterModel {
     print('a:$updata');
   }
 
+  void _onRefresh() async {
+    await Future.delayed(
+        const Duration(milliseconds: 1000)); //1초를 기다린 후 새로고침한다.
+    //이 부분에 새로고침 시 불러올 기능을 구현한다.
+    _refreshController.refreshCompleted();
+  }
+
 //입고처리 확인하기
-  Future<void> rcvCk(BuildContext context) async {
+  Future<bool> rcvCk(BuildContext context) async {
     String rcv =
         await SqlConn.readData("SELECT RCV_NB FROM DZICUBE.dbo.LSTOCK");
     List<dynamic> rcvdata = jsonDecode(rcv);
-    print(rcvdata);
 
-    for (var rsItem in rsData) {
+    for (var rsItem in spdata) {
       for (var rcvItem in rcvdata) {
         if (rcvItem["RCV_NB"] == rsItem["RCV_NB"]) {
           isuQtCheckDialog(context, '이미 처리된 입고입니다.');
-          break;
+          //break;
+          return false;
         }
       }
     }
+
+    return true;
   }
 
   // 바코드 스캔 영역
@@ -139,7 +157,7 @@ class ScmRegisterModel {
     print("asdad : $scanData");
     String detailDataString = '';
 
-    if (barcode.isEmpty) {
+    if (scanData[0].isEmpty) {
       return isuQtCheckDialog(context, '바코드가 입력되지 않았습니다.');
     }
     if (scanData[0].length != 12 || !scanData[0].startsWith('PD')) {
@@ -168,8 +186,13 @@ class ScmRegisterModel {
         List<dynamic> decodedData = jsonDecode(detailData);
         if (decodedData.isNotEmpty) {
           selectData1 = List<Map<String, dynamic>>.from(decodedData);
-          rsData.value = selectData1;
-          await setTitleData(rsData[0]);
+          spdata.value = selectData1;
+          print(spdata);
+
+          if (await rcvCk(context)) {
+            rsData.value = spdata;
+            await setTitleData(rsData[0]);
+          }
         } else {
           // 수입검사가 이루어진게 없을때
           isuQtCheckDialog(context, '수입검사가 이루어지지않았습니다.');
