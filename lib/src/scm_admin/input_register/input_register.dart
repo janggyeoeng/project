@@ -586,6 +586,7 @@ class _InputRegisterState extends State<InputRegister> {
 
               await _controller.regist(context);
               _controller.model.txtCon2.clear();
+              _controller.model.txtCon.clear();
               _controller.model.psuNb = '';
               _controller.model.trNm = '';
               _controller.model.rsData.clear();

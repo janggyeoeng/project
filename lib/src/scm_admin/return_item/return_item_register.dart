@@ -526,8 +526,13 @@ class _ReturnRegisterState extends State<ReturnRegister> {
                 ),
               ],
             ),
-            onTap: () {
-              _controller.returnRegist(context, _controller.getPsuDt());
+            onTap: () async {
+              await _controller.returnRegist(context, _controller.getPsuDt());
+              txtCon.clear();
+              txtCon2.clear();
+              _controller.model.psuNb = '';
+              _controller.model.trNm = '';
+              _controller.model.returnData.clear();
               print("a:${_controller.getPsuDt()}");
             },
           ),

@@ -568,9 +568,11 @@ class _ScmCheckState extends State<ScmCheck> {
               await _controller.checkspec(
                   _controller.getPsuNb(), _controller.getPsuSq(), widget.id);
 
-              //await _controller.updatedata(
-              // _controller.getPsuNb(), _controller.getPsuSq());
-              //Get.back();
+              txtCon.clear();
+              txtCon2.clear();
+              _controller.model.psuNb = '';
+              _controller.model.trNm = '';
+              _controller.model.detailData.clear();
 
               setState(() {});
             },
