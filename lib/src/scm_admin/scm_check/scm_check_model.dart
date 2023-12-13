@@ -93,7 +93,8 @@ class ScmCheckModel {
   //선택된게 하나라도있으면 TSIMPORTSPEC을 Y로 변경
   Future<void> updatedata(String detailNumber, int index, String id) async {
     await SqlConn.writeData(
-        "UPDATE TSIMPORTINSPEC SET IMPORTSPEC = CASE WHEN (SELECT COUNT(BARCODE) FROM TSPODELIVER_D_BOX WHERE PSU_NB = '$detailNumber' AND PSU_SQ ='${index + 1} ' ) > 0 THEN 'Y' ELSE NULL END , INSERT_DT = GETDATE(),INSERT_BY=(SELECT USER_ID FROM TSUSER WHERE USER_ID ='$trNm') WHERE PSU_NB = '$detailNumber' AND PSU_SQ ='${index + 1} '");
+        "INSERT INTO TSIMPORTINSPEC(PSU_NB, PSU_SQ, ITEM_CD, IMPORTSPEC, INSERT_DT, INSERT_BY) (SELECT '$detailNumber', '${index + 1}', '${boxdata[index]['ITEM_CD']}', 'Y', GETDATE(), '$trNm') ");
+    //"UPDATE TSIMPORTINSPEC SET IMPORTSPEC = CASE WHEN (SELECT COUNT(BARCODE) FROM TSPODELIVER_D_BOX WHERE PSU_NB = '$detailNumber' AND PSU_SQ ='${index + 1} ' ) > 0 THEN 'Y' ELSE NULL END , INSERT_DT = GETDATE(),INSERT_BY=(SELECT USER_ID FROM TSUSER WHERE USER_ID ='$trNm') WHERE PSU_NB = '$detailNumber' AND PSU_SQ ='${index + 1} '");
     print(index);
   }
 
@@ -201,10 +202,10 @@ class ScmCheckModel {
     String detailDataString = '';
     print('scanData : $scanData');
 
-    if (barcode.isEmpty) {
+    if (scanData[0].isEmpty) {
       return isuQtCheckDialog(context, '바코드가 입력되지 않았습니다.');
     }
-    if (barcode.length != 12 || !barcode.startsWith('PD')) {
+    if (scanData[0].length != 12 || !scanData[0].startsWith('PD')) {
       isuQtCheckDialog(context, '바코드가 올바르지 않습니다.');
     } else {
       // if (detailData[0]["PSU_NB"] != scanData[0]) {
@@ -275,6 +276,7 @@ class ScmCheckModel {
           await updatabox(detailNumber, int.parse(keys[i]) + 1,
               int.parse(boxdata[j]["BOX_SQ"]));
           // index i에서 values[i]의 j번째 요소가 '1'인 경우에 업데이트를 수행
+          print('dddddddddddd:${int.parse(boxdata[j]["BOX_SQ"])}');
         }
       }
     }

@@ -46,9 +46,9 @@ class ScmRegisterController {
     return model.regist(context);
   }
 
-  Future<void> rcvCk(BuildContext context) async {
-    return model.rcvCk(context);
-  }
+  // Future<void> rcvCk(BuildContext context) async {
+  //   return model.rcvCk(context);
+  // }
 
   Color getColor(int index) {
     return model.getColor(index);
