@@ -30,9 +30,9 @@ class ScmDeleteController {
     return model.deleteData(customerKeyword, startDate, endDate, context);
   }
 
-  Future<void> checkdelete(
-      BuildContext context, String psunb, int psusq, String rcvnb, int rcvsq) {
-    return model.checkdelete(context, psunb, psusq, rcvnb, rcvsq);
+  Future<void> checkdelete(BuildContext context, String psunb, int psusq,
+      String rcvnb, int rcvsq) async {
+    return await model.checkdelete(context, psunb, psusq, rcvnb, rcvsq);
   }
 
   Future<void> inputdata(BuildContext context) async {

@@ -107,7 +107,7 @@ class ScmRegisterDetailModel {
 
   // 출고번호 체크
   Future<void> checkNb(String detailNumber) async {
-    List<String> barcode = txtCon.text.split('@');
+    List<String> barcode = txtCon2.text.split('@');
     print("asdasdd : ${txtCon.text}");
     Map<String, dynamic> bcData = {"PSU_NB": barcode[0]};
     if (bcData["PSU_NB"] != detailNumber) {
@@ -124,8 +124,8 @@ class ScmRegisterDetailModel {
       ScmRegisterController scmRegisterController,
       String detailNumber,
       int superIndex) async {
-    List<String> barcode = txtCon.text.split('@');
-    if (txtCon.text.isEmpty) {
+    List<String> barcode = txtCon2.text.split('@');
+    if (txtCon2.text.isEmpty) {
       return isuQtCheckDialog(context, '바코드가 입력되지 않았습니다.');
     }
     Map<String, dynamic> bcData = {

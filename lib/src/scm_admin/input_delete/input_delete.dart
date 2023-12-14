@@ -432,6 +432,8 @@ class _ScmDeleteState extends State<ScmDelete> {
                           _controller.model.psuSq,
                           _controller.model.rcvNb,
                           _controller.model.rcvSq);
+                      // Get.back();
+                      print("asasaa");
                       setState(() {});
                     },
                     onCancel: () {},

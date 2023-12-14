@@ -103,9 +103,12 @@ class ScmDeleteModel {
 //제거 데이터 목록 조회
   Future<void> deleteData(String customerKeyword, DateTime startDate,
       DateTime endDate, BuildContext context) async {
-    print("test005 : $customerKeyword, $startDate, $endDate");
+    String start = startDate.toString().substring(0, 10).replaceAll('-', '');
+    String end = endDate.toString().substring(0, 10).replaceAll('-', '');
+
+    print("test005 : $customerKeyword, $start, $end");
     String data = await SqlConn.readData(
-        "exec SP_SCM_TS1JA0008A_R1_BAK '1001','$customerKeyword', 'B', '$startDate', '$endDate'");
+        "exec SP_SCM_TS1JA0008A_R1_BAK '1001','$customerKeyword', 'B', '$start', '$end'");
 
     String detailData = data.replaceAll('tsst', '');
     print(detailData);
@@ -160,8 +163,7 @@ class ScmDeleteModel {
         isuQtCheckDialog(context, '선택된 항목이 없습니다.');
       }
     } else {
-      isuQtCheckDialog(context, '삭제가 불가능합니다.');
-      return;
+      isuQtCheckDialog(context, '공정처리 중입니다.');
     }
   }
 
@@ -191,6 +193,7 @@ class ScmDeleteModel {
             actions: [
               TextButton(
                   onPressed: () {
+                    Navigator.pop(context);
                     Navigator.pop(context);
                   },
                   child: const Text('확인'))
